@@ -58,7 +58,7 @@ for details on how the robot side works.
 ## Unique features
 
 This years robot's unique features include:
- 
+
 - (add bullet points about all of the cool subsystems or features our robot has this year!)
 
 ## Goals of the year

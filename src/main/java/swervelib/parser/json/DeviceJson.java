@@ -11,41 +11,32 @@ import swervelib.motors.SparkMaxBrushedMotorSwerve;
 import swervelib.motors.SparkMaxSwerve;
 import swervelib.motors.SwerveMotor;
 
-/**
- * Device JSON parsed class. Used to access the JSON data.
- */
-public class DeviceJson
-{
+/** Device JSON parsed class. Used to access the JSON data. */
+public class DeviceJson {
 
-  /**
-   * The device type, e.g. pigeon/pigeon2/sparkmax/talonfx/navx
-   */
+  /** The device type, e.g. pigeon/pigeon2/sparkmax/talonfx/navx */
   public String type;
-  /**
-   * The CAN ID or pin ID of the device.
-   */
-  public int    id;
-  /**
-   * The CAN bus name which the device resides on if using CAN.
-   */
+
+  /** The CAN ID or pin ID of the device. */
+  public int id;
+
+  /** The CAN bus name which the device resides on if using CAN. */
   public String canbus = "";
 
   /**
    * Create a {@link SwerveAbsoluteEncoder} from the current configuration.
    *
-   * @param motor {@link SwerveMotor} of which attached encoders will be created from, only used when the type is
-   *              "attached" or "canandencoder".
+   * @param motor {@link SwerveMotor} of which attached encoders will be created from, only used
+   *     when the type is "attached" or "canandencoder".
    * @return {@link SwerveAbsoluteEncoder} given.
    */
-  public SwerveAbsoluteEncoder createEncoder(SwerveMotor motor)
-  {
-    if (id > 40)
-    {
-      DriverStation.reportWarning("CAN IDs greater than 40 can cause undefined behaviour, please use a CAN ID below 40!",
-                                  false);
+  public SwerveAbsoluteEncoder createEncoder(SwerveMotor motor) {
+    if (id > 40) {
+      DriverStation.reportWarning(
+          "CAN IDs greater than 40 can cause undefined behaviour, please use a CAN ID below 40!",
+          false);
     }
-    switch (type)
-    {
+    switch (type) {
       case "none":
         return null;
       case "integrated":
@@ -67,15 +58,13 @@ public class DeviceJson
    *
    * @return {@link SwerveIMU} given.
    */
-  public SwerveIMU createIMU()
-  {
-    if (id > 40)
-    {
-      DriverStation.reportWarning("CAN IDs greater than 40 can cause undefined behaviour, please use a CAN ID below 40!",
-                                  false);
+  public SwerveIMU createIMU() {
+    if (id > 40) {
+      DriverStation.reportWarning(
+          "CAN IDs greater than 40 can cause undefined behaviour, please use a CAN ID below 40!",
+          false);
     }
-    switch (type)
-    {
+    switch (type) {
       case "pigeon2":
         return new Pigeon2Swerve(id, canbus != null ? canbus : "");
       default:
@@ -89,18 +78,15 @@ public class DeviceJson
    * @param isDriveMotor If the motor being generated is a drive motor.
    * @return {@link SwerveMotor} given.
    */
-  public SwerveMotor createMotor(boolean isDriveMotor)
-  {
-    if (id > 40)
-    {
-      DriverStation.reportWarning("CAN IDs greater than 40 can cause undefined behaviour, please use a CAN ID below 40!",
-                                  false);
+  public SwerveMotor createMotor(boolean isDriveMotor) {
+    if (id > 40) {
+      DriverStation.reportWarning(
+          "CAN IDs greater than 40 can cause undefined behaviour, please use a CAN ID below 40!",
+          false);
     }
-    switch (type)
-    {
+    switch (type) {
       case "sparkmax_brushed":
-        switch (canbus)
-        {
+        switch (canbus) {
           case "greyhill_63r256":
             return new SparkMaxBrushedMotorSwerve(id, isDriveMotor, Type.kQuadrature, 1024, false);
           case "srx_mag_encoder":
@@ -114,11 +100,12 @@ public class DeviceJson
           case "srx_mag_encoder_dataport":
             return new SparkMaxBrushedMotorSwerve(id, isDriveMotor, Type.kQuadrature, 4096, true);
           default:
-            if (isDriveMotor)
-            {
-              throw new RuntimeException("Spark MAX " + id + " MUST have a encoder attached to the motor controller.");
+            if (isDriveMotor) {
+              throw new RuntimeException(
+                  "Spark MAX " + id + " MUST have a encoder attached to the motor controller.");
             }
-            // We are creating a motor for an angle motor which will use the absolute encoder attached to the data port.
+            // We are creating a motor for an angle motor which will use the absolute encoder
+            // attached to the data port.
             return new SparkMaxBrushedMotorSwerve(id, isDriveMotor, Type.kNoSensor, 0, false);
         }
       case "neo":

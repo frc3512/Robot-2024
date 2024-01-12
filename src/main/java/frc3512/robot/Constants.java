@@ -1,26 +1,46 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc3512.robot;
 
-/**
- * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
- * constants. This class should not be used for any other purpose. All constants should be declared
- * globally (i.e. public static). Do not put anything functional in this class.
- *
- * <p>It is advised to statically import this class (or one of its inner classes) wherever the
- * constants are needed, to reduce verbosity.
- */
+import edu.wpi.first.math.util.Units;
+import swervelib.math.SwerveMath;
+
 public final class Constants {
+
+  public static enum RobotType {
+    PROTO,
+    COMP,
+    DEFAULT
+  }
+
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
   }
 
+  public static final class SwerveConstants {
+    public static final double WHEEL_LOCK_TIME = 10; // seconds
+
+    public static final double swerveDeadband = 0.1;
+
+    public static final double maximumSpeed = Units.feetToMeters(14.5);
+
+    // Angle conversion factor is 360 / (GEAR RATIO * ENCODER RESOLUTION)
+    //  In this case the gear ratio is 12.8 motor revolutions per wheel rotation.
+    //  The encoder resolution per motor revolution is 1 per motor revolution.
+    public static final double angleConversionFactor =
+        SwerveMath.calculateDegreesPerSteeringRotation(12.8, 1);
+
+    // Motor conversion factor is (PI * WHEEL DIAMETER IN METERS) / (GEAR RATIO * ENCODER
+    // RESOLUTION).
+    //  In this case the wheel diameter is 4 inches, which must be converted to meters to get
+    // meters/second.
+    //  The gear ratio is 6.75 motor revolutions per wheel rotation.
+    //  The encoder resolution per motor revolution is 1 per motor revolution.
+    public static final double driveConversionFactor =
+        SwerveMath.calculateMetersPerRotation(Units.inchesToMeters(4), 6.75, 1);
+  }
+
   public static final class GeneralConstants {
     public static final boolean tuningMode = true;
-    
-    // Joystick axis deadband for the swerve drive
-    public static final double swerveDeadband = 0.1;
+
+    public static final RobotType robotType = RobotType.PROTO;
   }
 }
