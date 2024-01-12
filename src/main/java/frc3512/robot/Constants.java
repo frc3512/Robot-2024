@@ -16,4 +16,11 @@ public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
   }
+
+  public static final class GeneralConstants {
+    public static final boolean tuningMode = true;
+    
+    // Joystick axis deadband for the swerve drive
+    public static final double swerveDeadband = 0.1;
+  }
 }
