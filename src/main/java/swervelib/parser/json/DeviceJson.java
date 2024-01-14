@@ -2,14 +2,30 @@ package swervelib.parser.json;
 
 import com.revrobotics.SparkRelativeEncoder.Type;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.SerialPort.Port;
+import swervelib.encoders.AnalogAbsoluteEncoderSwerve;
 import swervelib.encoders.CANCoderSwerve;
+import swervelib.encoders.CanAndCoderSwerve;
+import swervelib.encoders.PWMDutyCycleEncoderSwerve;
+import swervelib.encoders.SparkMaxAnalogEncoderSwerve;
+import swervelib.encoders.SparkMaxEncoderSwerve;
 import swervelib.encoders.SwerveAbsoluteEncoder;
+import swervelib.imu.ADIS16448Swerve;
+import swervelib.imu.ADIS16470Swerve;
+import swervelib.imu.ADXRS450Swerve;
+import swervelib.imu.AnalogGyroSwerve;
+import swervelib.imu.NavXSwerve;
 import swervelib.imu.Pigeon2Swerve;
+import swervelib.imu.PigeonSwerve;
 import swervelib.imu.SwerveIMU;
 import swervelib.motors.SparkFlexSwerve;
 import swervelib.motors.SparkMaxBrushedMotorSwerve;
 import swervelib.motors.SparkMaxSwerve;
 import swervelib.motors.SwerveMotor;
+import swervelib.motors.TalonFXSwerve;
+import swervelib.motors.TalonSRXSwerve;
 
 /** Device JSON parsed class. Used to access the JSON data. */
 public class DeviceJson {
@@ -40,12 +56,24 @@ public class DeviceJson {
       case "none":
         return null;
       case "integrated":
+      case "attached":
+        return new SparkMaxEncoderSwerve(motor, 1);
+      case "sparkmax_analog":
+        return new SparkMaxAnalogEncoderSwerve(motor);
+      case "canandcoder":
+        return new SparkMaxEncoderSwerve(motor, 360);
+      case "canandcoder_can":
+        return new CanAndCoderSwerve(id);
       case "ma3":
       case "ctre_mag":
       case "rev_hex":
       case "throughbore":
       case "am_mag":
+      case "dutycycle":
+        return new PWMDutyCycleEncoderSwerve(id);
       case "thrifty":
+      case "analog":
+        return new AnalogAbsoluteEncoderSwerve(id);
       case "cancoder":
         return new CANCoderSwerve(id, canbus != null ? canbus : "");
       default:
@@ -65,6 +93,30 @@ public class DeviceJson {
           false);
     }
     switch (type) {
+      case "adis16448":
+        return new ADIS16448Swerve();
+      case "adis16470":
+        return new ADIS16470Swerve();
+      case "adxrs450":
+        return new ADXRS450Swerve();
+      case "analog":
+        return new AnalogGyroSwerve(id);
+      case "navx":
+      case "navx_spi":
+        return new NavXSwerve(SPI.Port.kMXP);
+      case "navx_i2c":
+        DriverStation.reportWarning(
+            "WARNING: There exists an I2C lockup issue on the roboRIO that could occur, more information here: "
+                + "\nhttps://docs.wpilib.org/en/stable/docs/yearly-overview/known-issues"
+                + ".html#onboard-i2c-causing-system-lockups",
+            false);
+        return new NavXSwerve(I2C.Port.kMXP);
+      case "navx_usb":
+        return new NavXSwerve(Port.kUSB);
+      case "navx_mxp":
+        return new NavXSwerve(Port.kMXP);
+      case "pigeon":
+        return new PigeonSwerve(id);
       case "pigeon2":
         return new Pigeon2Swerve(id, canbus != null ? canbus : "");
       default:
@@ -113,6 +165,11 @@ public class DeviceJson {
         return new SparkMaxSwerve(id, isDriveMotor);
       case "sparkflex":
         return new SparkFlexSwerve(id, isDriveMotor);
+      case "falcon":
+      case "talonfx":
+        return new TalonFXSwerve(id, canbus != null ? canbus : "", isDriveMotor);
+      case "talonsrx":
+        return new TalonSRXSwerve(id, isDriveMotor);
       default:
         throw new RuntimeException(type + " is not a recognized motor type.");
     }

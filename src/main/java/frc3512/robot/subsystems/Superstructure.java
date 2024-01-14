@@ -6,8 +6,12 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc3512.robot.Constants;
+import frc3512.robot.auton.Autos;
 
 public class Superstructure extends SubsystemBase {
+
+  // Autons
+  private final Autos autos;
 
   // Subsystems
   public final Swerve swerve = new Swerve();
@@ -21,7 +25,9 @@ public class Superstructure extends SubsystemBase {
   private final int strafeAxis = XboxController.Axis.kLeftX.value;
   private final int rotationAxis = XboxController.Axis.kRightX.value;
 
-  public Superstructure() {}
+  public Superstructure() {
+    autos = new Autos(this);
+  }
 
   public void configureBindings() {
     driverXbox.x().onTrue(new InstantCommand(() -> swerve.zeroGyro()));
@@ -40,8 +46,6 @@ public class Superstructure extends SubsystemBase {
   }
 
   public Command getAuton() {
-    // TODO: Eventually write an Autos class and replace this line with the auto chosen from the
-    // AutonChooser
-    return new InstantCommand();
+    return autos.getSelected();
   }
 }
