@@ -43,16 +43,25 @@ public class Swerve extends SubsystemBase {
       if (Constants.GeneralConstants.robotType == Constants.RobotType.COMP) {
         swerve =
             new SwerveParser(new File(Filesystem.getDeployDirectory(), "swerve/comp"))
-                .createSwerveDrive(Constants.SwerveConstants.maximumSpeed, Constants.SwerveConstants.angleConversionFactor, Constants.SwerveConstants.driveConversionFactor);
+                .createSwerveDrive(
+                    Constants.SwerveConstants.maximumSpeed,
+                    Constants.SwerveConstants.angleConversionFactor,
+                    Constants.SwerveConstants.driveConversionFactor);
       } else if (Constants.GeneralConstants.robotType == Constants.RobotType.PROTO) {
         swerve =
             new SwerveParser(new File(Filesystem.getDeployDirectory(), "swerve/proto"))
-                .createSwerveDrive(Constants.SwerveConstants.maximumSpeed, Constants.SwerveConstants.angleConversionFactor, Constants.SwerveConstants.driveConversionFactor);
+                .createSwerveDrive(
+                    Constants.SwerveConstants.maximumSpeed,
+                    Constants.SwerveConstants.angleConversionFactor,
+                    Constants.SwerveConstants.driveConversionFactor);
       } else {
         // Default back to the comp bot
         swerve =
             new SwerveParser(new File(Filesystem.getDeployDirectory(), "swerve/comp"))
-                .createSwerveDrive(Constants.SwerveConstants.maximumSpeed, Constants.SwerveConstants.angleConversionFactor, Constants.SwerveConstants.driveConversionFactor);
+                .createSwerveDrive(
+                    Constants.SwerveConstants.maximumSpeed,
+                    Constants.SwerveConstants.angleConversionFactor,
+                    Constants.SwerveConstants.driveConversionFactor);
       }
     } catch (Exception e) {
       throw new RuntimeException(e);
