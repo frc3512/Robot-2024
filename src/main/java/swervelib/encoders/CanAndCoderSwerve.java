@@ -3,33 +3,46 @@ package swervelib.encoders;
 import com.reduxrobotics.sensors.canandcoder.Canandcoder;
 import edu.wpi.first.wpilibj.DriverStation;
 
-/** HELIUM {@link Canandcoder} from ReduxRobotics absolute encoder, attached through the CAN bus. */
-public class CanAndCoderSwerve extends SwerveAbsoluteEncoder {
+/**
+ * HELIUM {@link Canandcoder} from ReduxRobotics absolute encoder, attached through the CAN bus.
+ */
+public class CanAndCoderSwerve extends SwerveAbsoluteEncoder
+{
 
-  /** The {@link Canandcoder} representing the CANandCoder on the CAN bus. */
-  public Canandcoder encoder;
-
-  /** Inversion state of the encoder. */
-  private boolean inverted = false;
+  /**
+   * The {@link Canandcoder} representing the CANandCoder on the CAN bus.
+   */
+  public  Canandcoder encoder;
+  /**
+   * Inversion state of the encoder.
+   */
+  private boolean     inverted = false;
 
   /**
    * Create the {@link Canandcoder}
    *
    * @param canid The CAN ID whenever the CANandCoder is operating on the CANBus.
    */
-  public CanAndCoderSwerve(int canid) {
+  public CanAndCoderSwerve(int canid)
+  {
     encoder = new Canandcoder(canid);
   }
 
-  /** Reset the encoder to factory defaults. */
+  /**
+   * Reset the encoder to factory defaults.
+   */
   @Override
-  public void factoryDefault() {
+  public void factoryDefault()
+  {
     encoder.resetFactoryDefaults(false);
   }
 
-  /** Clear sticky faults on the encoder. */
+  /**
+   * Clear sticky faults on the encoder.
+   */
   @Override
-  public void clearStickyFaults() {
+  public void clearStickyFaults()
+  {
     encoder.clearStickyFaults();
   }
 
@@ -39,7 +52,8 @@ public class CanAndCoderSwerve extends SwerveAbsoluteEncoder {
    * @param inverted Whether the encoder is inverted.
    */
   @Override
-  public void configure(boolean inverted) {
+  public void configure(boolean inverted)
+  {
     this.inverted = inverted;
   }
 
@@ -49,7 +63,8 @@ public class CanAndCoderSwerve extends SwerveAbsoluteEncoder {
    * @return Absolute position in degrees from [0, 360).
    */
   @Override
-  public double getAbsolutePosition() {
+  public double getAbsolutePosition()
+  {
     return (inverted ? -1.0 : 1.0) * encoder.getPosition() * 360;
   }
 
@@ -59,7 +74,8 @@ public class CanAndCoderSwerve extends SwerveAbsoluteEncoder {
    * @return Absolute encoder object.
    */
   @Override
-  public Object getAbsoluteEncoder() {
+  public Object getAbsoluteEncoder()
+  {
     return encoder;
   }
 
@@ -70,10 +86,11 @@ public class CanAndCoderSwerve extends SwerveAbsoluteEncoder {
    * @return always false due to CanAndCoder not supporting offset changing.
    */
   @Override
-  public boolean setAbsoluteEncoderOffset(double offset) {
-    // CanAndCoder does not support Absolute Offset Changing
-    DriverStation.reportWarning(
-        "Cannot Set Absolute Encoder Offset of CanAndCoders ID: " + encoder.getAddress(), false);
+  public boolean setAbsoluteEncoderOffset(double offset)
+  {
+    //CanAndCoder does not support Absolute Offset Changing
+    DriverStation.reportWarning("Cannot Set Absolute Encoder Offset of CanAndCoders ID: " + encoder.getAddress(),
+                                false);
     return false;
   }
 
@@ -83,7 +100,8 @@ public class CanAndCoderSwerve extends SwerveAbsoluteEncoder {
    * @return velocity in degrees/sec.
    */
   @Override
-  public double getVelocity() {
+  public double getVelocity()
+  {
     return encoder.getVelocity();
   }
 }

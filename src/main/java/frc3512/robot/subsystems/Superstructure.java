@@ -36,9 +36,9 @@ public class Superstructure extends SubsystemBase {
   public void configureAxisActions() {
     swerve.setDefaultCommand(
         swerve.drive(
-            () -> -driverXbox.getRawAxis(translationAxis),
-            () -> -driverXbox.getRawAxis(strafeAxis),
-            () -> -driverXbox.getRawAxis(rotationAxis)));
+            () -> driverXbox.getRawAxis(translationAxis),
+            () -> driverXbox.getRawAxis(strafeAxis),
+            () -> driverXbox.getRawAxis(rotationAxis)));
   }
 
   public void setMotorBrake(boolean brake) {
