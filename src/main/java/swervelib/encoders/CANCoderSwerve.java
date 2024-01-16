@@ -11,15 +11,10 @@ import com.ctre.phoenix6.signals.MagnetHealthValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 import edu.wpi.first.wpilibj.DriverStation;
 
-/**
- * Swerve Absolute Encoder for CTRE CANCoders.
- */
-public class CANCoderSwerve extends SwerveAbsoluteEncoder
-{
+/** Swerve Absolute Encoder for CTRE CANCoders. */
+public class CANCoderSwerve extends SwerveAbsoluteEncoder {
 
-  /**
-   * CANCoder with WPILib sendable and support.
-   */
+  /** CANCoder with WPILib sendable and support. */
   public CANcoder encoder;
 
   /**
@@ -27,37 +22,29 @@ public class CANCoderSwerve extends SwerveAbsoluteEncoder
    *
    * @param id CAN ID.
    */
-  public CANCoderSwerve(int id)
-  {
+  public CANCoderSwerve(int id) {
     encoder = new CANcoder(id);
   }
 
   /**
    * Initialize the CANCoder on the CANivore.
    *
-   * @param id     CAN ID.
+   * @param id CAN ID.
    * @param canbus CAN bus to initialize it on.
    */
-  public CANCoderSwerve(int id, String canbus)
-  {
+  public CANCoderSwerve(int id, String canbus) {
     encoder = new CANcoder(id, canbus);
   }
 
-  /**
-   * Reset the encoder to factory defaults.
-   */
+  /** Reset the encoder to factory defaults. */
   @Override
-  public void factoryDefault()
-  {
+  public void factoryDefault() {
     encoder.getConfigurator().apply(new CANcoderConfiguration());
   }
 
-  /**
-   * Clear sticky faults on the encoder.
-   */
+  /** Clear sticky faults on the encoder. */
   @Override
-  public void clearStickyFaults()
-  {
+  public void clearStickyFaults() {
     encoder.clearStickyFaults();
   }
 
@@ -67,55 +54,55 @@ public class CANCoderSwerve extends SwerveAbsoluteEncoder
    * @param inverted Whether the encoder is inverted.
    */
   @Override
-  public void configure(boolean inverted)
-  {
-    CANcoderConfigurator cfg                       = encoder.getConfigurator();
-    MagnetSensorConfigs  magnetSensorConfiguration = new MagnetSensorConfigs();
+  public void configure(boolean inverted) {
+    CANcoderConfigurator cfg = encoder.getConfigurator();
+    MagnetSensorConfigs magnetSensorConfiguration = new MagnetSensorConfigs();
     cfg.refresh(magnetSensorConfiguration);
-    cfg.apply(magnetSensorConfiguration
-                  .withAbsoluteSensorRange(AbsoluteSensorRangeValue.Unsigned_0To1)
-                  .withSensorDirection(inverted ? SensorDirectionValue.Clockwise_Positive
-                                                : SensorDirectionValue.CounterClockwise_Positive));
+    cfg.apply(
+        magnetSensorConfiguration
+            .withAbsoluteSensorRange(AbsoluteSensorRangeValue.Unsigned_0To1)
+            .withSensorDirection(
+                inverted
+                    ? SensorDirectionValue.Clockwise_Positive
+                    : SensorDirectionValue.CounterClockwise_Positive));
   }
 
   /**
-   * Get the absolute position of the encoder. Sets {@link SwerveAbsoluteEncoder#readingError} on erroneous readings.
+   * Get the absolute position of the encoder. Sets {@link SwerveAbsoluteEncoder#readingError} on
+   * erroneous readings.
    *
    * @return Absolute position in degrees from [0, 360).
    */
   @Override
-  public double getAbsolutePosition()
-  {
+  public double getAbsolutePosition() {
     readingError = false;
     MagnetHealthValue strength = encoder.getMagnetHealth().getValue();
 
-    if (strength != MagnetHealthValue.Magnet_Green)
-    {
+    if (strength != MagnetHealthValue.Magnet_Green) {
       DriverStation.reportWarning(
           "CANCoder " + encoder.getDeviceID() + " magnetic field is less than ideal.\n", false);
     }
-    if (strength == MagnetHealthValue.Magnet_Invalid || strength == MagnetHealthValue.Magnet_Red)
-    {
+    if (strength == MagnetHealthValue.Magnet_Invalid || strength == MagnetHealthValue.Magnet_Red) {
       readingError = true;
-      DriverStation.reportWarning("CANCoder " + encoder.getDeviceID() + " reading was faulty.\n", false);
+      DriverStation.reportWarning(
+          "CANCoder " + encoder.getDeviceID() + " reading was faulty.\n", false);
       return 0;
     }
     StatusSignal<Double> angle = encoder.getAbsolutePosition().refresh();
 
     // Taken from democat's library.
-    // Source: https://github.com/democat3457/swerve-lib/blob/7c03126b8c22f23a501b2c2742f9d173a5bcbc40/src/main/java/com/swervedrivespecialties/swervelib/ctre/CanCoderFactoryBuilder.java#L51-L74
-    for (int i = 0; i < maximumRetries; i++)
-    {
-      if (angle.getStatus() == StatusCode.OK)
-      {
+    // Source:
+    // https://github.com/democat3457/swerve-lib/blob/7c03126b8c22f23a501b2c2742f9d173a5bcbc40/src/main/java/com/swervedrivespecialties/swervelib/ctre/CanCoderFactoryBuilder.java#L51-L74
+    for (int i = 0; i < maximumRetries; i++) {
+      if (angle.getStatus() == StatusCode.OK) {
         break;
       }
       angle = angle.waitForUpdate(0.01);
     }
-    if (angle.getStatus() != StatusCode.OK)
-    {
+    if (angle.getStatus() != StatusCode.OK) {
       readingError = true;
-      DriverStation.reportWarning("CANCoder " + encoder.getDeviceID() + " reading was faulty, ignoring.\n", false);
+      DriverStation.reportWarning(
+          "CANCoder " + encoder.getDeviceID() + " reading was faulty, ignoring.\n", false);
     }
 
     return angle.getValue() * 360;
@@ -127,8 +114,7 @@ public class CANCoderSwerve extends SwerveAbsoluteEncoder
    * @return Absolute encoder object.
    */
   @Override
-  public Object getAbsoluteEncoder()
-  {
+  public Object getAbsoluteEncoder() {
     return encoder;
   }
 
@@ -139,22 +125,23 @@ public class CANCoderSwerve extends SwerveAbsoluteEncoder
    * @return if setting Absolute Encoder Offset was successful or not.
    */
   @Override
-  public boolean setAbsoluteEncoderOffset(double offset)
-  {
-    CANcoderConfigurator cfg    = encoder.getConfigurator();
-    MagnetSensorConfigs  magCfg = new MagnetSensorConfigs();
-    StatusCode           error  = cfg.refresh(magCfg);
-    if (error != StatusCode.OK)
-    {
+  public boolean setAbsoluteEncoderOffset(double offset) {
+    CANcoderConfigurator cfg = encoder.getConfigurator();
+    MagnetSensorConfigs magCfg = new MagnetSensorConfigs();
+    StatusCode error = cfg.refresh(magCfg);
+    if (error != StatusCode.OK) {
       return false;
     }
     error = cfg.apply(magCfg.withMagnetOffset(offset / 360));
-    if (error == StatusCode.OK)
-    {
+    if (error == StatusCode.OK) {
       return true;
     }
     DriverStation.reportWarning(
-        "Failure to set CANCoder " + encoder.getDeviceID() + " Absolute Encoder Offset Error: " + error, false);
+        "Failure to set CANCoder "
+            + encoder.getDeviceID()
+            + " Absolute Encoder Offset Error: "
+            + error,
+        false);
     return false;
   }
 
@@ -164,8 +151,7 @@ public class CANCoderSwerve extends SwerveAbsoluteEncoder
    * @return velocity in degrees/sec.
    */
   @Override
-  public double getVelocity()
-  {
+  public double getVelocity() {
     return encoder.getVelocity().getValue() * 360;
   }
 }

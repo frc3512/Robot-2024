@@ -4,32 +4,27 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 
 /**
- * DutyCycle encoders such as "US Digital MA3 with PWM Output, the CTRE Mag Encoder, the Rev Hex Encoder, and the AM Mag
- * Encoder." attached via a PWM lane.
- * <p>
- * Credits to
- * <a href="https://github.com/p2reneker25/2035-YAGSL/blob/main/swervelib/encoders/PWMDutyCycleEncoderSwerve.java">
+ * DutyCycle encoders such as "US Digital MA3 with PWM Output, the CTRE Mag Encoder, the Rev Hex
+ * Encoder, and the AM Mag Encoder." attached via a PWM lane.
+ *
+ * <p>Credits to <a
+ * href="https://github.com/p2reneker25/2035-YAGSL/blob/main/swervelib/encoders/PWMDutyCycleEncoderSwerve.java">
  * p2reneker25</a> for building this.
  */
-public class PWMDutyCycleEncoderSwerve extends SwerveAbsoluteEncoder
-{
+public class PWMDutyCycleEncoderSwerve extends SwerveAbsoluteEncoder {
 
-  /**
-   * Duty Cycle Encoder.
-   */
+  /** Duty Cycle Encoder. */
   private final DutyCycleEncoder encoder;
-  /**
-   * Inversion state.
-   */
-  private       boolean          isInverted;
+
+  /** Inversion state. */
+  private boolean isInverted;
 
   /**
    * Constructor for the PWM duty cycle encoder.
    *
    * @param pin PWM lane for the encoder.
    */
-  public PWMDutyCycleEncoderSwerve(int pin)
-  {
+  public PWMDutyCycleEncoderSwerve(int pin) {
     encoder = new DutyCycleEncoder(pin);
   }
 
@@ -39,8 +34,7 @@ public class PWMDutyCycleEncoderSwerve extends SwerveAbsoluteEncoder
    * @param inverted Whether the encoder is inverted.
    */
   @Override
-  public void configure(boolean inverted)
-  {
+  public void configure(boolean inverted) {
     isInverted = inverted;
   }
 
@@ -50,8 +44,7 @@ public class PWMDutyCycleEncoderSwerve extends SwerveAbsoluteEncoder
    * @return Absolute position in degrees from [0, 360).
    */
   @Override
-  public double getAbsolutePosition()
-  {
+  public double getAbsolutePosition() {
     return (isInverted ? -1.0 : 1.0) * encoder.getAbsolutePosition() * 360;
   }
 
@@ -61,8 +54,7 @@ public class PWMDutyCycleEncoderSwerve extends SwerveAbsoluteEncoder
    * @return {@link DutyCycleEncoder} from the class.
    */
   @Override
-  public Object getAbsoluteEncoder()
-  {
+  public Object getAbsoluteEncoder() {
     return encoder;
   }
 
@@ -72,27 +64,21 @@ public class PWMDutyCycleEncoderSwerve extends SwerveAbsoluteEncoder
    * @return velocity in degrees/sec.
    */
   @Override
-  public double getVelocity()
-  {
-    DriverStation.reportWarning("The PWM Duty Cycle encoder may not report accurate velocities!", true);
+  public double getVelocity() {
+    DriverStation.reportWarning(
+        "The PWM Duty Cycle encoder may not report accurate velocities!", true);
     return encoder.get();
   }
 
-  /**
-   * Reset the encoder to factory defaults.
-   */
+  /** Reset the encoder to factory defaults. */
   @Override
-  public void factoryDefault()
-  {
+  public void factoryDefault() {
     // Do nothing
   }
 
-  /**
-   * Clear sticky faults on the encoder.
-   */
+  /** Clear sticky faults on the encoder. */
   @Override
-  public void clearStickyFaults()
-  {
+  public void clearStickyFaults() {
     // Do nothing
   }
 
@@ -103,8 +89,7 @@ public class PWMDutyCycleEncoderSwerve extends SwerveAbsoluteEncoder
    * @return Always true due to no external device commands.
    */
   @Override
-  public boolean setAbsoluteEncoderOffset(double offset)
-  {
+  public boolean setAbsoluteEncoderOffset(double offset) {
     encoder.setPositionOffset(offset);
 
     return true;

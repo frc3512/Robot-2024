@@ -8,30 +8,25 @@ import edu.wpi.first.wpilibj.DriverStation;
 import java.util.function.Supplier;
 import swervelib.motors.SwerveMotor;
 
-/**
- * SparkMax absolute encoder, attached through the data port analog pin.
- */
-public class SparkMaxAnalogEncoderSwerve extends SwerveAbsoluteEncoder
-{
+/** SparkMax absolute encoder, attached through the data port analog pin. */
+public class SparkMaxAnalogEncoderSwerve extends SwerveAbsoluteEncoder {
 
   /**
-   * The {@link SparkAnalogSensor} representing the duty cycle encoder attached to the SparkMax analog port.
+   * The {@link SparkAnalogSensor} representing the duty cycle encoder attached to the SparkMax
+   * analog port.
    */
   public SparkAnalogSensor encoder;
 
   /**
-   * Create the {@link SparkMaxAnalogEncoderSwerve} object as a analog sensor from the {@link CANSparkMax} motor data
-   * port analog pin.
+   * Create the {@link SparkMaxAnalogEncoderSwerve} object as a analog sensor from the {@link
+   * CANSparkMax} motor data port analog pin.
    *
    * @param motor Motor to create the encoder from.
    */
-  public SparkMaxAnalogEncoderSwerve(SwerveMotor motor)
-  {
-    if (motor.getMotor() instanceof CANSparkMax)
-    {
+  public SparkMaxAnalogEncoderSwerve(SwerveMotor motor) {
+    if (motor.getMotor() instanceof CANSparkMax) {
       encoder = ((CANSparkMax) motor.getMotor()).getAnalog(Mode.kAbsolute);
-    } else
-    {
+    } else {
       throw new RuntimeException("Motor given to instantiate SparkMaxEncoder is not a CANSparkMax");
     }
   }
@@ -41,33 +36,24 @@ public class SparkMaxAnalogEncoderSwerve extends SwerveAbsoluteEncoder
    *
    * @param config Lambda supplier returning the error state.
    */
-  private void configureSparkMax(Supplier<REVLibError> config)
-  {
-    for (int i = 0; i < maximumRetries; i++)
-    {
-      if (config.get() == REVLibError.kOk)
-      {
+  private void configureSparkMax(Supplier<REVLibError> config) {
+    for (int i = 0; i < maximumRetries; i++) {
+      if (config.get() == REVLibError.kOk) {
         return;
       }
     }
     DriverStation.reportWarning("Failure configuring encoder", true);
   }
 
-  /**
-   * Reset the encoder to factory defaults.
-   */
+  /** Reset the encoder to factory defaults. */
   @Override
-  public void factoryDefault()
-  {
+  public void factoryDefault() {
     // Do nothing
   }
 
-  /**
-   * Clear sticky faults on the encoder.
-   */
+  /** Clear sticky faults on the encoder. */
   @Override
-  public void clearStickyFaults()
-  {
+  public void clearStickyFaults() {
     // Do nothing
   }
 
@@ -77,8 +63,7 @@ public class SparkMaxAnalogEncoderSwerve extends SwerveAbsoluteEncoder
    * @param inverted Whether the encoder is inverted.
    */
   @Override
-  public void configure(boolean inverted)
-  {
+  public void configure(boolean inverted) {
     encoder.setInverted(inverted);
   }
 
@@ -88,8 +73,7 @@ public class SparkMaxAnalogEncoderSwerve extends SwerveAbsoluteEncoder
    * @return Absolute position in degrees from [0, 360).
    */
   @Override
-  public double getAbsolutePosition()
-  {
+  public double getAbsolutePosition() {
     return encoder.getPosition();
   }
 
@@ -99,8 +83,7 @@ public class SparkMaxAnalogEncoderSwerve extends SwerveAbsoluteEncoder
    * @return Absolute encoder object.
    */
   @Override
-  public Object getAbsoluteEncoder()
-  {
+  public Object getAbsoluteEncoder() {
     return encoder;
   }
 
@@ -111,8 +94,7 @@ public class SparkMaxAnalogEncoderSwerve extends SwerveAbsoluteEncoder
    * @return if setting Absolute Encoder Offset was successful or not.
    */
   @Override
-  public boolean setAbsoluteEncoderOffset(double offset)
-  {
+  public boolean setAbsoluteEncoderOffset(double offset) {
     DriverStation.reportWarning("SparkMax Analog Sensor's do not support integrated offsets", true);
     return false;
   }
@@ -123,8 +105,7 @@ public class SparkMaxAnalogEncoderSwerve extends SwerveAbsoluteEncoder
    * @return velocity in degrees/sec.
    */
   @Override
-  public double getVelocity()
-  {
+  public double getVelocity() {
     return encoder.getVelocity();
   }
 }
