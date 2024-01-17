@@ -3,7 +3,6 @@ package swervelib.encoders;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkAnalogSensor;
 import com.revrobotics.SparkAnalogSensor.Mode;
-
 import edu.wpi.first.wpilibj.DriverStation;
 import swervelib.motors.SwerveMotor;
 
@@ -34,19 +33,11 @@ public class SparkMaxAnalogEncoderSwerve extends SwerveAbsoluteEncoder {
    * Run the configuration until it succeeds or times out.
    *
    * @param config Lambda supplier returning the error state.
-   * 
-   * UNUSED METHOD
-   * 
-   * private void configureSparkMax(Supplier<REVLibError> config) {
-    for (int i = 0; i < maximumRetries; i++) {
-      if (config.get() == REVLibError.kOk) {
-        return;
-      }
-    }
-    DriverStation.reportWarning("Failure configuring encoder", true);
-  }
+   *     <p>UNUSED METHOD
+   *     <p>private void configureSparkMax(Supplier<REVLibError> config) { for (int i = 0; i <
+   *     maximumRetries; i++) { if (config.get() == REVLibError.kOk) { return; } }
+   *     DriverStation.reportWarning("Failure configuring encoder", true); }
    */
-  
 
   /** Reset the encoder to factory defaults. */
   @Override

@@ -1,12 +1,10 @@
 package swervelib.parser;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import swervelib.SwerveDrive;
 import swervelib.SwerveModule;
 import swervelib.math.SwerveMath;
@@ -87,18 +85,10 @@ public class SwerveParser {
    *
    * @param file JSON File to open.
    * @return JsonNode of file.
-   * 
-   * this method was not being used locally
-   * 
-   * private JsonNode openJson(File file) {
-    try {
-      return new ObjectMapper().readTree(file);
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
-  }
+   *     <p>this method was not being used locally
+   *     <p>private JsonNode openJson(File file) { try { return new ObjectMapper().readTree(file); }
+   *     catch (IOException e) { throw new RuntimeException(e); } }
    */
-  
 
   /**
    * Check directory structure.
