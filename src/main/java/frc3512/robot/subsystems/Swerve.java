@@ -1,5 +1,8 @@
 package frc3512.robot.subsystems;
 
+import java.io.File;
+import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -14,8 +17,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc3512.lib.logging.SpartanEntryManager;
 import frc3512.robot.Constants;
-import java.io.File;
-import java.util.function.DoubleSupplier;
 import swervelib.SwerveController;
 import swervelib.SwerveDrive;
 import swervelib.parser.SwerveDriveConfiguration;
@@ -117,6 +118,18 @@ public class Swerve extends SubsystemBase {
         rotation,
         fieldRelative,
         false); // Open loop is disabled since it shouldn't be used most of the time.
+  }
+
+  public Command driveCommand(DoubleSupplier translationX, DoubleSupplier translationY, DoubleSupplier angularRotationX)
+  {
+    return run(() -> {
+      // Make the robot move
+      swerve.drive(new Translation2d(Math.pow(translationX.getAsDouble(), 3) * swerve.getMaximumVelocity(),
+                                          Math.pow(translationY.getAsDouble(), 3) * swerve.getMaximumVelocity()),
+                        Math.pow(angularRotationX.getAsDouble(), 3) * swerve.getMaximumAngularVelocity(),
+                        true,
+                        false);
+    });
   }
 
   /**
