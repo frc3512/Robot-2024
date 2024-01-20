@@ -71,15 +71,15 @@ public class Swerve extends SubsystemBase {
         () -> {
           swerve.drive(
               new Translation2d(
-                      MathUtil.applyDeadband(
-                          translationX.getAsDouble() * swerve.getMaximumVelocity(),
-                          Constants.SwerveConstants.swerveDeadband),
-                      MathUtil.applyDeadband(
-                          translationY.getAsDouble() * swerve.getMaximumVelocity(),
-                          Constants.SwerveConstants.swerveDeadband)),
                   MathUtil.applyDeadband(
-                      angularRotationX.getAsDouble() * swerve.getMaximumAngularVelocity(),
+                      translationX.getAsDouble() * swerve.getMaximumVelocity(),
                       Constants.SwerveConstants.swerveDeadband),
+                  MathUtil.applyDeadband(
+                      translationY.getAsDouble() * swerve.getMaximumVelocity(),
+                      Constants.SwerveConstants.swerveDeadband)),
+              MathUtil.applyDeadband(
+                  angularRotationX.getAsDouble() * swerve.getMaximumAngularVelocity(),
+                  Constants.SwerveConstants.swerveDeadband),
               true,
               false);
         });
