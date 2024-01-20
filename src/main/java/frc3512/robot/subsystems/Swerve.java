@@ -1,7 +1,6 @@
 package frc3512.robot.subsystems;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -26,12 +25,6 @@ public class Swerve extends SubsystemBase {
   private final SwerveDrive swerve;
 
   // Allows the swerve to gradually slow down rather than quickly stop, preventing tipping
-  private SlewRateLimiter translationLimiter =
-      new SlewRateLimiter(Constants.SwerveConstants.maximumSpeed);
-  private SlewRateLimiter strafeLimiter =
-      new SlewRateLimiter(Constants.SwerveConstants.maximumSpeed);
-  private SlewRateLimiter rotationLimiter =
-      new SlewRateLimiter(Constants.SwerveConstants.maximumSpeed);
 
   public Swerve() {
 
@@ -45,19 +38,16 @@ public class Swerve extends SubsystemBase {
       if (Constants.GeneralConstants.robotType == Constants.RobotType.COMP) {
         swerve =
             new SwerveParser(new File(Filesystem.getDeployDirectory(), "swerve/comp"))
-                .createSwerveDrive(
-                    Constants.SwerveConstants.maximumSpeed);
+                .createSwerveDrive(Constants.SwerveConstants.maximumSpeed);
       } else if (Constants.GeneralConstants.robotType == Constants.RobotType.PROTO) {
         swerve =
             new SwerveParser(new File(Filesystem.getDeployDirectory(), "swerve/proto"))
-                .createSwerveDrive(
-                    Constants.SwerveConstants.maximumSpeed);
+                .createSwerveDrive(Constants.SwerveConstants.maximumSpeed);
       } else {
         // Default back to the comp bot
         swerve =
             new SwerveParser(new File(Filesystem.getDeployDirectory(), "swerve/comp"))
-                .createSwerveDrive(
-                    Constants.SwerveConstants.maximumSpeed);
+                .createSwerveDrive(Constants.SwerveConstants.maximumSpeed);
       }
     } catch (Exception e) {
       throw new RuntimeException(e);
@@ -81,18 +71,15 @@ public class Swerve extends SubsystemBase {
         () -> {
           swerve.drive(
               new Translation2d(
-                  translationLimiter.calculate(
-                      MathUtil.applyDeadband(
-                          translationX.getAsDouble() * swerve.getMaximumVelocity(),
-                          Constants.SwerveConstants.swerveDeadband)),
-                  strafeLimiter.calculate(
-                      MathUtil.applyDeadband(
-                          translationY.getAsDouble() * swerve.getMaximumVelocity(),
-                          Constants.SwerveConstants.swerveDeadband))),
-              rotationLimiter.calculate(
                   MathUtil.applyDeadband(
-                      angularRotationX.getAsDouble() * swerve.getMaximumAngularVelocity(),
+                      translationX.getAsDouble() * swerve.getMaximumVelocity(),
+                      Constants.SwerveConstants.swerveDeadband),
+                  MathUtil.applyDeadband(
+                      translationY.getAsDouble() * swerve.getMaximumVelocity(),
                       Constants.SwerveConstants.swerveDeadband)),
+              MathUtil.applyDeadband(
+                  angularRotationX.getAsDouble() * swerve.getMaximumAngularVelocity(),
+                  Constants.SwerveConstants.swerveDeadband),
               true,
               false);
         });

@@ -23,7 +23,7 @@ public final class Constants {
     public static final double swerveDeadband = 0.1;
 
     public static final double maximumSpeed = Units.feetToMeters(19.0);
-    }
+  }
 
   public static final class GeneralConstants {
     public static final boolean tuningMode = true;

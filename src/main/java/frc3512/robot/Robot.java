@@ -83,7 +83,9 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during autonomous. */
   @Override
-  public void autonomousPeriodic() {}
+  public void autonomousPeriodic() {
+    m_robot.setMotorBrake(true);
+  }
 
   @Override
   public void teleopInit() {
@@ -100,7 +102,9 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+    m_robot.setMotorBrake(true);
+  }
 
   @Override
   public void testInit() {
