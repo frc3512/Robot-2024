@@ -264,4 +264,9 @@ public class Swerve extends SubsystemBase {
   public Rotation2d getPitch() {
     return swerve.getPitch();
   }
+
+  @Override
+  public void periodic() {
+    swerve.updateOdometry();
+  }
 }
