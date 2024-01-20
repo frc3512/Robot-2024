@@ -1,5 +1,6 @@
 package frc3512.robot.subsystems;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -36,9 +37,9 @@ public class Superstructure extends SubsystemBase {
   public void configureAxisActions() {
     swerve.setDefaultCommand(
         swerve.driveCommand(
-            () -> driverXbox.getRawAxis(translationAxis),
-            () -> driverXbox.getRawAxis(strafeAxis),
-            () -> driverXbox.getRawAxis(rotationAxis)));
+            () -> MathUtil.applyDeadband(driverXbox.getRawAxis(translationAxis), 0.1),
+            () -> MathUtil.applyDeadband(driverXbox.getRawAxis(strafeAxis), 0.1),
+            () -> MathUtil.applyDeadband(driverXbox.getRawAxis(rotationAxis), 0.1)));
   }
 
   public void setMotorBrake(boolean brake) {
