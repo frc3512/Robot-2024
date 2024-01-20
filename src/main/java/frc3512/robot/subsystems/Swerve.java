@@ -45,19 +45,16 @@ public class Swerve extends SubsystemBase {
       if (Constants.GeneralConstants.robotType == Constants.RobotType.COMP) {
         swerve =
             new SwerveParser(new File(Filesystem.getDeployDirectory(), "swerve/comp"))
-                .createSwerveDrive(
-                    Constants.SwerveConstants.maximumSpeed);
+                .createSwerveDrive(Constants.SwerveConstants.maximumSpeed);
       } else if (Constants.GeneralConstants.robotType == Constants.RobotType.PROTO) {
         swerve =
             new SwerveParser(new File(Filesystem.getDeployDirectory(), "swerve/proto"))
-                .createSwerveDrive(
-                    Constants.SwerveConstants.maximumSpeed);
+                .createSwerveDrive(Constants.SwerveConstants.maximumSpeed);
       } else {
         // Default back to the comp bot
         swerve =
             new SwerveParser(new File(Filesystem.getDeployDirectory(), "swerve/comp"))
-                .createSwerveDrive(
-                    Constants.SwerveConstants.maximumSpeed);
+                .createSwerveDrive(Constants.SwerveConstants.maximumSpeed);
       }
     } catch (Exception e) {
       throw new RuntimeException(e);
