@@ -24,8 +24,6 @@ import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
 public class Swerve extends SubsystemBase {
   private final SwerveDrive swerve;
 
-  // Allows the swerve to gradually slow down rather than quickly stop, preventing tipping
-
   public Swerve() {
 
     if (SpartanEntryManager.isTuningMode()) {
