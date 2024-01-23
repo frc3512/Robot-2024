@@ -26,9 +26,6 @@ public class TalonFXSwerve extends SwerveMotor {
   /** Velocity voltage setter for controlling drive motor. */
   private final VelocityVoltage m_velocityVoltageSetter = new VelocityVoltage(0);
 
-  /** Conversion factor for the motor. */
-  private double conversionFactor;
-
   /** TalonFX motor controller. */
   TalonFX motor;
 
@@ -136,8 +133,6 @@ public class TalonFXSwerve extends SwerveMotor {
     if (!isDriveMotor) {
       positionConversionFactor *= 360;
     }
-    conversionFactor = positionConversionFactor;
-
     configuration.MotionMagic =
         configuration.MotionMagic.withMotionMagicCruiseVelocity(100.0 / positionConversionFactor)
             .withMotionMagicAcceleration((100.0 / positionConversionFactor) / 0.100)
@@ -203,8 +198,6 @@ public class TalonFXSwerve extends SwerveMotor {
     //    motor.setStatusFramePeriod(StatusFrameEnhanced.Status_21_FeedbackIntegrated, CANStatus21);
     //    motor.setStatusFramePeriod(StatusFrameEnhanced.Status_Brushless_Current,
     // CANStatusCurrent);
-
-    // TODO: Configure Status Frame 2 thru 21 if necessary
     // https://v5.docs.ctr-electronics.com/en/stable/ch18_CommonAPI.html#setting-status-frame-periods
   }
 
