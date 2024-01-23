@@ -27,7 +27,7 @@ public class Superstructure extends SubsystemBase {
   private final int rotationAxis = XboxController.Axis.kRightX.value;
 
   public Superstructure() {
-    autos = new Autos(this);
+    autos = new Autos(this, swerve);
   }
 
   public void configureBindings() {
