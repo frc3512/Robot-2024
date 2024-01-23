@@ -19,6 +19,9 @@ public class Pigeon2Swerve extends SwerveIMU {
   /** Offset for the Pigeon 2. */
   private Rotation3d offset = new Rotation3d();
 
+  /** Inversion for the gyro */
+  private boolean invertedIMU = false;
+
   /**
    * Generate the SwerveIMU for pigeon.
    *
@@ -65,22 +68,34 @@ public class Pigeon2Swerve extends SwerveIMU {
   }
 
   /**
+   * Set the gyro to invert its default direction
+   *
+   * @param invertIMU invert gyro direction
+   */
+  public void setInverted(boolean invertIMU) {
+    invertedIMU = invertIMU;
+  }
+
+  /**
    * Fetch the {@link Rotation3d} from the IMU without any zeroing. Robot relative.
    *
    * @return {@link Rotation3d} from the IMU.
    */
   @Override
   public Rotation3d getRawRotation3d() {
+    // TODO: Switch to suppliers.
     StatusSignal<Double> w = imu.getQuatW();
     StatusSignal<Double> x = imu.getQuatX();
     StatusSignal<Double> y = imu.getQuatY();
     StatusSignal<Double> z = imu.getQuatZ();
-    return new Rotation3d(
-        new Quaternion(
-            w.refresh().getValue(),
-            x.refresh().getValue(),
-            y.refresh().getValue(),
-            z.refresh().getValue()));
+    Rotation3d reading =
+        new Rotation3d(
+            new Quaternion(
+                w.refresh().getValue(),
+                x.refresh().getValue(),
+                y.refresh().getValue(),
+                z.refresh().getValue()));
+    return invertedIMU ? reading.unaryMinus() : reading;
   }
 
   /**
@@ -101,6 +116,7 @@ public class Pigeon2Swerve extends SwerveIMU {
    */
   @Override
   public Optional<Translation3d> getAccel() {
+    // TODO: Switch to suppliers.
     StatusSignal<Double> xAcc = imu.getAccelerationX();
     StatusSignal<Double> yAcc = imu.getAccelerationX();
     StatusSignal<Double> zAcc = imu.getAccelerationX();

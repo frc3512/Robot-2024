@@ -16,7 +16,7 @@ public class SwerveController {
   public final SwerveControllerConfiguration config;
 
   /** PID Controller for the robot heading. */
-  public final PIDController thetaController;
+  public final PIDController thetaController; // TODO: Switch to ProfilePIDController
 
   /** Last angle as a scalar [-1,1] the robot was set to. */
   public double lastAngleScalar;

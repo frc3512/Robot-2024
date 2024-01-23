@@ -107,7 +107,7 @@ public class SwerveModule {
     angleMotor.configurePIDF(moduleConfiguration.anglePIDF);
     angleMotor.configurePIDWrapping(0, 180);
     angleMotor.setInverted(moduleConfiguration.angleMotorInverted);
-    angleMotor.setMotorBrake(true);
+    angleMotor.setMotorBrake(false);
 
     // Config drive motor/controller
     driveMotor.configureIntegratedEncoder(moduleConfiguration.conversionFactors.drive);
@@ -188,7 +188,7 @@ public class SwerveModule {
       /* If the error is close to 0.25 rotations, then we're 90 degrees, so movement doesn't help us at all */
       double cosineScalar = Math.cos(Units.degreesToRadians(steerMotorError));
       /* Make sure we don't invert our drive, even though we shouldn't ever target over 90 degrees anyway */
-      if (cosineScalar < 0.0) {
+      if (cosineScalar < 0.0 || desiredState.speedMetersPerSecond == 0) {
         cosineScalar = 0.0;
       }
 
