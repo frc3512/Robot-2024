@@ -170,7 +170,7 @@ public class Swerve extends SubsystemBase {
    * @return The yaw angle
    */
   public Rotation2d getHeading() {
-    return swerve.getYaw();
+    return swerve.getOdometryHeading();
   }
 
   /**
