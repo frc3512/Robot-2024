@@ -19,7 +19,7 @@ public class Superstructure extends SubsystemBase {
 
   // Joysticks
   private final CommandXboxController driverXbox =
-      new CommandXboxController(Constants.OperatorConstants.kDriverControllerPort);
+      new CommandXboxController(Constants.OperatorConstants.driverControllerPort);
 
   // Xbox Axis Values
   private final int translationAxis = XboxController.Axis.kLeftY.value;
@@ -27,7 +27,7 @@ public class Superstructure extends SubsystemBase {
   private final int rotationAxis = XboxController.Axis.kRightX.value;
 
   public Superstructure() {
-    autos = new Autos(this);
+    autos = new Autos(this, swerve);
   }
 
   public void configureBindings() {
@@ -37,9 +37,17 @@ public class Superstructure extends SubsystemBase {
   public void configureAxisActions() {
     swerve.setDefaultCommand(
         swerve.driveCommand(
-            () -> MathUtil.applyDeadband(driverXbox.getRawAxis(translationAxis), 0.1),
-            () -> MathUtil.applyDeadband(driverXbox.getRawAxis(strafeAxis), 0.1),
-            () -> MathUtil.applyDeadband(driverXbox.getRawAxis(rotationAxis), 0.1)));
+            () ->
+                MathUtil.applyDeadband(
+                    driverXbox.getRawAxis(translationAxis),
+                    Constants.SwerveConstants.swerveDeadband),
+            () ->
+                MathUtil.applyDeadband(
+                    driverXbox.getRawAxis(strafeAxis), Constants.SwerveConstants.swerveDeadband),
+            () ->
+                MathUtil.applyDeadband(
+                    driverXbox.getRawAxis(rotationAxis),
+                    Constants.SwerveConstants.swerveDeadband)));
   }
 
   public void setMotorBrake(boolean brake) {
