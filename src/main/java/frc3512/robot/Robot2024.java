@@ -1,9 +1,6 @@
 package frc3512.robot;
 
-import com.pathplanner.lib.auto.NamedCommands;
-
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc3512.robot.subsystems.Superstructure;
 
 public class Robot2024 {
