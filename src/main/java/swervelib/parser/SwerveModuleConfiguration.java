@@ -49,6 +49,9 @@ public class SwerveModuleConfiguration {
   /** Name for the swerve module for telemetry. */
   public String name;
 
+  /** Should do cosine compensation when not pointing correct direction;. */
+  public boolean useCosineCompensator;
+
   /**
    * Construct a configuration object for swerve modules.
    *
@@ -66,6 +69,7 @@ public class SwerveModuleConfiguration {
    * @param physicalCharacteristics Physical characteristics of the swerve module.
    * @param name The name for the swerve module.
    * @param conversionFactors Conversion factors to be applied to the drive and angle motors.
+   * @param useCosineCompensator Should use cosineCompensation.
    */
   public SwerveModuleConfiguration(
       SwerveMotor driveMotor,
@@ -81,7 +85,8 @@ public class SwerveModuleConfiguration {
       boolean absoluteEncoderInverted,
       boolean driveMotorInverted,
       boolean angleMotorInverted,
-      String name) {
+      String name,
+      boolean useCosineCompensator) {
     this.driveMotor = driveMotor;
     this.angleMotor = angleMotor;
     this.conversionFactors = conversionFactors;
@@ -95,6 +100,7 @@ public class SwerveModuleConfiguration {
     this.velocityPIDF = velocityPIDF;
     this.physicalCharacteristics = physicalCharacteristics;
     this.name = name;
+    this.useCosineCompensator = useCosineCompensator;
   }
 
   /**
@@ -112,6 +118,7 @@ public class SwerveModuleConfiguration {
    * @param velocityPIDF Velocity PIDF configuration.
    * @param physicalCharacteristics Physical characteristics of the swerve module.
    * @param name Name for the module.
+   * @param useCosineCompensator Should use cosineCompensation.
    */
   public SwerveModuleConfiguration(
       SwerveMotor driveMotor,
@@ -124,7 +131,8 @@ public class SwerveModuleConfiguration {
       PIDFConfig anglePIDF,
       PIDFConfig velocityPIDF,
       SwerveModulePhysicalCharacteristics physicalCharacteristics,
-      String name) {
+      String name,
+      boolean useCosineCompensator) {
     this(
         driveMotor,
         angleMotor,
@@ -139,6 +147,7 @@ public class SwerveModuleConfiguration {
         false,
         false,
         false,
-        name);
+        name,
+        useCosineCompensator);
   }
 }
