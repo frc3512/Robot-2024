@@ -25,6 +25,6 @@ public final class Constants {
   public static final class GeneralConstants {
     public static final boolean tuningMode = true;
 
-    public static final RobotType robotType = RobotType.PROTO;
+    public static final RobotType robotType = RobotType.COMP;
   }
 }
