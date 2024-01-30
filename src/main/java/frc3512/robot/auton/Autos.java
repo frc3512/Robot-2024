@@ -49,20 +49,21 @@ public class Autos {
           // This will flip the path being followed to the red side of the field.
           // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
 
-          /*var alliance = DriverStation.getAlliance();
+          var alliance = DriverStation.getAlliance();
           if (alliance.isPresent()) {
-            return alliance.get() == DriverStation.Alliance.Red;
+            return alliance.get() == DriverStation.Alliance.Blue;
           }
-          return false;*/
-          return true;
+          return false;
         },
         swerve // Reference to this subsystem to set requirements
         );
 
     autonChooser = new SendableChooser<Command>();
     autonChooser.setDefaultOption("No-Op", new InstantCommand());
-    autonChooser.addOption("Forward", foward());
-    autonChooser.addOption("Right", right());
+    autonChooser.addOption("L Path", lPath());
+    autonChooser.addOption("Straight", straight());
+    autonChooser.addOption("Square", square());
+    autonChooser.addOption("Spin", spin());
 
     SmartDashboard.putData("Auton Chooser", autonChooser);
   }
@@ -80,12 +81,20 @@ public class Autos {
     return autonChooser.getSelected();
   }
 
-  public Command foward() {
+  public Command lPath() {
     // return AutoBuilder.buildAuto("Forward");
-    return AutoBuilder.followPath(PathPlannerPath.fromPathFile("Forward"));
+    return AutoBuilder.followPath(PathPlannerPath.fromPathFile("L path"));
   }
 
-  public Command right() {
-    return AutoBuilder.followPath(PathPlannerPath.fromPathFile("Right"));
+  public Command straight() {
+    return AutoBuilder.followPath(PathPlannerPath.fromPathFile("Straight Line"));
+  }
+
+  public Command square() {
+    return AutoBuilder.followPath(PathPlannerPath.fromPathFile("Square"));
+  }
+
+  public Command spin() {
+    return AutoBuilder.followPath(PathPlannerPath.fromPathFile("Spin Path"));
   }
 }
