@@ -1,11 +1,11 @@
 package frc3512.robot.auton;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -28,6 +28,8 @@ public class Autos {
     eventMap = new HashMap<>();
     setMarkers();
 
+    NamedCommands.registerCommand("Reset Gyro", resetGyro());
+
     AutoBuilder.configureHolonomic(
         swerve::getPose, // Robot pose supplier
         swerve
@@ -41,7 +43,8 @@ public class Autos {
             new PIDConstants(0.01, 0.0, 0.0), // Rotation PID constants
             3.5, // Max module speed, in m/s
             0.4, // Drive base radius in meters. Distance from robot center to furthest module.
-            new ReplanningConfig() // Default path replanning config. See the API for the options
+            new ReplanningConfig(
+                false, false) // Default path replanning config. See the API for the options
             // here
             ),
         () -> {
@@ -49,10 +52,10 @@ public class Autos {
           // This will flip the path being followed to the red side of the field.
           // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
 
-          var alliance = DriverStation.getAlliance();
-          if (alliance.isPresent()) {
-            return alliance.get() == DriverStation.Alliance.Red;
-          }
+          // var alliance = DriverStation.getAlliance();
+          // if (alliance.isPresent()) {
+          //  return alliance.get() == DriverStation.Alliance.Blue;
+          // }
           return false;
         },
         swerve // Reference to this subsystem to set requirements
@@ -60,8 +63,10 @@ public class Autos {
 
     autonChooser = new SendableChooser<Command>();
     autonChooser.setDefaultOption("No-Op", new InstantCommand());
-    autonChooser.addOption("Forward", foward());
-    autonChooser.addOption("Right", right());
+    autonChooser.addOption("L Path", lPath());
+    autonChooser.addOption("Straight", straight());
+    autonChooser.addOption("Square", square());
+    autonChooser.addOption("Spin", spin());
 
     SmartDashboard.putData("Auton Chooser", autonChooser);
   }
@@ -79,12 +84,20 @@ public class Autos {
     return autonChooser.getSelected();
   }
 
-  public Command foward() {
+  public Command lPath() {
     // return AutoBuilder.buildAuto("Forward");
-    return AutoBuilder.followPath(PathPlannerPath.fromPathFile("Forward"));
+    return AutoBuilder.followPath(PathPlannerPath.fromPathFile("L path"));
   }
 
-  public Command right() {
-    return AutoBuilder.followPath(PathPlannerPath.fromPathFile("Right"));
+  public Command straight() {
+    return AutoBuilder.buildAuto("Straight");
+  }
+
+  public Command square() {
+    return AutoBuilder.followPath(PathPlannerPath.fromPathFile("Square"));
+  }
+
+  public Command spin() {
+    return AutoBuilder.followPath(PathPlannerPath.fromPathFile("Spin Path"));
   }
 }
