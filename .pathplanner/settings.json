@@ -5,7 +5,9 @@
   "pathFolders": [
     "Test autos"
   ],
-  "autoFolders": [],
+  "autoFolders": [
+    "Test Autos"
+  ],
   "defaultMaxVel": 3.0,
   "defaultMaxAccel": 3.0,
   "defaultMaxAngVel": 540.0,

@@ -1,6 +1,8 @@
 package frc3512.robot.auton;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
@@ -28,6 +30,8 @@ public class Autos {
     eventMap = new HashMap<>();
     setMarkers();
 
+    NamedCommands.registerCommand("Reset Gyro", resetGyro());
+
     AutoBuilder.configureHolonomic(
         swerve::getPose, // Robot pose supplier
         swerve
@@ -41,7 +45,8 @@ public class Autos {
             new PIDConstants(0.01, 0.0, 0.0), // Rotation PID constants
             3.5, // Max module speed, in m/s
             0.4, // Drive base radius in meters. Distance from robot center to furthest module.
-            new ReplanningConfig() // Default path replanning config. See the API for the options
+            new ReplanningConfig(
+                false, false) // Default path replanning config. See the API for the options
             // here
             ),
         () -> {
@@ -49,10 +54,10 @@ public class Autos {
           // This will flip the path being followed to the red side of the field.
           // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
 
-          var alliance = DriverStation.getAlliance();
-          if (alliance.isPresent()) {
-            return alliance.get() == DriverStation.Alliance.Blue;
-          }
+          //var alliance = DriverStation.getAlliance();
+          //if (alliance.isPresent()) {
+          //  return alliance.get() == DriverStation.Alliance.Blue;
+          //}
           return false;
         },
         swerve // Reference to this subsystem to set requirements
@@ -87,7 +92,7 @@ public class Autos {
   }
 
   public Command straight() {
-    return AutoBuilder.followPath(PathPlannerPath.fromPathFile("Straight Line"));
+    return AutoBuilder.buildAuto("Straight");
   }
 
   public Command square() {
