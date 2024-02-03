@@ -2,12 +2,10 @@ package frc3512.robot.auton;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
-import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -54,10 +52,10 @@ public class Autos {
           // This will flip the path being followed to the red side of the field.
           // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
 
-          //var alliance = DriverStation.getAlliance();
-          //if (alliance.isPresent()) {
+          // var alliance = DriverStation.getAlliance();
+          // if (alliance.isPresent()) {
           //  return alliance.get() == DriverStation.Alliance.Blue;
-          //}
+          // }
           return false;
         },
         swerve // Reference to this subsystem to set requirements
