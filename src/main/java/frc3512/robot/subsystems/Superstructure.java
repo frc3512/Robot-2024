@@ -39,14 +39,14 @@ public class Superstructure extends SubsystemBase {
         swerve.driveCommand(
             () ->
                 MathUtil.applyDeadband(
-                    driverXbox.getRawAxis(translationAxis),
+                    -driverXbox.getRawAxis(translationAxis),
                     Constants.SwerveConstants.swerveDeadband),
             () ->
                 MathUtil.applyDeadband(
-                    driverXbox.getRawAxis(strafeAxis), Constants.SwerveConstants.swerveDeadband),
+                    -driverXbox.getRawAxis(strafeAxis), Constants.SwerveConstants.swerveDeadband),
             () ->
                 MathUtil.applyDeadband(
-                    driverXbox.getRawAxis(rotationAxis),
+                    -driverXbox.getRawAxis(rotationAxis),
                     Constants.SwerveConstants.swerveDeadband)));
   }
 
