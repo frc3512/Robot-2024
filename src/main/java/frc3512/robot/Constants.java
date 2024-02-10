@@ -1,5 +1,6 @@
 package frc3512.robot;
 
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.util.Units;
 
 public final class Constants {
@@ -26,5 +27,10 @@ public final class Constants {
     public static final boolean tuningMode = true;
 
     public static final RobotType robotType = RobotType.COMP;
+  }
+
+  public static final class VisionConstants {
+    public static final String cameraName = "photonvision";
+    public static final Transform3d robotToCam = new Transform3d();
   }
 }

@@ -16,6 +16,7 @@ public class Superstructure extends SubsystemBase {
 
   // Subsystems
   public final Swerve swerve = new Swerve();
+  public final Vision vision = new Vision();
 
   // Joysticks
   private final CommandXboxController driverXbox =
@@ -32,6 +33,7 @@ public class Superstructure extends SubsystemBase {
 
   public void configureBindings() {
     driverXbox.x().onTrue(new InstantCommand(() -> swerve.zeroGyro()));
+    driverXbox.leftBumper().whileTrue(swerve.aimAtTarget(vision.returnCamera(vision)));
   }
 
   public void configureAxisActions() {

@@ -14,6 +14,8 @@ import frc3512.lib.logging.SpartanEntryManager;
 import frc3512.robot.Constants;
 import java.io.File;
 import java.util.function.DoubleSupplier;
+import org.photonvision.PhotonCamera;
+import org.photonvision.targeting.PhotonPipelineResult;
 import swervelib.SwerveController;
 import swervelib.SwerveDrive;
 import swervelib.parser.SwerveDriveConfiguration;
@@ -53,6 +55,23 @@ public class Swerve extends SubsystemBase {
 
     // Heading correction should only be used while controlling the robot via angle.
     swerve.setHeadingCorrection(false);
+  }
+
+  public Command aimAtTarget(PhotonCamera camera) {
+    return run(
+        () -> {
+          PhotonPipelineResult result = camera.getLatestResult();
+          if (result.hasTargets()) {
+            drive(
+                getTargetSpeeds(
+                    0,
+                    0,
+                    Rotation2d.fromDegrees(
+                        result
+                            .getBestTarget()
+                            .getYaw()))); // Not sure if this will work, more math may be required.
+          }
+        });
   }
 
   /**
@@ -170,7 +189,7 @@ public class Swerve extends SubsystemBase {
    * @return The yaw angle
    */
   public Rotation2d getHeading() {
-    return swerve.getOdometryHeading();
+    return swerve.getYaw();
   }
 
   /**
