@@ -30,7 +30,7 @@ public final class Constants {
   }
 
   public static final class VisionConstants {
-    public static final String cameraName = "jonny";
+    public static final String cameraName = "USB_GS_Camera";
     public static final Transform3d robotToCam = new Transform3d();
   }
 }

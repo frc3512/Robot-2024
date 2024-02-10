@@ -1,6 +1,7 @@
 package frc3512.robot.subsystems;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -8,7 +9,6 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.Filesystem;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc3512.lib.logging.SpartanEntryManager;
@@ -75,21 +75,20 @@ public class Swerve extends SubsystemBase {
       PhotonCamera camera) {
     return run(
         () -> {
-          SmartDashboard.putBoolean("Diagnostics/Vision/DoVisionAim", doAim.getAsBoolean());
           PhotonPipelineResult result = camera.getLatestResult();
+          final double ANGULAR_P = 0.1;
+          final double ANGULAR_D = 0.0;
+          PIDController turnController = new PIDController(ANGULAR_P, 0, ANGULAR_D);
           if (result.hasTargets() && doAim.getAsBoolean()) {
             drive(
-                getTargetSpeeds(
+                swerve.swerveController.getRawTargetSpeeds(
                     MathUtil.applyDeadband(
                         translationX.getAsDouble() * swerve.getMaximumVelocity(),
                         Constants.SwerveConstants.swerveDeadband),
                     MathUtil.applyDeadband(
                         translationY.getAsDouble() * swerve.getMaximumVelocity(),
                         Constants.SwerveConstants.swerveDeadband),
-                    Rotation2d.fromDegrees(
-                        result
-                            .getBestTarget()
-                            .getYaw()))); // Not sure if this will work, more math may be required.
+                    -turnController.calculate(result.getBestTarget().getYaw(), 0)));
           } else {
             swerve.drive(
                 new Translation2d(
