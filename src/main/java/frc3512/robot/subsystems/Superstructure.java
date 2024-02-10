@@ -33,7 +33,6 @@ public class Superstructure extends SubsystemBase {
 
   public void configureBindings() {
     driverXbox.x().onTrue(new InstantCommand(() -> swerve.zeroGyro()));
-    driverXbox.leftBumper().whileTrue(swerve.aimAtTarget(vision.returnCamera(vision)));
   }
 
   public void configureAxisActions() {
@@ -48,8 +47,9 @@ public class Superstructure extends SubsystemBase {
                     -driverXbox.getRawAxis(strafeAxis), Constants.SwerveConstants.swerveDeadband),
             () ->
                 MathUtil.applyDeadband(
-                    -driverXbox.getRawAxis(rotationAxis),
-                    Constants.SwerveConstants.swerveDeadband)));
+                    -driverXbox.getRawAxis(rotationAxis), Constants.SwerveConstants.swerveDeadband),
+            () -> driverXbox.leftBumper().getAsBoolean(),
+            vision.returnCamera(vision)));
   }
 
   public void setMotorBrake(boolean brake) {

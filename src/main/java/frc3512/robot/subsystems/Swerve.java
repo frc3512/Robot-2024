@@ -8,11 +8,13 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc3512.lib.logging.SpartanEntryManager;
 import frc3512.robot.Constants;
 import java.io.File;
+import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 import org.photonvision.PhotonCamera;
 import org.photonvision.targeting.PhotonPipelineResult;
@@ -57,23 +59,6 @@ public class Swerve extends SubsystemBase {
     swerve.setHeadingCorrection(false);
   }
 
-  public Command aimAtTarget(PhotonCamera camera) {
-    return run(
-        () -> {
-          PhotonPipelineResult result = camera.getLatestResult();
-          if (result.hasTargets()) {
-            drive(
-                getTargetSpeeds(
-                    0,
-                    0,
-                    Rotation2d.fromDegrees(
-                        result
-                            .getBestTarget()
-                            .getYaw()))); // Not sure if this will work, more math may be required.
-          }
-        });
-  }
-
   /**
    * Command to drive the robot using translative values and heading as angular velocity.
    *
@@ -83,22 +68,43 @@ public class Swerve extends SubsystemBase {
    * @return Drive command.
    */
   public Command driveCommand(
-      DoubleSupplier translationX, DoubleSupplier translationY, DoubleSupplier angularRotationX) {
+      DoubleSupplier translationX,
+      DoubleSupplier translationY,
+      DoubleSupplier angularRotationX,
+      BooleanSupplier doAim,
+      PhotonCamera camera) {
     return run(
         () -> {
-          swerve.drive(
-              new Translation2d(
-                  MathUtil.applyDeadband(
-                      translationX.getAsDouble() * swerve.getMaximumVelocity(),
-                      Constants.SwerveConstants.swerveDeadband),
-                  MathUtil.applyDeadband(
-                      translationY.getAsDouble() * swerve.getMaximumVelocity(),
-                      Constants.SwerveConstants.swerveDeadband)),
-              MathUtil.applyDeadband(
-                  angularRotationX.getAsDouble() * swerve.getMaximumAngularVelocity(),
-                  Constants.SwerveConstants.swerveDeadband),
-              true,
-              false);
+          SmartDashboard.putBoolean("Diagnostics/Vision/DoVisionAim", doAim.getAsBoolean());
+          PhotonPipelineResult result = camera.getLatestResult();
+          if (result.hasTargets() && doAim.getAsBoolean()) {
+            drive(
+                getTargetSpeeds(
+                    MathUtil.applyDeadband(
+                        translationX.getAsDouble() * swerve.getMaximumVelocity(),
+                        Constants.SwerveConstants.swerveDeadband),
+                    MathUtil.applyDeadband(
+                        translationY.getAsDouble() * swerve.getMaximumVelocity(),
+                        Constants.SwerveConstants.swerveDeadband),
+                    Rotation2d.fromDegrees(
+                        result
+                            .getBestTarget()
+                            .getYaw()))); // Not sure if this will work, more math may be required.
+          } else {
+            swerve.drive(
+                new Translation2d(
+                    MathUtil.applyDeadband(
+                        translationX.getAsDouble() * swerve.getMaximumVelocity(),
+                        Constants.SwerveConstants.swerveDeadband),
+                    MathUtil.applyDeadband(
+                        translationY.getAsDouble() * swerve.getMaximumVelocity(),
+                        Constants.SwerveConstants.swerveDeadband)),
+                MathUtil.applyDeadband(
+                    angularRotationX.getAsDouble() * swerve.getMaximumAngularVelocity(),
+                    Constants.SwerveConstants.swerveDeadband),
+                true,
+                false);
+          }
         });
   }
 
