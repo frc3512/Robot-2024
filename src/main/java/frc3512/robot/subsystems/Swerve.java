@@ -8,6 +8,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -143,6 +144,26 @@ public class Swerve extends SubsystemBase {
    */
   public void resetOdometry(Pose2d initialHolonomicPose) {
     swerve.resetOdometry(initialHolonomicPose);
+  }
+
+  private boolean isRedAlliance() {
+    var alliance = DriverStation.getAlliance();
+    return alliance.isPresent() ? alliance.get() == DriverStation.Alliance.Red : false;
+  }
+
+  /**
+   * This will zero (calibrate) the robot to assume the current position is facing forward
+   *
+   * <p>If red alliance rotate the robot 180 after the drviebase zero command
+   */
+  public void zeroGyroWithAlliance() {
+    if (isRedAlliance()) {
+      zeroGyro();
+      // Set the pose 180 degrees
+      resetOdometry(new Pose2d(getPose().getTranslation(), Rotation2d.fromDegrees(180)));
+    } else {
+      zeroGyro();
+    }
   }
 
   /**
