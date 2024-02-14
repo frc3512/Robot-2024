@@ -49,7 +49,8 @@ public class Autos {
     buildAuto("L Path");
     buildAuto("Straight");
     buildAuto("Circle");
-    buildAuto("Eli");
+    buildAuto("Source Wing Note");
+    buildAuto("Mid Wing Note");
 
     SmartDashboard.putData("Auton Chooser", autonChooser);
   }
