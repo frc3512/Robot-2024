@@ -1,20 +1,20 @@
 {
   "version": 1.0,
-  "startingPose": null,
+  "startingPose": {
+    "position": {
+      "x": 1.835943131345722,
+      "y": 7.626880118625102
+    },
+    "rotation": 0
+  },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
         {
-          "type": "named",
-          "data": {
-            "name": "Reset Gyro"
-          }
-        },
-        {
           "type": "path",
           "data": {
-            "pathName": "Red Straight"
+            "pathName": null
           }
         }
       ]

@@ -49,6 +49,7 @@ public class Autos {
     buildAuto("L Path");
     buildAuto("Straight");
     buildAuto("Circle");
+    buildAuto("Eli");
 
     SmartDashboard.putData("Auton Chooser", autonChooser);
   }
