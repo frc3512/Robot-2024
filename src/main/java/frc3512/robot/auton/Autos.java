@@ -51,6 +51,9 @@ public class Autos {
     buildAuto("Circle");
     buildAuto("Source Wing Note");
     buildAuto("Mid Wing Note");
+    buildAuto("Amp Wing Note");
+    buildAuto("Source Note 1");
+    buildAuto("Source Note 2");
 
     SmartDashboard.putData("Auton Chooser", autonChooser);
   }
