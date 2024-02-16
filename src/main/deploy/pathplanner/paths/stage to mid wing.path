@@ -3,41 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.0,
-        "y": 4.0
+        "x": 2.65,
+        "y": 4.82
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.27974564468267,
-        "y": 4.0
+        "x": 2.092304218796472,
+        "y": 4.754958980003431
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 3.0,
-        "y": 4.0
+        "x": 2.1,
+        "y": 5.52
       },
       "prevControl": {
-        "x": 2.6772707560523035,
-        "y": 4.0
-      },
-      "nextControl": {
-        "x": 3.0466256066971127,
-        "y": 4.0
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 3.0,
-        "y": 5.0
-      },
-      "prevControl": {
-        "x": 3.0,
-        "y": 4.341404954780864
+        "x": 1.5550909734298102,
+        "y": 5.574916038720967
       },
       "nextControl": null,
       "isLocked": false,
@@ -48,21 +32,21 @@
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 1.0,
-    "maxAcceleration": 1.0,
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
-    "velocity": 0.0,
-    "rotation": 0.0,
+    "velocity": 0,
+    "rotation": 180.0,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Test autos",
+  "folder": "Score to Note",
   "previewStartingState": {
-    "rotation": 0.0,
+    "rotation": 160.0,
     "velocity": 0
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }
