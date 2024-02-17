@@ -14,10 +14,10 @@ import frc3512.lib.util.CANSparkMaxUtil.Usage;
 
 public class Shootake extends SubsystemBase {
   private CANSparkMax intakeMotor = new CANSparkMax(10, CANSparkLowLevel.MotorType.kBrushless);
-  private CANSparkMax topMotor = new CANSparkMax(11, CANSparkLowLevel.MotorType.kBrushless);
-  private CANSparkMax bottomMotor = new CANSparkMax(12, CANSparkLowLevel.MotorType.kBrushless);
+  private CANSparkMax topMotor = new CANSparkMax(12, CANSparkLowLevel.MotorType.kBrushless);
+  private CANSparkMax bottomMotor = new CANSparkMax(11, CANSparkLowLevel.MotorType.kBrushless);
 
-  private PIDController bottomController = new PIDController(0.01, 0, 0);
+  private PIDController controller = new PIDController(0.01, 0, 0);
 
   private DigitalInput noteEnterBeamBreak = new DigitalInput(0);
 
@@ -49,7 +49,8 @@ public class Shootake extends SubsystemBase {
     topMotor.enableVoltageCompensation(10);
     bottomMotor.enableVoltageCompensation(10);
 
-    topMotor.setInverted(true);
+    topMotor.setInverted(false);
+    bottomMotor.setInverted(false);
   }
 
   public void intake() {
