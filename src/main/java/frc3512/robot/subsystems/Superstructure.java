@@ -19,12 +19,13 @@ public class Superstructure extends SubsystemBase {
   public final Swerve swerve = new Swerve();
   public final Vision vision = new Vision();
   public final Shootake shootake = new Shootake();
+  public final Arm arm = new Arm();
 
   // Joysticks
   private final CommandXboxController driverXbox =
       new CommandXboxController(Constants.OperatorConstants.driverControllerPort);
 
-  private final CommandJoystick joystick = 
+  private final CommandJoystick appendageJoystick = 
       new CommandJoystick(Constants.OperatorConstants.appendageControllerPort);
 
   // Xbox Axis Values
@@ -40,16 +41,19 @@ public class Superstructure extends SubsystemBase {
     driverXbox.x().onTrue(new InstantCommand(() -> swerve.zeroGyro()));
 
     // Shooter/intake controls
-    joystick.button(3).onTrue(new InstantCommand(() -> shootake.intake()));
-    joystick.button(3).onFalse(new InstantCommand(() -> shootake.stopIntakeOutake()));
-    joystick.button(4).onTrue(new InstantCommand(() -> shootake.outake()));
-    joystick.button(4).onFalse(new InstantCommand(() -> shootake.stopIntakeOutake()));
-    joystick.button(11).onTrue(new InstantCommand(() -> shootake.shootClose()));
-    joystick.button(11).onFalse(new InstantCommand(() -> shootake.stopShooting()));
-    joystick.button(9).onTrue(new InstantCommand(() -> shootake.shootMedium()));
-    joystick.button(9).onFalse(new InstantCommand(() -> shootake.stopShooting()));
-    joystick.button(7).onTrue(new InstantCommand(() -> shootake.shootFar()));
-    joystick.button(7).onFalse(new InstantCommand(() -> shootake.stopShooting()));
+    appendageJoystick.button(3).onTrue(new InstantCommand(() -> shootake.intake()));
+    appendageJoystick.button(3).onFalse(new InstantCommand(() -> shootake.stopIntakeOutake()));
+    appendageJoystick.button(4).onTrue(new InstantCommand(() -> shootake.outake()));
+    appendageJoystick.button(4).onFalse(new InstantCommand(() -> shootake.stopIntakeOutake()));
+    appendageJoystick.button(11).onTrue(new InstantCommand(() -> shootake.shootClose()));
+    appendageJoystick.button(11).onFalse(new InstantCommand(() -> shootake.stopShooting()));
+    appendageJoystick.button(9).onTrue(new InstantCommand(() -> shootake.shootMedium()));
+    appendageJoystick.button(9).onFalse(new InstantCommand(() -> shootake.stopShooting()));
+    appendageJoystick.button(7).onTrue(new InstantCommand(() -> shootake.shootFar()));
+    appendageJoystick.button(7).onFalse(new InstantCommand(() -> shootake.stopShooting()));
+    appendageJoystick.button(2).onTrue(new InstantCommand( () -> arm.stopArm()));
+    appendageJoystick.button(3).onTrue(new InstantCommand( () -> arm.moveArm(0.1)));
+    appendageJoystick.button(4).onTrue(new InstantCommand( () -> arm.moveArm(-0.1)));
   }
 
   public void configureAxisActions() {

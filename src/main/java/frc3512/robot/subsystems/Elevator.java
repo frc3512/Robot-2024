@@ -31,6 +31,14 @@ public class Elevator extends SubsystemBase{
         SmartDashboard.putNumber("Elevator Encoder", elevatorEncoder.getAbsolutePosition());
     }
 
+    public void moveElevator(double speed) {
+        elevatorMotor.set(speed);
+    }
+
+    public void stopElevator() {
+        elevatorMotor.set(0);
+    }
+
     @Override
     public void periodic() {
         SmartDashboard.putNumber("Elevator Encoder", elevatorEncoder.getAbsolutePosition());

@@ -41,6 +41,15 @@ public class Arm extends SubsystemBase {
         SmartDashboard.putNumber("Arm Encoder", armEncoder.getAbsolutePosition());
     }
 
+    public void moveArm(double speed) {
+        leftMotor.set(speed);
+    }
+
+    public void stopArm() {
+        leftMotor.set(0);
+        rightMotor.set(0);
+    }
+
     @Override
     public void periodic() {
         SmartDashboard.putNumber("Arm Encoder Distance Per Rotation", armEncoder.getDistancePerRotation());
