@@ -20,6 +20,7 @@ public class Superstructure extends SubsystemBase {
   public final Vision vision = new Vision();
   public final Shootake shootake = new Shootake();
   public final Arm arm = new Arm();
+  public final Elevator elevator = new Elevator();
 
   // Joysticks
   private final CommandXboxController driverXbox =
@@ -54,6 +55,9 @@ public class Superstructure extends SubsystemBase {
     appendageJoystick.button(2).onTrue(new InstantCommand( () -> arm.stopArm()));
     appendageJoystick.button(3).onTrue(new InstantCommand( () -> arm.moveArm(0.1)));
     appendageJoystick.button(4).onTrue(new InstantCommand( () -> arm.moveArm(-0.1)));
+    appendageJoystick.button(5).onTrue(new InstantCommand( () -> elevator.moveElevator(0.1)));
+    appendageJoystick.button(6).onTrue(new InstantCommand( () -> elevator.moveElevator(-0.1)));
+    appendageJoystick.button(7).onTrue(new InstantCommand( () -> elevator.stopElevator()));
   }
 
   public void configureAxisActions() {

@@ -15,24 +15,37 @@ public class Elevator extends SubsystemBase{
     private CANSparkMax elevatorMotor = new CANSparkMax(13, MotorType.kBrushless);
     private DutyCycleEncoder elevatorEncoder = new DutyCycleEncoder(1);
 
+    boolean bypassStop = false;
+
     public Elevator() {
         elevatorMotor.restoreFactoryDefaults();
 
         CANSparkMaxUtil.setCANSparkMaxBusUsage(elevatorMotor, Usage.kPositionOnly);
 
-        elevatorMotor.setIdleMode(IdleMode.kCoast);
+        elevatorMotor.setIdleMode(IdleMode.kBrake);
         elevatorMotor.setSmartCurrentLimit(Constants.ElevatorConstants.currentLimit);
         elevatorMotor.enableVoltageCompensation(10);
+        elevatorMotor.setInverted(true);
 
         elevatorMotor.burnFlash();
 
         elevatorMotor.set(0);
 
-        SmartDashboard.putNumber("Elevator Encoder", elevatorEncoder.getAbsolutePosition());
+        SmartDashboard.putNumber("Elevator Encoder", elevatorEncoder.getDistance());
     }
 
     public void moveElevator(double speed) {
-        elevatorMotor.set(speed);
+        if (elevatorEncoder.getDistance() <= 0.49 && elevatorEncoder.getDistance() >= -1.55) {
+            elevatorMotor.set(speed);
+        }
+        else if (elevatorEncoder.getDistance() >= 0.49 && speed > 0) {
+            bypassStop = true;
+            elevatorMotor.set(speed);
+        }
+        else if (elevatorEncoder.getDistance() <= -1.55 && speed < 0) {
+            bypassStop = true;
+            elevatorMotor.set(speed);
+        }
     }
 
     public void stopElevator() {
@@ -41,6 +54,12 @@ public class Elevator extends SubsystemBase{
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("Elevator Encoder", elevatorEncoder.getAbsolutePosition());
+        if ((elevatorEncoder.getDistance() >= 0.49 || elevatorEncoder.getDistance() <= -1.55) && !bypassStop) {
+            stopElevator();
+        }
+        else if (elevatorEncoder.getDistance() <= 0.49 && elevatorEncoder.getDistance() >= -1.55) {
+            bypassStop = false;
+        }
+        SmartDashboard.putNumber("Elevator Encoder", elevatorEncoder.getDistance());
     }
 }

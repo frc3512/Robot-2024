@@ -16,6 +16,8 @@ public class Arm extends SubsystemBase {
     private CANSparkMax rightMotor = new CANSparkMax(15, MotorType.kBrushless);
     private DutyCycleEncoder armEncoder = new DutyCycleEncoder(5);
 
+    boolean bypassStop = false;
+
     public Arm() {
         leftMotor.restoreFactoryDefaults();
         rightMotor.restoreFactoryDefaults();
@@ -26,8 +28,8 @@ public class Arm extends SubsystemBase {
         leftMotor.setSmartCurrentLimit(Constants.ArmConstants.currentLimit);
         rightMotor.setSmartCurrentLimit(Constants.ArmConstants.currentLimit);
 
-        leftMotor.setIdleMode(IdleMode.kCoast);
-        rightMotor.setIdleMode(IdleMode.kCoast);
+        leftMotor.setIdleMode(IdleMode.kBrake);
+        rightMotor.setIdleMode(IdleMode.kBrake);
 
         rightMotor.setInverted(true);
         rightMotor.follow(leftMotor);
@@ -42,7 +44,18 @@ public class Arm extends SubsystemBase {
     }
 
     public void moveArm(double speed) {
-        leftMotor.set(speed);
+        if (armEncoder.getAbsolutePosition() <= 0.96 && armEncoder.getAbsolutePosition() >= 0.2) {
+            leftMotor.set(speed);
+            bypassStop = false;
+        }
+        else if (armEncoder.getAbsolutePosition() >= 0.96 && speed < 0) {
+            bypassStop = true;
+            leftMotor.set(speed);
+        }
+        else if (armEncoder.getAbsolutePosition() <= 0.2 && speed > 0) {
+            bypassStop = true;
+            leftMotor.set(speed);
+        }
     }
 
     public void stopArm() {
@@ -52,6 +65,13 @@ public class Arm extends SubsystemBase {
 
     @Override
     public void periodic() {
+        if ((armEncoder.getAbsolutePosition() >= 0.96 || armEncoder.getAbsolutePosition() <= 0.2) && !bypassStop) {
+            stopArm();
+        }
+        else if (armEncoder.getAbsolutePosition() <= 0.96 && armEncoder.getAbsolutePosition() >= 0.2) {
+            bypassStop = false;
+        }
+
         SmartDashboard.putNumber("Arm Encoder Distance Per Rotation", armEncoder.getDistancePerRotation());
         SmartDashboard.putNumber("Arm Encoder", armEncoder.getAbsolutePosition());
     }
