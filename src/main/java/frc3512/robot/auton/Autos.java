@@ -1,5 +1,7 @@
 package frc3512.robot.auton;
 
+import java.time.Instant;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
@@ -49,11 +51,7 @@ public class Autos {
     buildAuto("L Path");
     buildAuto("Straight");
     buildAuto("Circle");
-    buildAuto("Source Wing Note");
-    buildAuto("Mid Wing Note");
-    buildAuto("Amp Wing Note");
-    buildAuto("Source Note 1");
-    buildAuto("Source Note 2");
+    buildAuto("Source auto");    
 
     SmartDashboard.putData("Auton Chooser", autonChooser);
   }
@@ -65,6 +63,8 @@ public class Autos {
   private void setMarkers() {
     NamedCommands.registerCommand(
         "Reset Gyro", new InstantCommand(() -> swerve.zeroGyroWithAlliance()));
+    NamedCommands.registerCommand("Shoot", new InstantCommand(/* Shoot */));
+    NamedCommands.registerCommand("Intake", new InstantCommand(/* Intake */));
   }
 
   /*
