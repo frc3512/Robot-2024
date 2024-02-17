@@ -46,7 +46,7 @@ public class Autos {
     autonChooser.setDefaultOption("No-op", new InstantCommand());
 
     // Add autos
-    buildAuto("L Path");
+    buildAuto("L-Path");
     buildAuto("Straight");
     buildAuto("Circle");
 
