@@ -35,7 +35,7 @@ public class Autos {
             Constants.AutonConstants.ANGLE_PID,
             4.5,
             swerve.getSwerveDriveConfiguration().getDriveBaseRadiusMeters(),
-            new ReplanningConfig(false, false)),
+            new ReplanningConfig()),
         () -> {
           var alliance = DriverStation.getAlliance();
           return alliance.isPresent() ? alliance.get() == DriverStation.Alliance.Red : false;
@@ -46,7 +46,12 @@ public class Autos {
     autonChooser.setDefaultOption("No-op", new InstantCommand());
 
     // Add autos
-    buildAuto("Auto 2");
+    buildAuto("Straight");
+    buildAuto("Circle");
+    buildAuto("1 Note Amp Start Auto");
+    buildAuto("2 Note Amp Start Auto");
+    buildAuto("3 Note Amp Start Auto");
+    buildAuto("2 Note Mid Start Auto");
 
     SmartDashboard.putData("Auton Chooser", autonChooser);
   }
@@ -59,6 +64,7 @@ public class Autos {
     NamedCommands.registerCommand(
         "Reset Gyro", new InstantCommand(() -> swerve.zeroGyroWithAlliance()));
     NamedCommands.registerCommand("Shoot", new InstantCommand(/* Shoot */ ));
+    NamedCommands.registerCommand("Intake", new InstantCommand(/* Intake */));
   }
 
   /*
