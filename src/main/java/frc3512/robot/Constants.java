@@ -41,4 +41,25 @@ public final class Constants {
     public static final String cameraName = "USB_GS_Camera";
     public static final Transform3d robotToCam = new Transform3d();
   }
+
+  public static final class ArmConstants {
+    public static final int currentLimit = 40;
+    public static final double speed = 0.1;
+
+    public static final double kP = 0;
+    public static final double kI = 0;
+    public static final double kD = 0;
+
+    public static final double minAngle = 10;
+    public static final double maxAngle = 60;
+  }
+
+  public static final class ElevatorConstants {
+    public static final int currentLimit = 40;
+    public static final double speed = 0.1;
+
+    public static final double kP = 0;
+    public static final double kI = 0;
+    public static final double kD = 0;
+  }
 }
