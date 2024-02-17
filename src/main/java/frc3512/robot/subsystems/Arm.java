@@ -44,7 +44,7 @@ public class Arm extends SubsystemBase {
     }
 
     public void moveArm(double speed) {
-        if (armEncoder.getAbsolutePosition() <= 0.96 && armEncoder.getAbsolutePosition() >= 0.2) {
+        if (armEncoder.getAbsolutePosition() <= 0.96 && armEncoder.getAbsolutePosition() >= 0.145) {
             leftMotor.set(speed);
             bypassStop = false;
         }
@@ -52,7 +52,7 @@ public class Arm extends SubsystemBase {
             bypassStop = true;
             leftMotor.set(speed);
         }
-        else if (armEncoder.getAbsolutePosition() <= 0.2 && speed > 0) {
+        else if (armEncoder.getAbsolutePosition() <= 0.145 && speed > 0) {
             bypassStop = true;
             leftMotor.set(speed);
         }
@@ -65,10 +65,10 @@ public class Arm extends SubsystemBase {
 
     @Override
     public void periodic() {
-        if ((armEncoder.getAbsolutePosition() >= 0.96 || armEncoder.getAbsolutePosition() <= 0.2) && !bypassStop) {
+        if ((armEncoder.getAbsolutePosition() >= 0.96 || armEncoder.getAbsolutePosition() <= 0.145) && !bypassStop) {
             stopArm();
         }
-        else if (armEncoder.getAbsolutePosition() <= 0.96 && armEncoder.getAbsolutePosition() >= 0.2) {
+        else if (armEncoder.getAbsolutePosition() <= 0.96 && armEncoder.getAbsolutePosition() >= 0.145) {
             bypassStop = false;
         }
 
