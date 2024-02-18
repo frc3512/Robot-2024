@@ -62,6 +62,13 @@ public class Superstructure extends SubsystemBase {
     appendageJoystick.button(10).onFalse(new InstantCommand(() -> shootake.stopShooting()));
 
     appendageJoystick
+        .button(9)
+        .whileFalse(new InstantCommand(() -> shootake.overrideBeamBreak("auto")));
+    appendageJoystick
+        .button(9)
+        .whileTrue(new InstantCommand(() -> shootake.overrideBeamBreak("manual")));
+
+    appendageJoystick
         .button(7)
         .onTrue(
             new InstantCommand(
@@ -96,17 +103,17 @@ public class Superstructure extends SubsystemBase {
 
   private void poseEstimationPeriodic() {
     if (Constants.GeneralConstants.enablePoseEstimation) {
-        // Correct pose estimate with vision measurements
-        var visionEst = vision.getEstimatedGlobalPose();
-        visionEst.ifPresent(
-            est -> {
-              var estPose = est.estimatedPose.toPose2d();
-              // Change our trust in the measurement based on the tags we can see
-              var estStdDevs = vision.getEstimationStdDevs(estPose);
+      // Correct pose estimate with vision measurements
+      var visionEst = vision.getEstimatedGlobalPose();
+      visionEst.ifPresent(
+          est -> {
+            var estPose = est.estimatedPose.toPose2d();
+            // Change our trust in the measurement based on the tags we can see
+            var estStdDevs = vision.getEstimationStdDevs(estPose);
 
-              swerve.addVisionMeasurement(
-                  est.estimatedPose.toPose2d(), est.timestampSeconds, estStdDevs);
-            });
+            swerve.addVisionMeasurement(
+                est.estimatedPose.toPose2d(), est.timestampSeconds, estStdDevs);
+          });
     }
   }
 

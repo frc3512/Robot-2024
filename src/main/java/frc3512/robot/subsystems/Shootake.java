@@ -27,6 +27,7 @@ public class Shootake extends SubsystemBase {
   private SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(0.05, 0.0023);
 
   boolean shooting = false;
+  boolean manual_intake = false;
 
   public Shootake() {
     intakeMotor.restoreFactoryDefaults();
@@ -89,12 +90,22 @@ public class Shootake extends SubsystemBase {
     shooting = false;
   }
 
+  public void overrideBeamBreak(String mode) {
+    if (mode == "manual") {
+      manual_intake = true;
+    } else if (mode == "auto") {
+      manual_intake = false;
+    } else {
+      manual_intake = false;
+    }
+  }
+
   @Override
   public void periodic() {
     super.periodic();
     SmartDashboard.putNumber("Top Motor Velocity", topEncoder.getVelocity());
     SmartDashboard.putNumber("Bottom Motor Velocity", bottomEncoder.getVelocity());
-    if (!noteEnterBeamBreak.get() && shooting == false) {
+    if ((!noteEnterBeamBreak.get() && shooting == false) && !manual_intake) {
       stopIntakeOutake();
     }
   }

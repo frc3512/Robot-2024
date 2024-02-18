@@ -1,7 +1,6 @@
 package frc3512.robot;
 
 import com.pathplanner.lib.util.PIDConstants;
-
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.VecBuilder;
@@ -44,7 +43,8 @@ public final class Constants {
 
   public static final class GeneralConstants {
     public static final boolean tuningMode = true;
-    public static final boolean enablePoseEstimation = false; // Change to true to enable pose estimation
+    public static final boolean enablePoseEstimation =
+        false; // Change to true to enable pose estimation
 
     public static final RobotType robotType = RobotType.PROTO;
   }
