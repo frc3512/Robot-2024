@@ -1,12 +1,15 @@
 package frc3512.robot.subsystems;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
@@ -28,6 +31,11 @@ import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
 
 public class Swerve extends SubsystemBase {
   private final SwerveDrive swerve;
+  private final PIDController turnController =
+      new PIDController(
+          Constants.SwerveConstants.turnControllerP,
+          Constants.SwerveConstants.turnControllerI,
+          Constants.SwerveConstants.turnControllerD);
 
   public Swerve() {
 
@@ -77,9 +85,6 @@ public class Swerve extends SubsystemBase {
     return run(
         () -> {
           PhotonPipelineResult result = camera.getLatestResult();
-          final double ANGULAR_P = 0.1;
-          final double ANGULAR_D = 0.0;
-          PIDController turnController = new PIDController(ANGULAR_P, 0, ANGULAR_D);
           if (result.hasTargets() && doAim.getAsBoolean()) {
             drive(
                 swerve.swerveController.getRawTargetSpeeds(
@@ -310,8 +315,11 @@ public class Swerve extends SubsystemBase {
     return swerve.getPitch();
   }
 
-  @Override
-  public void periodic() {
-    swerve.updateOdometry();
+  /*
+    Add in vision measurement into the
+  */
+  public void addVisionMeasurement(
+      Pose2d pose, double timestamp, Matrix<N3, N1> visionMeasurementStdDevs) {
+    swerve.addVisionMeasurement(pose, timestamp, visionMeasurementStdDevs);
   }
 }

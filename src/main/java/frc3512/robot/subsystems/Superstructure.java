@@ -1,12 +1,16 @@
 package frc3512.robot.subsystems;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.units.Distance;
+import edu.wpi.first.units.Measure;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc3512.lib.util.ScoringUtil;
 import frc3512.robot.Constants;
 import frc3512.robot.auton.Autos;
 
@@ -87,7 +91,27 @@ public class Superstructure extends SubsystemBase {
                 MathUtil.applyDeadband(
                     -driverXbox.getRawAxis(rotationAxis), Constants.SwerveConstants.swerveDeadband),
             () -> driverXbox.leftBumper().getAsBoolean(),
-            vision.returnCamera(vision)));
+            vision.returnCamera()));
+  }
+
+  private void poseEstimationPeriodic() {
+    if (Constants.GeneralConstants.enablePoseEstimation) {
+        // Correct pose estimate with vision measurements
+        var visionEst = vision.getEstimatedGlobalPose();
+        visionEst.ifPresent(
+            est -> {
+              var estPose = est.estimatedPose.toPose2d();
+              // Change our trust in the measurement based on the tags we can see
+              var estStdDevs = vision.getEstimationStdDevs(estPose);
+
+              swerve.addVisionMeasurement(
+                  est.estimatedPose.toPose2d(), est.timestampSeconds, estStdDevs);
+            });
+    }
+  }
+
+  public Measure<Distance> getTargetDistance() {
+    return vision.getTargetDistance(swerve::getPose, () -> ScoringUtil.provideScoringPose());
   }
 
   public void setMotorBrake(boolean brake) {
@@ -96,5 +120,12 @@ public class Superstructure extends SubsystemBase {
 
   public Command getAuton() {
     return autos.getSelected();
+  }
+
+  @Override
+  public void periodic() {
+    poseEstimationPeriodic();
+    SmartDashboard.putNumber(
+        "Diagnostics/Vision/Vision Distance", getTargetDistance().baseUnitMagnitude());
   }
 }
