@@ -40,6 +40,7 @@ public class Superstructure extends SubsystemBase {
 
   public Superstructure() {
     autos = new Autos(this, swerve);
+    SmartDashboard.putData(arm);
   }
 
   public void configureBindings() {
@@ -77,11 +78,10 @@ public class Superstructure extends SubsystemBase {
                   arm.stopArm();
                 }));
 
-    appendageJoystick.button(1).onTrue(new InstantCommand(() -> arm.moveArm(0.25)));
-    appendageJoystick.button(4).onTrue(new InstantCommand(() -> arm.moveArm(-0.25)));
-
-    appendageJoystick.button(2).onTrue(new InstantCommand(() -> elevator.moveElevator(0.2)));
-    appendageJoystick.button(5).onTrue(new InstantCommand(() -> elevator.moveElevator(-0.2)));
+    appendageJoystick.button(1).onTrue(new InstantCommand(() -> {arm.ampShootingPos(); elevator.stowElevator();}));
+    appendageJoystick.button(4).onTrue(new InstantCommand(() -> {arm.stowArm(); elevator.stowElevator();}));
+    appendageJoystick.button(2).onTrue(new InstantCommand(() -> {arm.intakePos(); elevator.outElevator();}));
+    appendageJoystick.button(5).onTrue(new InstantCommand(() -> elevator.outElevator()));
   }
 
   public void configureAxisActions() {
