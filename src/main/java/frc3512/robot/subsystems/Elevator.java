@@ -80,12 +80,12 @@ public class Elevator extends PIDSubsystem {
   @Override
   public void periodic() {
     super.periodic();
-    /*if ((elevatorEncoder.getDistance() >= 0.49 || elevatorEncoder.getDistance() <= -1.55)
+    if ((elevatorEncoder.getDistance() >= 0.49 || elevatorEncoder.getDistance() <= -1.55)
         && !bypassStop) {
       stopElevator();
     } else if (elevatorEncoder.getDistance() <= 0.49 && elevatorEncoder.getDistance() >= -1.55) {
       bypassStop = false;
-    }*/
+    }
     SmartDashboard.putNumber("Elevator Encoder", elevatorEncoder.getDistance());
     SmartDashboard.putNumber("Elevator PID Setpoint", getSetpoint());
   }

@@ -5,16 +5,20 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.PIDSubsystem;
+import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc3512.lib.util.CANSparkMaxUtil;
 import frc3512.lib.util.CANSparkMaxUtil.Usage;
 import frc3512.robot.Constants;
 
-public class Arm extends PIDSubsystem {
+public class Arm extends ProfiledPIDSubsystem {
   private CANSparkMax leftMotor = new CANSparkMax(14, MotorType.kBrushless);
   private CANSparkMax rightMotor = new CANSparkMax(15, MotorType.kBrushless);
   private DutyCycleEncoder armEncoder = new DutyCycleEncoder(5);
@@ -23,9 +27,14 @@ public class Arm extends PIDSubsystem {
   boolean bypassStop = false;
 
   public Arm() {
-    super(new PIDController(Constants.ArmConstants.kP, Constants.ArmConstants.kI, Constants.ArmConstants.kD));
+    super(new ProfiledPIDController(
+      Constants.ArmConstants.kP,
+       Constants.ArmConstants.kI,
+        Constants.ArmConstants.kD,
+        new TrapezoidProfile.Constraints(6,4)
+        ));
     getController().setTolerance(0.002);
-    setSetpoint(Constants.ArmConstants.ampPosition);
+    setGoal(Constants.ArmConstants.stowPosition);
 
     leftMotor.restoreFactoryDefaults();
     rightMotor.restoreFactoryDefaults();
@@ -48,12 +57,12 @@ public class Arm extends PIDSubsystem {
     SmartDashboard.putNumber(
         "Arm/Arm Encoder Distance Per Rotation", armEncoder.getDistancePerRotation());
     SmartDashboard.putNumber("Arm/Arm Encoder", armEncoder.getAbsolutePosition());
-    SmartDashboard.putNumber("Arm/Arm PID Setpoint", getSetpoint());
+    SmartDashboard.putNumber("Arm/Arm PID Goal", getController().getGoal().position);
     
   }
 
   @Override
-  public void useOutput(double output, double setpoint) {
+  public void useOutput(double output, State setpoint) {
     leftMotor.setVoltage(output);
   }
 
@@ -77,19 +86,19 @@ public class Arm extends PIDSubsystem {
 
   public void stowArm() {
     SmartDashboard.putString("Arm/Arm Test", "Stow Pos");
-    setSetpoint(Constants.ArmConstants.stowPosition);
+    setGoal(Constants.ArmConstants.stowPosition);
     enable();
   }
 
   public void ampShootingPos() {
     SmartDashboard.putString("Arm/Arm Test", "Amp Pos");
-    setSetpoint(Constants.ArmConstants.ampPosition);
+    setGoal(Constants.ArmConstants.ampPosition);
     enable();
   }
 
   public void intakePos() {
     SmartDashboard.putString("Arm/Arm Test", "Intake Pos");
-    setSetpoint(Constants.ArmConstants.intakePosition);
+    setGoal(Constants.ArmConstants.intakePosition);
     timer.delay(0.5);
     enable();
   }
@@ -115,6 +124,6 @@ public class Arm extends PIDSubsystem {
     SmartDashboard.putNumber(
         "Arm/Arm Encoder Distance Per Rotation", armEncoder.getDistancePerRotation());
     SmartDashboard.putNumber("Arm/Arm Encoder", armEncoder.getAbsolutePosition());
-    SmartDashboard.putNumber("Arm/Arm PID Setpoint", getSetpoint());
+    SmartDashboard.putNumber("Arm/Arm PID Goal", getController().getGoal().position);
   }
 }
