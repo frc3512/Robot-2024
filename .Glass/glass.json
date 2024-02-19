@@ -1,0 +1,86 @@
+{
+  "NetworkTables": {
+    "transitory": {
+      "SmartDashboard": {
+        "Arm": {
+          "open": true
+        },
+        "Elevator": {
+          "open": true
+        },
+        "open": true
+      }
+    },
+    "types": {
+      "/FMSInfo": "FMSInfo",
+      "/SmartDashboard/Arm": "Subsystem",
+      "/SmartDashboard/Auton Chooser": "String Chooser",
+      "/SmartDashboard/Field": "Field2d",
+      "/SmartDashboard/Pigeon 2 (v6) [0]": "Gyro"
+    }
+  },
+  "NetworkTables Settings": {
+    "mode": "Client (NT4)",
+    "serverTeam": "3512"
+  },
+  "Plots": {
+    "Plot <0>": {
+      "plots": [
+        {
+          "backgroundColor": [
+            0.0,
+            0.0,
+            0.0,
+            0.8500000238418579
+          ],
+          "height": 332
+        }
+      ],
+      "window": {
+        "visible": false
+      }
+    },
+    "Plot <1>": {
+      "plots": [
+        {
+          "axis": [
+            {
+              "max": 0.5,
+              "min": -2.0
+            }
+          ],
+          "backgroundColor": [
+            0.0,
+            0.0,
+            0.0,
+            0.8500000238418579
+          ],
+          "height": 328,
+          "series": [
+            {
+              "color": [
+                0.2980392277240753,
+                0.44705885648727417,
+                0.6901960968971252,
+                1.0
+              ],
+              "id": "NT:/SmartDashboard/Elevator/ Encoder"
+            },
+            {
+              "color": [
+                0.8666667342185974,
+                0.5176470875740051,
+                0.32156863808631897,
+                1.0
+              ],
+              "id": "NT:/SmartDashboard/Elevator/ PID Setpoint"
+            }
+          ]
+        }
+      ],
+      "window": {
+        "visible": false
+      }
+    }
+  }
+}

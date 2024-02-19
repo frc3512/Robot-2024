@@ -5,7 +5,7 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
 import frc3512.lib.util.CANSparkMaxUtil;
@@ -15,7 +15,7 @@ import frc3512.robot.Constants.ElevatorConstants;
 
 public class Elevator extends ProfiledPIDSubsystem {
   private CANSparkMax elevatorMotor = new CANSparkMax(13, MotorType.kBrushless);
-  private Encoder elevatorEncoder = new Encoder(2, 3);
+  private DutyCycleEncoder elevatorEncoder = new DutyCycleEncoder(1);
   /* 1 is absolute, 2 is a, 3 is b, 4 is incremental */
 
   boolean bypassStop = false;
@@ -39,7 +39,7 @@ public class Elevator extends ProfiledPIDSubsystem {
     elevatorMotor.setIdleMode(IdleMode.kBrake);
     elevatorMotor.setSmartCurrentLimit(Constants.ElevatorConstants.currentLimit);
     elevatorMotor.enableVoltageCompensation(10);
-    elevatorMotor.setInverted(true);
+    elevatorMotor.setInverted(false);
 
     elevatorMotor.burnFlash();
 
@@ -47,8 +47,8 @@ public class Elevator extends ProfiledPIDSubsystem {
     SmartDashboard.putNumber("Elevator PID Setpoint", getController().getGoal().position);
     SmartDashboard.putNumber("Elevator/ P", ElevatorConstants.kP);
 
-    elevatorEncoder.setDistancePerPulse(Constants.ElevatorConstants.distancePerPulse);
-    elevatorEncoder.setSamplesToAverage(Constants.ElevatorConstants.averageSampleSize);
+    // elevatorEncoder.setDistancePerPulse(Constants.ElevatorConstants.distancePerPulse);
+    // elevatorEncoder.setSamplesToAverage(Constants.ElevatorConstants.averageSampleSize);
 
     elevatorEncoder.reset();
   }

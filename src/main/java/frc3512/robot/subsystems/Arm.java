@@ -3,16 +3,13 @@ package frc3512.robot.subsystems;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.PIDSubsystem;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc3512.lib.util.CANSparkMaxUtil;
 import frc3512.lib.util.CANSparkMaxUtil.Usage;
 import frc3512.robot.Constants;
@@ -26,12 +23,12 @@ public class Arm extends ProfiledPIDSubsystem {
   boolean bypassStop = false;
 
   public Arm() {
-    super(new ProfiledPIDController(
-      Constants.ArmConstants.kP,
-       Constants.ArmConstants.kI,
-        Constants.ArmConstants.kD,
-        new TrapezoidProfile.Constraints(6,4)
-        ));
+    super(
+        new ProfiledPIDController(
+            Constants.ArmConstants.kP,
+            Constants.ArmConstants.kI,
+            Constants.ArmConstants.kD,
+            new TrapezoidProfile.Constraints(6, 2)));
     getController().setTolerance(0.002);
     setGoal(Constants.ArmConstants.stowPosition);
 
@@ -57,7 +54,6 @@ public class Arm extends ProfiledPIDSubsystem {
         "Arm/Arm Encoder Distance Per Rotation", armEncoder.getDistancePerRotation());
     SmartDashboard.putNumber("Arm/Arm Encoder", armEncoder.getAbsolutePosition());
     SmartDashboard.putNumber("Arm/Arm PID Goal", getController().getGoal().position);
-    
   }
 
   @Override

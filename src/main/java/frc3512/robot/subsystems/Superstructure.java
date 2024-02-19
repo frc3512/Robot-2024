@@ -50,8 +50,8 @@ public class Superstructure extends SubsystemBase {
     appendageJoystick.button(3).onTrue(new InstantCommand(() -> shootake.intake()));
     appendageJoystick.button(3).onFalse(new InstantCommand(() -> shootake.stopIntakeOutake()));
 
-    appendageJoystick.button(6).onTrue(new InstantCommand(() -> shootake.outake()));
-    appendageJoystick.button(6).onFalse(new InstantCommand(() -> shootake.stopIntakeOutake()));
+    appendageJoystick.button(7).onTrue(new InstantCommand(() -> shootake.outake()));
+    appendageJoystick.button(7).onFalse(new InstantCommand(() -> shootake.stopIntakeOutake()));
 
     appendageJoystick.button(12).onTrue(new InstantCommand(() -> shootake.shootClose()));
     appendageJoystick.button(12).onFalse(new InstantCommand(() -> shootake.stopShooting()));
@@ -69,7 +69,13 @@ public class Superstructure extends SubsystemBase {
         .button(9)
         .whileTrue(new InstantCommand(() -> shootake.overrideBeamBreak("manual")));
 
-    appendageJoystick
+    appendageJoystick.button(1).onTrue(new InstantCommand(() -> elevator.stowElevator()));
+    appendageJoystick.button(2).onTrue(new InstantCommand(() -> elevator.outElevator()));
+
+    appendageJoystick.button(4).onTrue(new InstantCommand(() -> arm.ampShootingPos()));
+    appendageJoystick.button(5).onTrue(new InstantCommand(() -> arm.stowArm()));
+    appendageJoystick.button(6).onTrue(new InstantCommand(() -> arm.intakePos()));
+    /*appendageJoystick
         .button(7)
         .onTrue(
             new InstantCommand(
@@ -83,7 +89,7 @@ public class Superstructure extends SubsystemBase {
         .onTrue(
             new InstantCommand(
                 () -> {
-                  //arm.ampShootingPos();
+                  // arm.ampShootingPos();
                   elevator.stowElevator();
                 }));
     appendageJoystick
@@ -91,7 +97,7 @@ public class Superstructure extends SubsystemBase {
         .onTrue(
             new InstantCommand(
                 () -> {
-                  //arm.stowArm();
+                  // arm.stowArm();
                   elevator.stowElevator();
                 }));
     appendageJoystick
@@ -99,10 +105,10 @@ public class Superstructure extends SubsystemBase {
         .onTrue(
             new InstantCommand(
                 () -> {
-                  //arm.intakePos();
+                  // arm.intakePos();
                   elevator.outElevator();
                 }));
-    appendageJoystick.button(5).onTrue(new InstantCommand(() -> elevator.outElevator()));
+    appendageJoystick.button(5).onTrue(new InstantCommand(() -> elevator.outElevator()));*/
   }
 
   public void configureAxisActions() {
