@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc3512.lib.util.ScoringUtil;
@@ -74,7 +75,14 @@ public class Superstructure extends SubsystemBase {
 
     appendageJoystick.button(4).onTrue(new InstantCommand(() -> arm.ampShootingPos()));
     appendageJoystick.button(5).onTrue(new InstantCommand(() -> arm.stowArm()));
-    appendageJoystick.button(6).onTrue(new InstantCommand(() -> arm.intakePos()));
+    // appendageJoystick.button(6).onTrue(new InstantCommand(() -> arm.intakePos()));
+
+    appendageJoystick
+        .button(6)
+        .onTrue(
+            new InstantCommand(() -> elevator.outElevator())
+                .andThen(new WaitCommand(1.5))
+                .andThen(new InstantCommand(() -> arm.intakePos())));
     /*appendageJoystick
         .button(7)
         .onTrue(

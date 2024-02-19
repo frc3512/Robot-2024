@@ -94,7 +94,6 @@ public class Arm extends ProfiledPIDSubsystem {
   public void intakePos() {
     SmartDashboard.putString("Arm/Arm Test", "Intake Pos");
     setGoal(Constants.ArmConstants.intakePosition);
-    timer.delay(0.5);
     enable();
   }
 
