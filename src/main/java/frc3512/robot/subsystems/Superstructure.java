@@ -73,8 +73,13 @@ public class Superstructure extends SubsystemBase {
     appendageJoystick.button(1).onTrue(new InstantCommand(() -> elevator.stowElevator()));
     appendageJoystick.button(2).onTrue(new InstantCommand(() -> elevator.outElevator()));
 
-    appendageJoystick.button(4).onTrue(new InstantCommand(() -> arm.ampShootingPos()));
-    appendageJoystick.button(5).onTrue(new InstantCommand(() -> arm.stowArm()));
+    appendageJoystick.button(4).onTrue(new InstantCommand(() -> arm.ampShootingPos())
+      .andThen(new WaitCommand(1.5))
+      .andThen(new InstantCommand(() -> elevator.outElevator())));
+
+    appendageJoystick.button(5).onTrue(new InstantCommand(() -> arm.stowArm())
+      .andThen(new WaitCommand(1.5))
+      .andThen(new InstantCommand(() -> elevator.stowElevator())));
     // appendageJoystick.button(6).onTrue(new InstantCommand(() -> arm.intakePos()));
 
     appendageJoystick
