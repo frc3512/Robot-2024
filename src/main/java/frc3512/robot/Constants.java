@@ -50,7 +50,8 @@ public final class Constants {
   }
 
   public static final class VisionConstants {
-    public static final String cameraName = "USB_GS_Camera";
+    public static final String visionName = "USB_GS_Camera";
+    public static final String driverName = "HD_Web_Camera";
     public static final Transform3d robotToCam = new Transform3d();
 
     public static final Pair<Integer, Translation2d> blueSpeaker =
@@ -79,11 +80,17 @@ public final class Constants {
     public static final int currentLimit = 40;
     public static final double speed = 0.1;
 
-    public static final double kP = 3;
+    public static final double kP = 8.5;
     public static final double kI = 0;
     public static final double kD = 0;
 
     public static final double stowPosition = 0.52;
     public static final double outPosition = -1.55;
+    public static final double kMaxVelocityRadPerSecond = 3.0;
+    public static final double kMaxAccelerationRadPerSecSquared = 1.0;
+
+    public static final int averageSampleSize = 10;
+    public static final double distancePerPulse =
+        (Math.PI * 2.0 * Units.inchesToMeters(1.751)) / 8192;
   }
 }

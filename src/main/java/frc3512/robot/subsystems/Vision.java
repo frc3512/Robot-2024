@@ -23,14 +23,15 @@ import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 import org.photonvision.targeting.PhotonPipelineResult;
 
 public class Vision extends SubsystemBase {
-  public PhotonCamera photonCamera = new PhotonCamera(Constants.VisionConstants.cameraName);
+  public PhotonCamera photonCamera = new PhotonCamera(Constants.VisionConstants.visionName);
+  public PhotonCamera driverCamera = new PhotonCamera(Constants.VisionConstants.driverName);
   public PhotonPoseEstimator photonPoseEstimator;
   public AprilTagFieldLayout atfl;
   private double lastEstTimestamp = 0;
 
   public Vision() {
     PhotonCamera.setVersionCheckEnabled(false);
-    // photonCamera.setDriverMode(true);
+    driverCamera.setDriverMode(true);
 
     atfl = AprilTagFields.kDefaultField.loadAprilTagLayoutField();
 
