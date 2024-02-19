@@ -67,12 +67,12 @@ public final class Constants {
     public static final int currentLimit = 40;
     public static final double speed = 0.1;
 
-    public static final double kP = 13;
+    public static final double kP = 22;
     public static final double kI = 0;
     public static final double kD = 0;
 
     public static final double stowPosition = 0.315;
-    public static final double ampPosition = 0.93;
+    public static final double ampPosition = 0.95;
     public static final double intakePosition = 0.17;
   }
 
