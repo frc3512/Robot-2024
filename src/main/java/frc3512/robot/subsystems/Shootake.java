@@ -7,7 +7,6 @@ import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.PIDSubsystem;
 import frc3512.lib.util.CANSparkMaxUtil;
@@ -28,6 +27,9 @@ public class Shootake extends PIDSubsystem {
 
   boolean shooting = false;
   boolean manual_intake = false;
+  boolean can_intake = true;
+  boolean want_to_intake = false;
+  boolean want_to_outtake = false;
 
   public Shootake() {
 
@@ -70,12 +72,20 @@ public class Shootake extends PIDSubsystem {
     bottomMotor.burnFlash();
   }
 
-  public void intake() {
-    intakeMotor.set(-1);
+  public void i_wanna_intake() {
+    want_to_intake = true;
   }
 
-  public void outake() {
-    intakeMotor.set(1);
+  public void i_wanna_outtake() {
+    want_to_outtake = true;
+  }
+
+  public void i_dont_wanna_intake() {
+    want_to_intake = false;
+  }
+
+  public void i_dont_wanna_outtake() {
+    want_to_outtake = false;
   }
 
   public void stopIntakeOutake() {
@@ -85,7 +95,7 @@ public class Shootake extends PIDSubsystem {
   public void shootClose() {
     // topMotor.setVoltage(feedforward.calculate(1000));
     // bottomMotor.setVoltage(feedforward.calculate(1000));
-    setSetpoint(1000);
+    setSetpoint(1100);
     enable();
     shooting = true;
   }
@@ -93,7 +103,7 @@ public class Shootake extends PIDSubsystem {
   public void shootMedium() {
     // topMotor.setVoltage(feedforward.calculate(1500));
     // bottomMotor.setVoltage(feedforward.calculate(1500));
-    setSetpoint(1500);
+    setSetpoint(1700);
     enable();
     shooting = true;
   }
@@ -101,7 +111,7 @@ public class Shootake extends PIDSubsystem {
   public void shootFar() {
     // topMotor.setVoltage(feedforward.calculate(2500));
     // bottomMotor.setVoltage(feedforward.calculate(2500));
-    setSetpoint(2500);
+    setSetpoint(2570);
     enable();
     shooting = true;
   }
@@ -129,9 +139,21 @@ public class Shootake extends PIDSubsystem {
     SmartDashboard.putNumber("Shooter/Top Motor Velocity", topEncoder.getVelocity());
     SmartDashboard.putNumber("Shooter/Bottom Motor Velocity", bottomEncoder.getVelocity());
     SmartDashboard.putNumber("Shooter/PID Setpoint", getSetpoint());
-    // if ((!noteEnterBeamBreak.get() && shooting == false) && !manual_intake) {
-    //   stopIntakeOutake();
-    // }
+    SmartDashboard.putBoolean("Shooter/want_to_intake", want_to_intake);
+    SmartDashboard.putBoolean("Shooter/want_to_outtake", want_to_outtake);
+    if ((!noteEnterBeamBreak.get() && shooting == false) && !manual_intake) {
+      can_intake = false;
+    } else {
+      can_intake = true;
+    }
+
+    if (want_to_intake && can_intake) {
+      intakeMotor.set(-1);
+    } else if (want_to_outtake) {
+      intakeMotor.set(0.85);
+    } else {
+      intakeMotor.set(0);
+    }
   }
 
   @Override

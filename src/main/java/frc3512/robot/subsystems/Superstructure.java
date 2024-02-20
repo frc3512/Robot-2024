@@ -48,20 +48,20 @@ public class Superstructure extends SubsystemBase {
     driverXbox.x().onTrue(new InstantCommand(() -> swerve.zeroGyro()));
 
     // Shooter/intake controls
-    appendageJoystick.button(3).onTrue(new InstantCommand(() -> shootake.intake()));
-    appendageJoystick.button(3).onFalse(new InstantCommand(() -> shootake.stopIntakeOutake()));
+    appendageJoystick.button(3).onTrue(new InstantCommand(() -> shootake.i_wanna_intake()));
+    appendageJoystick.button(3).onFalse(new InstantCommand(() -> shootake.i_dont_wanna_intake()));
 
-    appendageJoystick.button(7).onTrue(new InstantCommand(() -> shootake.outake()));
-    appendageJoystick.button(7).onFalse(new InstantCommand(() -> shootake.stopIntakeOutake()));
+    appendageJoystick.button(7).onTrue(new InstantCommand(() -> shootake.i_wanna_outtake()));
+    appendageJoystick.button(7).onFalse(new InstantCommand(() -> shootake.i_dont_wanna_outtake()));
 
-    appendageJoystick.button(12).onTrue(new InstantCommand(() -> shootake.shootClose()));
-    appendageJoystick.button(12).onFalse(new InstantCommand(() -> shootake.stopShooting()));
+    appendageJoystick.button(10).onTrue(new InstantCommand(() -> shootake.shootFar()));
+    appendageJoystick.button(10).onFalse(new InstantCommand(() -> shootake.stopShooting()));
 
     appendageJoystick.button(11).onTrue(new InstantCommand(() -> shootake.shootMedium()));
     appendageJoystick.button(11).onFalse(new InstantCommand(() -> shootake.stopShooting()));
 
-    appendageJoystick.button(10).onTrue(new InstantCommand(() -> shootake.shootFar()));
-    appendageJoystick.button(10).onFalse(new InstantCommand(() -> shootake.stopShooting()));
+    appendageJoystick.button(12).onTrue(new InstantCommand(() -> shootake.shootClose()));
+    appendageJoystick.button(12).onFalse(new InstantCommand(() -> shootake.stopShooting()));
 
     appendageJoystick
         .button(9)
@@ -70,6 +70,7 @@ public class Superstructure extends SubsystemBase {
         .button(9)
         .whileTrue(new InstantCommand(() -> shootake.overrideBeamBreak("manual")));
 
+    // Elevator and Arm controls
     appendageJoystick.button(1).onTrue(new InstantCommand(() -> elevator.stowElevator()));
     appendageJoystick.button(2).onTrue(new InstantCommand(() -> elevator.outElevator()));
 
@@ -80,7 +81,6 @@ public class Superstructure extends SubsystemBase {
     appendageJoystick.button(5).onTrue(new InstantCommand(() -> arm.stowArm())
       .andThen(new WaitCommand(1.5))
       .andThen(new InstantCommand(() -> elevator.stowElevator())));
-    // appendageJoystick.button(6).onTrue(new InstantCommand(() -> arm.intakePos()));
 
     appendageJoystick
         .button(6)
@@ -88,40 +88,6 @@ public class Superstructure extends SubsystemBase {
             new InstantCommand(() -> elevator.outElevator())
                 .andThen(new WaitCommand(1.5))
                 .andThen(new InstantCommand(() -> arm.intakePos())));
-    /*appendageJoystick
-        .button(7)
-        .onTrue(
-            new InstantCommand(
-                () -> {
-                  shootake.stopShooting();
-                  arm.stopArm();
-                }));
-
-    appendageJoystick
-        .button(1)
-        .onTrue(
-            new InstantCommand(
-                () -> {
-                  // arm.ampShootingPos();
-                  elevator.stowElevator();
-                }));
-    appendageJoystick
-        .button(4)
-        .onTrue(
-            new InstantCommand(
-                () -> {
-                  // arm.stowArm();
-                  elevator.stowElevator();
-                }));
-    appendageJoystick
-        .button(2)
-        .onTrue(
-            new InstantCommand(
-                () -> {
-                  // arm.intakePos();
-                  elevator.outElevator();
-                }));
-    appendageJoystick.button(5).onTrue(new InstantCommand(() -> elevator.outElevator()));*/
   }
 
   public void configureAxisActions() {
