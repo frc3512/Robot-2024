@@ -23,7 +23,8 @@ public class Shootake extends PIDSubsystem {
   private RelativeEncoder topEncoder = topMotor.getEncoder();
   private RelativeEncoder bottomEncoder = bottomMotor.getEncoder();
 
-  private SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(0, 0.0026);
+  private SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(0, 0.0035);
+  private SimpleMotorFeedforward bottMotorFeedforward = new SimpleMotorFeedforward(0, 0.035);
 
   boolean shooting = false;
   boolean manual_intake = false;
@@ -103,7 +104,7 @@ public class Shootake extends PIDSubsystem {
   public void shootMedium() {
     // topMotor.setVoltage(feedforward.calculate(1500));
     // bottomMotor.setVoltage(feedforward.calculate(1500));
-    setSetpoint(1700);
+        setSetpoint(1700);
     enable();
     shooting = true;
   }
@@ -154,11 +155,15 @@ public class Shootake extends PIDSubsystem {
     } else {
       intakeMotor.set(0);
     }
+    // if (!noteEnterBeamBreak.get() && !shooting && !manual_intake) {
+      //stopIntakeOutake();
+    //}
   }
 
   @Override
   public void useOutput(double output, double setPoint) {
     topMotor.setVoltage(output + feedforward.calculate(setPoint));
+    bottomMotor.setVoltage(output + bottMotorFeedforward.calculate(setPoint));
   }
 
   @Override

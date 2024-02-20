@@ -95,9 +95,13 @@ public final class Constants {
   }
 
   public static final class ShooterConstants {
-    public static final double kP = 0.00005;
+    public static final double kP = 0;
     public static final double kI = 0;
     public static final double kD = 0;
+
+    public static final double bkP = 0;
+    public static final double bkI = 0;
+    public static final double bkD = 0;
 
     public static final int kShooterToleranceRPM = 10;
   }
