@@ -28,7 +28,7 @@ public class Arm extends ProfiledPIDSubsystem {
             Constants.ArmConstants.kP,
             Constants.ArmConstants.kI,
             Constants.ArmConstants.kD,
-            new TrapezoidProfile.Constraints(6, 2)));
+            new TrapezoidProfile.Constraints(7, 5)));
     getController().setTolerance(0.002);
     setGoal(Constants.ArmConstants.stowPosition);
 
@@ -96,6 +96,19 @@ public class Arm extends ProfiledPIDSubsystem {
     setGoal(Constants.ArmConstants.intakePosition);
     enable();
   }
+
+  public void closeShootingPos() {
+    SmartDashboard.putString("Arm/Arm Test", "Close Shooting Pos");
+    setGoal(Constants.ArmConstants.closeShootingPosition);
+    enable();
+  }
+
+  public void farShootingPos() {
+    SmartDashboard.putString("Arm/Arm Test", "Far Shooting Pos");
+    setGoal(Constants.ArmConstants.farShootingPosition);
+    enable();
+  }
+  
 
   public void stopArm() {
     disable();

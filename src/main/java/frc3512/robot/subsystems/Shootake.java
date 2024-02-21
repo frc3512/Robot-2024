@@ -91,6 +91,12 @@ public class Shootake extends PIDSubsystem {
 
   public void stopIntakeOutake() {
     intakeMotor.set(0.0);
+    want_to_intake = false;
+  }
+
+  public void roweIntake() {
+    intakeMotor.set(-1);
+    want_to_intake = true;
   }
 
   public void shootClose() {
@@ -112,8 +118,10 @@ public class Shootake extends PIDSubsystem {
   public void shootFar() {
     // topMotor.setVoltage(feedforward.calculate(2500));
     // bottomMotor.setVoltage(feedforward.calculate(2500));
-    setSetpoint(2570);
-    enable();
+    //setSetpoint(4000);
+    topMotor.set(0.85);
+    bottomMotor.set(0.85);
+    //enable();
     shooting = true;
   }
 
@@ -150,8 +158,12 @@ public class Shootake extends PIDSubsystem {
 
     if (want_to_intake && can_intake) {
       intakeMotor.set(-1);
+      topMotor.set(.6);
+      bottomMotor.set(.6);
     } else if (want_to_outtake) {
       intakeMotor.set(0.85);
+      topMotor.set(0);
+      bottomMotor.set(0);
     } else {
       intakeMotor.set(0);
     }
