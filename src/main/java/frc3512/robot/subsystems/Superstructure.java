@@ -1,7 +1,5 @@
 package frc3512.robot.subsystems;
 
-import java.time.Instant;
-
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.units.Distance;
 import edu.wpi.first.units.Measure;
@@ -72,35 +70,48 @@ public class Superstructure extends SubsystemBase {
         .button(9)
         .whileTrue(new InstantCommand(() -> shootake.overrideBeamBreak("manual")));
 
+    appendageJoystick
+        .button(2)
+        .onTrue(
+            new InstantCommand(() -> shootake.shootFar())
+            /*.andThen(new InstantCommand(() -> arm.closeShootingPos()))
+            .andThen(new InstantCommand(() -> elevator.outElevator()))*/
+            );
 
-    appendageJoystick.button(2).onTrue(
-      new InstantCommand(() -> shootake.shootFar())
-      /*.andThen(new InstantCommand(() -> arm.closeShootingPos()))
-      .andThen(new InstantCommand(() -> elevator.outElevator()))*/
-    );
-
-    appendageJoystick.button(2).onFalse(
-      new InstantCommand(() -> shootake.roweIntake()).andThen(new WaitCommand(.75))
-      .andThen(new InstantCommand(() -> shootake.stopIntakeOutake()))
-      .andThen(new InstantCommand(() -> shootake.stopShooting()))
-      .andThen(new InstantCommand(() -> arm.stowArm()))
-      .andThen(new InstantCommand(() -> elevator.stowElevator()))
-    );
+    appendageJoystick
+        .button(2)
+        .onFalse(
+            new InstantCommand(() -> shootake.roweIntake())
+                .andThen(new WaitCommand(.75))
+                .andThen(new InstantCommand(() -> shootake.stopIntakeOutake()))
+                .andThen(new InstantCommand(() -> shootake.stopShooting()))
+                .andThen(new InstantCommand(() -> arm.stowArm()))
+                .andThen(new InstantCommand(() -> elevator.stowElevator())));
 
     /*appendageJoystick.button(2).onFalse(new InstantCommand(() -> shootake.stopIntakeOutake())
-      .andThen(new InstantCommand(() -> shootake.stopShooting())));*/
+    .andThen(new InstantCommand(() -> shootake.stopShooting())));*/
 
     // Elevator and Arm controls
-    appendageJoystick.button(1).onTrue(new InstantCommand(() -> arm.closeShootingPos()).andThen(new InstantCommand(() -> elevator.outElevator())));
-    //appendageJoystick.button(2).onTrue(new InstantCommand(() -> arm.farShootingPos()));
+    appendageJoystick
+        .button(1)
+        .onTrue(
+            new InstantCommand(() -> arm.closeShootingPos())
+                .andThen(new InstantCommand(() -> elevator.outElevator())));
+    // appendageJoystick.button(2).onTrue(new InstantCommand(() -> arm.farShootingPos()));
 
-    appendageJoystick.button(4).onTrue(new InstantCommand(() -> arm.ampShootingPos())
-      .andThen(new WaitCommand(0.75))
-      .andThen(new InstantCommand(() -> elevator.outElevator())));
+    appendageJoystick
+        .button(4)
+        .onTrue(
+            new InstantCommand(() -> arm.ampShootingPos())
+                .andThen(new WaitCommand(0.75))
+                .andThen(new InstantCommand(() -> elevator.outElevator())));
 
-    appendageJoystick.button(5).onTrue(new InstantCommand(() -> arm.stowArm())
-      .andThen(new WaitCommand(.5))
-      .andThen(new InstantCommand(() -> elevator.stowElevator())));
+    appendageJoystick
+        .button(5)
+        .onTrue(
+            new InstantCommand(() -> arm.stowArm())
+                .andThen(new WaitCommand(.5))
+                .andThen(new InstantCommand(() -> elevator.stowElevator())));
 
     appendageJoystick
         .button(6)

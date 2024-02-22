@@ -13,6 +13,8 @@ import frc3512.robot.Constants;
 import frc3512.robot.subsystems.Superstructure;
 import frc3512.robot.subsystems.Swerve;
 
+@SuppressWarnings(
+    "unused") // The superstructure is going to be used, but the linter isn't that smart (yet) XD
 public class Autos {
 
   private final Superstructure superstructure;
