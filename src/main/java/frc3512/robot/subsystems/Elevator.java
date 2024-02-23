@@ -85,6 +85,11 @@ public class Elevator extends ProfiledPIDSubsystem {
     enable();
   }
 
+  public void ampElevator() {
+    setGoal(ElevatorConstants.ampPosition);
+    enable();
+  }
+
   public void stopElevator() {
     elevatorMotor.set(0);
     disable();

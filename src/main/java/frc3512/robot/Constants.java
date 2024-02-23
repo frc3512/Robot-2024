@@ -73,7 +73,7 @@ public final class Constants {
 
     public static final double stowPosition = 0.4;
     public static final double closeShootingPosition = 0.22;
-    public static final double farShootingPosition = 0.7;
+    public static final double farShootingPosition = 0.35;
     public static final double ampPosition = 0.95;
     public static final double intakePosition = 0.17;
   }
@@ -88,6 +88,7 @@ public final class Constants {
 
     public static final double stowPosition = 0.25;
     public static final double outPosition = -1.55;
+    public static final double ampPosition = -0.5;
     public static final double kMaxVelocityRadPerSecond = 10.0;
     public static final double kMaxAccelerationRadPerSecSquared = 15.0;
 
