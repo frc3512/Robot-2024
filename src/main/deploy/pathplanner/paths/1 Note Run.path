@@ -3,41 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.0,
-        "y": 4.0
+        "x": 0.904140353216511,
+        "y": 4.473539560488536
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.27974564468267,
-        "y": 4.0
+        "x": 1.3374413054104268,
+        "y": 3.7357568581043012
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 3.0,
-        "y": 4.0
+        "x": 2.537562767433229,
+        "y": 1.6872472206482891
       },
       "prevControl": {
-        "x": 2.6772707560523035,
-        "y": 4.0
-      },
-      "nextControl": {
-        "x": 3.0466256066971127,
-        "y": 4.0
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 3.0,
-        "y": 5.0
-      },
-      "prevControl": {
-        "x": 3.0,
-        "y": 4.341404954780864
+        "x": 2.057418469056187,
+        "y": 2.4835841057614303
       },
       "nextControl": null,
       "isLocked": false,
@@ -54,14 +38,14 @@
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
-    "velocity": 0.0,
-    "rotation": 0.0,
+    "velocity": 0,
+    "rotation": -58.5133946495603,
     "rotateFast": false
   },
   "reversed": false,
   "folder": "Test autos",
   "previewStartingState": {
-    "rotation": 0.0,
+    "rotation": -59.90371895157272,
     "velocity": 0
   },
   "useDefaultConstraints": false

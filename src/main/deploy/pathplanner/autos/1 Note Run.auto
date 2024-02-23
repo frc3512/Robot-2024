@@ -1,0 +1,61 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.9,
+      "y": 4.47
+    },
+    "rotation": -60.62153633367534
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "Shooting Speed"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Close Shooting"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Stow"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Stop Shooting"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "1 Note Run"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "Test Autos",
+  "choreoAuto": false
+}

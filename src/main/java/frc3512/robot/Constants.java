@@ -72,7 +72,7 @@ public final class Constants {
     public static final double kD = 0.05;
 
     public static final double stowPosition = 0.4;
-    public static final double closeShootingPosition = 0.29;
+    public static final double closeShootingPosition = 0.22;
     public static final double farShootingPosition = 0.7;
     public static final double ampPosition = 0.95;
     public static final double intakePosition = 0.17;

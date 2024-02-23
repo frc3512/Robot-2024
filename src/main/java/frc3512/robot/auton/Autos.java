@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc3512.robot.Constants;
 import frc3512.robot.subsystems.Superstructure;
 import frc3512.robot.subsystems.Swerve;
@@ -48,9 +49,8 @@ public class Autos {
     autonChooser.setDefaultOption("No-op", new InstantCommand());
 
     // Add autos
-    buildAuto("L-Path");
-    buildAuto("Straight");
-    buildAuto("Circle");
+    buildAuto("1 Note Run");
+    buildAuto("2 Note Fast");
 
     SmartDashboard.putData("Auton Chooser", autonChooser);
   }
@@ -62,6 +62,33 @@ public class Autos {
   private void setMarkers() {
     NamedCommands.registerCommand(
         "Reset Gyro", new InstantCommand(() -> swerve.zeroGyroWithAlliance()));
+    NamedCommands.registerCommand(
+        "Stow",
+        (new InstantCommand(() -> superstructure.elevator.stowElevator()))
+            .andThen(new InstantCommand(() -> superstructure.arm.stowArm())));
+    NamedCommands.registerCommand(
+        "Intake Position",
+        (new InstantCommand(() -> superstructure.elevator.outElevator()))
+            .andThen(new WaitCommand(0.5))
+            .andThen(new InstantCommand(() -> superstructure.arm.intakePos())));
+    NamedCommands.registerCommand(
+        "Intake", new InstantCommand(() -> superstructure.shootake.i_wanna_intake()));
+    NamedCommands.registerCommand(
+        "Close Shooting",
+        (new InstantCommand(() -> superstructure.elevator.outElevator()))
+            .andThen(new InstantCommand(() -> superstructure.arm.closeShootingPos())));
+    NamedCommands.registerCommand(
+        "Shoot",
+        (new InstantCommand(() -> superstructure.shootake.shootFar()))
+            .andThen(new WaitCommand(2))
+            .andThen(new InstantCommand(() -> superstructure.shootake.roweIntake()))
+            .andThen(new WaitCommand(0.75))
+            .andThen(new InstantCommand(() -> superstructure.shootake.stopShooting()))
+            .andThen(new InstantCommand(() -> superstructure.shootake.stopIntakeOutake())));
+    NamedCommands.registerCommand(
+        "Stop Shooting", new InstantCommand(() -> superstructure.shootake.stopShooting()));
+    NamedCommands.registerCommand(
+        "Shooting Speed", new InstantCommand(() -> superstructure.shootake.shootFar()));
   }
 
   /*
