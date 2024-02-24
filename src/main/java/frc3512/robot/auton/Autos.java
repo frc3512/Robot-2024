@@ -1,5 +1,7 @@
 package frc3512.robot.auton;
 
+import org.photonvision.PhotonCamera;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
@@ -50,7 +52,7 @@ public class Autos {
 
     // Add autos
     buildAuto("1 Note Run");
-    buildAuto("2 Note Fast");
+    buildAuto("3 Note Fast");
 
     SmartDashboard.putData("Auton Chooser", autonChooser);
   }
@@ -61,7 +63,9 @@ public class Autos {
 
   private void setMarkers() {
     NamedCommands.registerCommand(
-        "Reset Gyro", new InstantCommand(() -> swerve.zeroGyroWithAlliance()));
+        "Reset Gyro", new InstantCommand(() -> swerve.zeroGyro()));
+    NamedCommands.registerCommand(
+        "Motor Fix", new InstantCommand(() -> swerve.driveCommand(() -> 0.0, () -> 0.0, () -> 0.0, () -> false, new PhotonCamera(null))));
     NamedCommands.registerCommand(
         "Stow",
         (new InstantCommand(() -> superstructure.elevator.stowElevator()))
@@ -77,6 +81,18 @@ public class Autos {
         "Close Shooting",
         (new InstantCommand(() -> superstructure.elevator.outElevator()))
             .andThen(new InstantCommand(() -> superstructure.arm.closeShootingPos())));
+    NamedCommands.registerCommand(
+        "Far Shooting",
+        (new InstantCommand(() -> superstructure.elevator.outElevator()))
+            .andThen(new InstantCommand(() -> superstructure.arm.farShootingPos())));
+    NamedCommands.registerCommand(
+        "Auto Shooting",
+        (new InstantCommand(() -> superstructure.elevator.outElevator()))
+            .andThen(new InstantCommand(() -> superstructure.arm.autoShootingPos())));
+    NamedCommands.registerCommand(
+        "Stow Shooting",
+        (new InstantCommand(() -> superstructure.elevator.outElevator()))
+            .andThen(new InstantCommand(() -> superstructure.arm.stowArm())));
     NamedCommands.registerCommand(
         "Shoot",
         (new InstantCommand(() -> superstructure.shootake.shootFar()))

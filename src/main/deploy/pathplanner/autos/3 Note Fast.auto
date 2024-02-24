@@ -5,12 +5,24 @@
       "x": 1.3929974013794195,
       "y": 5.555088802485298
     },
-    "rotation": 0
+    "rotation": 0.0
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "Motor Fix"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
+          }
+        },
         {
           "type": "named",
           "data": {
@@ -60,15 +72,15 @@
           }
         },
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "2 Note Fast 2"
+            "name": "Stow Shooting"
           }
         },
         {
-          "type": "named",
+          "type": "wait",
           "data": {
-            "name": "Close Shooting"
+            "waitTime": 1.75
           }
         },
         {
@@ -78,15 +90,27 @@
           }
         },
         {
-          "type": "wait",
+          "type": "named",
           "data": {
-            "waitTime": 0.5
+            "name": "Stop Shooting"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "2 Note Fast 3"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "Stop Shooting"
+            "name": "Intake Position"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake"
           }
         }
       ]
