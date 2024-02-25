@@ -1,8 +1,12 @@
 package frc3512.robot.subsystems;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.photonvision.targeting.PhotonPipelineResult;
+import org.photonvision.targeting.PhotonTrackedTarget;
+
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.units.Distance;
-import edu.wpi.first.units.Measure;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -12,7 +16,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc3512.lib.util.ScoringUtil;
 import frc3512.robot.Constants;
 import frc3512.robot.auton.Autos;
 
@@ -97,26 +100,6 @@ public class Superstructure extends SubsystemBase {
             vision.returnCamera()));
   }
 
-  private void poseEstimationPeriodic() {
-    if (Constants.GeneralConstants.enablePoseEstimation) {
-      // Correct pose estimate with vision measurements
-      var visionEst = vision.getEstimatedGlobalPose();
-      visionEst.ifPresent(
-          est -> {
-            var estPose = est.estimatedPose.toPose2d();
-            // Change our trust in the measurement based on the tags we can see
-            var estStdDevs = vision.getEstimationStdDevs(estPose);
-
-            swerve.addVisionMeasurement(
-                est.estimatedPose.toPose2d(), est.timestampSeconds, estStdDevs);
-          });
-    }
-  }
-
-  public Measure<Distance> getTargetDistance() {
-    return vision.getTargetDistance(swerve::getPose, () -> ScoringUtil.provideScoringPose());
-  }
-
   public void setMotorBrake(boolean brake) {
     swerve.setMotorBrake(brake);
   }
@@ -168,8 +151,13 @@ public class Superstructure extends SubsystemBase {
 
   @Override
   public void periodic() {
-    poseEstimationPeriodic();
-    SmartDashboard.putNumber(
-        "Diagnostics/Vision/Vision Distance", getTargetDistance().baseUnitMagnitude());
+    PhotonPipelineResult result = vision.photonCamera.getLatestResult();
+    List<PhotonTrackedTarget> targets =  result.getTargets();
+    double[] tags = new double[targets.size()]; 
+    for (int i = 0; i < targets.size(); i++) {
+      tags[i] = targets.get(i).getFiducialId();
+    }
+    SmartDashboard.putNumberArray(
+        "Diagnostics/Vision/Tag IDs", tags);
   }
 }
