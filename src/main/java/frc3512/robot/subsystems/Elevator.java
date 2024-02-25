@@ -64,12 +64,12 @@ public class Elevator extends ProfiledPIDSubsystem {
   }
 
   public void moveElevator(double speed) {
-    if (elevatorEncoder.getDistance() <= 0.49 && elevatorEncoder.getDistance() >= -1.55) {
+    if (elevatorEncoder.getDistance() <= 0.49 && elevatorEncoder.getDistance() >= -1.25) {
       elevatorMotor.set(speed);
     } else if (elevatorEncoder.getDistance() >= 0.49 && speed > 0) {
       bypassStop = true;
       elevatorMotor.set(speed);
-    } else if (elevatorEncoder.getDistance() <= -1.55 && speed < 0) {
+    } else if (elevatorEncoder.getDistance() <= -1.25 && speed < 0) {
       bypassStop = true;
       elevatorMotor.set(speed);
     }

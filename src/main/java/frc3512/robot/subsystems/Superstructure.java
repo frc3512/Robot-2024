@@ -52,7 +52,7 @@ public class Superstructure extends SubsystemBase {
         .onTrue(
             new InstantCommand(() -> arm.ampShootingPos())
                 .andThen(new WaitCommand(0.75))
-                .andThen(new InstantCommand(() -> elevator.ampElevator())));
+                .andThen(new InstantCommand(() -> elevator.outElevator())));
 
     appendageJoystick
         .button(2)
@@ -106,9 +106,16 @@ public class Superstructure extends SubsystemBase {
             new InstantCommand(() -> arm.farShootingPos())
                 .andThen(new InstantCommand(() -> elevator.outElevator())));
 
-    appendageJoystick.button(11).onTrue(new InstantCommand(() -> elevator.outElevator()));
+    // Joystick / Climber Controls (IN PROGRESS)
+    // appendageJoystick.axisLessThan(Joystick.AxisType.kY.value, -0.5).whileTrue(new InstantCommand(() -> Climber.motorUp()));
+    // appendageJoystick.axisGreaterThan(Joystick.AxisType.kY.value, 0.5).whileTrue(new InstantCommand(() -> Climber.motorDown()));
 
-    appendageJoystick.button(12).onTrue(new InstantCommand(() -> elevator.stowElevator()));
+    appendageJoystick.button(11).onTrue(new InstantCommand(() -> Climber.motorUp()));
+    appendageJoystick.button(11).onFalse(new InstantCommand(() -> Climber.stopClimbers()));
+
+    appendageJoystick.button(12).onTrue(new InstantCommand(() -> Climber.motorDown()));
+    appendageJoystick.button(12).onFalse(new InstantCommand(() -> Climber.stopClimbers()));
+
   }
 
   public void configureAxisActions() {

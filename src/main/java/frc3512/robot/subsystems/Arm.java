@@ -43,6 +43,7 @@ public class Arm extends ProfiledPIDSubsystem {
     rightMotor.setIdleMode(IdleMode.kBrake);
 
     rightMotor.setInverted(true);
+    leftMotor.setInverted(true);
     rightMotor.follow(leftMotor);
 
     rightMotor.burnFlash();
@@ -65,10 +66,10 @@ public class Arm extends ProfiledPIDSubsystem {
   }
 
   public void moveArm(double speed) {
-    if (armEncoder.getAbsolutePosition() <= 0.96 && armEncoder.getAbsolutePosition() >= 0.145) {
+    if (armEncoder.getAbsolutePosition() <= 1.2 && armEncoder.getAbsolutePosition() >= 0.145) {
       leftMotor.set(speed);
       bypassStop = false;
-    } else if (armEncoder.getAbsolutePosition() >= 0.96 && speed < 0) {
+    } else if (armEncoder.getAbsolutePosition() >= 1.2 && speed < 0) {
       bypassStop = true;
       leftMotor.set(speed);
     } else if (armEncoder.getAbsolutePosition() <= 0.145 && speed > 0) {

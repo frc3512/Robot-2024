@@ -46,7 +46,7 @@ public final class Constants {
     public static final boolean enablePoseEstimation =
         false; // Change to true to enable pose estimation
 
-    public static final RobotType robotType = RobotType.PROTO;
+    public static final RobotType robotType = RobotType.COMP;
   }
 
   public static final class VisionConstants {
@@ -64,7 +64,7 @@ public final class Constants {
   }
 
   public static final class ArmConstants {
-    public static final int currentLimit = 40;
+    public static final int currentLimit = 70;
     public static final double speed = 0.1;
 
     public static final double kP = 26;
@@ -75,8 +75,8 @@ public final class Constants {
     public static final double closeShootingPosition = 0.22;
     public static final double farShootingPosition = 0.35;
     public static final double autoShootingPosition = 0.415;
-    public static final double ampPosition = 0.95;
-    public static final double intakePosition = 0.17;
+    public static final double ampPosition = 1;
+    public static final double intakePosition = 0.14;
   }
 
   public static final class ElevatorConstants {
@@ -88,8 +88,8 @@ public final class Constants {
     public static final double kD = 0;
 
     public static final double stowPosition = 0.25;
-    public static final double outPosition = -1.55;
-    public static final double ampPosition = -0.5;
+    public static final double outPosition = -1.2;
+    public static final double ampPosition = -1;
     public static final double kMaxVelocityRadPerSecond = 10.0;
     public static final double kMaxAccelerationRadPerSecSquared = 15.0;
 
