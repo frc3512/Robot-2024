@@ -1,7 +1,5 @@
 package frc3512.robot.auton;
 
-import org.photonvision.PhotonCamera;
-
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
@@ -15,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc3512.robot.Constants;
 import frc3512.robot.subsystems.Superstructure;
 import frc3512.robot.subsystems.Swerve;
+import org.photonvision.PhotonCamera;
 
 @SuppressWarnings(
     "unused") // The superstructure is going to be used, but the linter isn't that smart (yet) XD
@@ -62,29 +61,19 @@ public class Autos {
   }
 
   private void setMarkers() {
+    NamedCommands.registerCommand("Reset Gyro", new InstantCommand(() -> swerve.zeroGyro()));
     NamedCommands.registerCommand(
-        "Reset Gyro", new InstantCommand(() -> swerve.zeroGyro()));
+        "Motor Fix",
+        new InstantCommand(
+            () ->
+                swerve.driveCommand(
+                    () -> 0.0, () -> 0.0, () -> 0.0, () -> false, new PhotonCamera(null))));
     NamedCommands.registerCommand(
-        "Motor Fix", new InstantCommand(() -> swerve.driveCommand(() -> 0.0, () -> 0.0, () -> 0.0, () -> false, new PhotonCamera(null))));
-    NamedCommands.registerCommand(
-        "Stow",
-        (new InstantCommand(() -> superstructure.elevator.stowElevator()))
-            .andThen(new InstantCommand(() -> superstructure.arm.stowArm())));
-    NamedCommands.registerCommand(
-        "Intake Position",
-        (new InstantCommand(() -> superstructure.elevator.outElevator()))
-            .andThen(new WaitCommand(0.5))
-            .andThen(new InstantCommand(() -> superstructure.arm.intakePos())));
-    NamedCommands.registerCommand(
-        "Intake", new InstantCommand(() -> superstructure.shootake.i_wanna_intake()));
-    NamedCommands.registerCommand(
-        "Close Shooting",
-        (new InstantCommand(() -> superstructure.elevator.outElevator()))
-            .andThen(new InstantCommand(() -> superstructure.arm.closeShootingPos())));
-    NamedCommands.registerCommand(
-        "Far Shooting",
-        (new InstantCommand(() -> superstructure.elevator.outElevator()))
-            .andThen(new InstantCommand(() -> superstructure.arm.farShootingPos())));
+        "Intake", new InstantCommand(() -> superstructure.shootake.want_to_intake = true));
+    NamedCommands.registerCommand("Stow", superstructure.subsystemStow());
+    NamedCommands.registerCommand("Intake Position", superstructure.subsystemIntake());
+    NamedCommands.registerCommand("Close Shooting", superstructure.subsystemCloseShot());
+    NamedCommands.registerCommand("Far Shooting", superstructure.subsystemFarShot());
     NamedCommands.registerCommand(
         "Auto Shooting",
         (new InstantCommand(() -> superstructure.elevator.outElevator()))
@@ -95,16 +84,13 @@ public class Autos {
             .andThen(new InstantCommand(() -> superstructure.arm.stowArm())));
     NamedCommands.registerCommand(
         "Shoot",
-        (new InstantCommand(() -> superstructure.shootake.shootFar()))
+        (new InstantCommand(() -> superstructure.shootake.shoot()))
             .andThen(new WaitCommand(2))
-            .andThen(new InstantCommand(() -> superstructure.shootake.roweIntake()))
-            .andThen(new WaitCommand(0.75))
-            .andThen(new InstantCommand(() -> superstructure.shootake.stopShooting()))
-            .andThen(new InstantCommand(() -> superstructure.shootake.stopIntakeOutake())));
+            .andThen(superstructure.shootSequence()));
     NamedCommands.registerCommand(
         "Stop Shooting", new InstantCommand(() -> superstructure.shootake.stopShooting()));
     NamedCommands.registerCommand(
-        "Shooting Speed", new InstantCommand(() -> superstructure.shootake.shootFar()));
+        "Shooting Speed", new InstantCommand(() -> superstructure.shootake.shoot()));
   }
 
   /*

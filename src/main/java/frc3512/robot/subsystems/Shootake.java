@@ -29,11 +29,10 @@ public class Shootake extends PIDSubsystem {
   boolean shooting = false;
   boolean manual_intake = false;
   boolean can_intake = true;
-  boolean want_to_intake = false;
   boolean want_to_outtake = false;
+  public boolean want_to_intake = false;
 
   public Shootake() {
-
     super(new PIDController(ShooterConstants.kP, ShooterConstants.kI, ShooterConstants.kD));
     getController().setTolerance(ShooterConstants.kShooterToleranceRPM);
     setSetpoint(0);
@@ -73,60 +72,23 @@ public class Shootake extends PIDSubsystem {
     bottomMotor.burnFlash();
   }
 
-  public void i_wanna_intake() {
-    want_to_intake = true;
-  }
-
-  public void i_wanna_outtake() {
-    want_to_outtake = true;
-  }
-
-  public void i_dont_wanna_intake() {
-    want_to_intake = false;
-  }
-
-  public void i_dont_wanna_outtake() {
-    want_to_outtake = false;
-  }
-
   public void stopIntakeOutake() {
     intakeMotor.set(0.0);
     want_to_intake = false;
   }
 
-  public void roweIntake() {
+  public void intake() {
     intakeMotor.set(-1);
     want_to_intake = true;
   }
 
-  public void shootClose() {
-    // topMotor.setVoltage(feedforward.calculate(1000));
-    // bottomMotor.setVoltage(feedforward.calculate(1000));
-    setSetpoint(1100);
-    enable();
-    shooting = true;
-  }
-
-  public void shootMedium() {
-    // topMotor.setVoltage(feedforward.calculate(1500));
-    // bottomMotor.setVoltage(feedforward.calculate(1500));
-    setSetpoint(1700);
-    enable();
-    shooting = true;
-  }
-
-  public void shootFar() {
-    // topMotor.setVoltage(feedforward.calculate(2500));
-    // bottomMotor.setVoltage(feedforward.calculate(2500));
-    // setSetpoint(4000);
+  public void shoot() {
     topMotor.set(0.85);
     bottomMotor.set(0.85);
-    // enable();
     shooting = true;
   }
 
   public void stopShooting() {
-    disable();
     topMotor.set(0.0);
     bottomMotor.set(0.0);
     shooting = false;
@@ -167,9 +129,6 @@ public class Shootake extends PIDSubsystem {
     } else {
       intakeMotor.set(0);
     }
-    // if (!noteEnterBeamBreak.get() && !shooting && !manual_intake) {
-    // stopIntakeOutake();
-    // }
   }
 
   @Override

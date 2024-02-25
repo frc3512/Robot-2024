@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
@@ -21,10 +22,10 @@ public class Superstructure extends SubsystemBase {
   private final Autos autos;
 
   // Subsystems
+  public final Arm arm = new Arm();
   public final Swerve swerve = new Swerve();
   public final Vision vision = new Vision();
   public final Shootake shootake = new Shootake();
-  public final Arm arm = new Arm();
   public final Elevator elevator = new Elevator();
 
   // Joysticks
@@ -47,64 +48,32 @@ public class Superstructure extends SubsystemBase {
   public void configureBindings() {
     driverXbox.x().onTrue(new InstantCommand(() -> swerve.zeroGyro()));
 
-    appendageJoystick
-        .button(1)
-        .onTrue(
-            new InstantCommand(() -> arm.ampShootingPos())
-                .andThen(new WaitCommand(0.75))
-                .andThen(new InstantCommand(() -> elevator.ampElevator())));
+    appendageJoystick.button(1).onTrue(subsystemAmp());
 
-    appendageJoystick
-        .button(2)
-        .onTrue(
-            new InstantCommand(() -> arm.closeShootingPos())
-                .andThen(new InstantCommand(() -> elevator.outElevator())));
+    appendageJoystick.button(2).onTrue(subsystemCloseShot());
 
-    appendageJoystick.button(3).onTrue(new InstantCommand(() -> shootake.shootFar()));
+    appendageJoystick.button(3).onTrue(new InstantCommand(() -> shootake.shoot()));
+    appendageJoystick.button(3).onFalse(shootSequence());
 
-    appendageJoystick
-        .button(3)
-        .onFalse(
-            new InstantCommand(() -> shootake.roweIntake())
-                .andThen(new WaitCommand(.75))
-                .andThen(new InstantCommand(() -> shootake.stopIntakeOutake()))
-                .andThen(new InstantCommand(() -> shootake.stopShooting()))
-                .andThen(new InstantCommand(() -> arm.stowArm()))
-                .andThen(new InstantCommand(() -> elevator.stowElevator())));
+    appendageJoystick.button(4).onTrue(subsystemStow());
 
-    appendageJoystick
-        .button(4)
-        .onTrue(
-            new InstantCommand(() -> arm.stowArm())
-                .andThen(new WaitCommand(.5))
-                .andThen(new InstantCommand(() -> elevator.stowElevator())));
+    appendageJoystick.button(5).onTrue(subsystemIntake());
 
-    appendageJoystick
-        .button(5)
-        .onTrue(
-            new InstantCommand(() -> elevator.outElevator())
-                .andThen(new WaitCommand(.5))
-                .andThen(new InstantCommand(() -> arm.intakePos())));
+    appendageJoystick.button(6).onTrue(new InstantCommand(() -> shootake.want_to_intake = true));
+    appendageJoystick.button(6).onFalse(new InstantCommand(() -> shootake.want_to_intake = false));
 
-    appendageJoystick.button(6).onTrue(new InstantCommand(() -> shootake.i_wanna_intake()));
-
-    appendageJoystick.button(6).onFalse(new InstantCommand(() -> shootake.i_dont_wanna_intake()));
-
-    appendageJoystick.button(7).onTrue(new InstantCommand(() -> shootake.i_wanna_outtake()));
-    appendageJoystick.button(7).onFalse(new InstantCommand(() -> shootake.i_dont_wanna_outtake()));
+    appendageJoystick.button(7).onTrue(new InstantCommand(() -> shootake.want_to_outtake = true));
+    appendageJoystick.button(7).onFalse(new InstantCommand(() -> shootake.want_to_outtake = false));
 
     appendageJoystick
         .button(9)
         .whileFalse(new InstantCommand(() -> shootake.overrideBeamBreak("auto")));
+
     appendageJoystick
         .button(9)
         .whileTrue(new InstantCommand(() -> shootake.overrideBeamBreak("manual")));
 
-    appendageJoystick
-        .button(10)
-        .onTrue(
-            new InstantCommand(() -> arm.farShootingPos())
-                .andThen(new InstantCommand(() -> elevator.outElevator())));
+    appendageJoystick.button(10).onTrue(subsystemFarShot());
 
     appendageJoystick.button(11).onTrue(new InstantCommand(() -> elevator.outElevator()));
 
@@ -154,6 +123,47 @@ public class Superstructure extends SubsystemBase {
 
   public Command getAuton() {
     return autos.getSelected();
+  }
+
+  public SequentialCommandGroup shootSequence() {
+    return new InstantCommand(() -> shootake.intake())
+        .andThen(new WaitCommand(.75))
+        .andThen(new InstantCommand(() -> shootake.stopIntakeOutake()))
+        .andThen(new InstantCommand(() -> shootake.stopShooting()))
+        .andThen(new InstantCommand(() -> arm.stowArm()))
+        .andThen(new InstantCommand(() -> elevator.stowElevator()));
+  }
+
+  public SequentialCommandGroup subsystemStow() {
+    return new InstantCommand(() -> arm.stowArm())
+        .andThen(new WaitCommand(.5))
+        .andThen(new InstantCommand(() -> elevator.stowElevator()));
+  }
+
+  public SequentialCommandGroup subsystemIntake() {
+    return new InstantCommand(() -> elevator.outElevator())
+        .andThen(new WaitCommand(.5))
+        .andThen(new InstantCommand(() -> arm.intakePos()));
+  }
+
+  public SequentialCommandGroup subsystemAmp() {
+    return new InstantCommand(() -> arm.ampShootingPos())
+        .andThen(new WaitCommand(0.75))
+        .andThen(new InstantCommand(() -> elevator.ampElevator()));
+  }
+
+  public SequentialCommandGroup subsystemFarShot() {
+    return new InstantCommand(() -> arm.farShootingPos())
+        .andThen(new InstantCommand(() -> elevator.outElevator()));
+  }
+
+  public SequentialCommandGroup subsystemCloseShot() {
+    return new InstantCommand(() -> arm.closeShootingPos())
+        .andThen(new InstantCommand(() -> elevator.outElevator()));
+  }
+
+  public SequentialCommandGroup example() {
+    return new InstantCommand().andThen(new InstantCommand());
   }
 
   @Override
