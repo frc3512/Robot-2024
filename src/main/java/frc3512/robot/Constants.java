@@ -72,11 +72,12 @@ public final class Constants {
     public static final double kD = 0.05;
 
     public static final double stowPosition = 0.4;
-    public static final double closeShootingPosition = 0.22;
-    public static final double farShootingPosition = 0.35;
+    public static final double closeShootingPosition = 0.3;
+    public static final double farShootingPosition = 0.48;
     public static final double autoShootingPosition = 0.415;
     public static final double ampPosition = 0.95;
-    public static final double intakePosition = 0.17;
+    public static final double intakePosition = 0.21;
+    public static final double trapPositon = 0.95;
   }
 
   public static final class ElevatorConstants {
@@ -87,9 +88,9 @@ public final class Constants {
     public static final double kI = 0;
     public static final double kD = 0;
 
-    public static final double stowPosition = 0.25;
-    public static final double outPosition = -1.55;
-    public static final double ampPosition = -0.5;
+    public static final double stowPosition = 0.0;
+    public static final double outPosition = -1.9;
+    public static final double ampPosition = -0.7;
     public static final double kMaxVelocityRadPerSecond = 10.0;
     public static final double kMaxAccelerationRadPerSecSquared = 15.0;
 

@@ -113,6 +113,11 @@ public class Arm extends ProfiledPIDSubsystem {
     enable();
   }
 
+  public void trapPositon() {
+    setGoal(Constants.ArmConstants.trapPositon);
+    enable();
+  }
+
   public void stopArm() {
     disable();
     leftMotor.set(0);

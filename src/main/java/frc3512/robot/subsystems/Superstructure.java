@@ -1,12 +1,7 @@
 package frc3512.robot.subsystems;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.photonvision.targeting.PhotonPipelineResult;
-import org.photonvision.targeting.PhotonTrackedTarget;
-
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -18,6 +13,9 @@ import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc3512.robot.Constants;
 import frc3512.robot.auton.Autos;
+import java.util.List;
+import org.photonvision.targeting.PhotonPipelineResult;
+import org.photonvision.targeting.PhotonTrackedTarget;
 
 public class Superstructure extends SubsystemBase {
 
@@ -30,6 +28,7 @@ public class Superstructure extends SubsystemBase {
   public final Vision vision = new Vision();
   public final Shootake shootake = new Shootake();
   public final Elevator elevator = new Elevator();
+  public final Climber climber = new Climber();
 
   // Joysticks
   private final CommandXboxController driverXbox =
@@ -78,9 +77,20 @@ public class Superstructure extends SubsystemBase {
 
     appendageJoystick.button(10).onTrue(subsystemFarShot());
 
-    appendageJoystick.button(11).onTrue(new InstantCommand(() -> elevator.outElevator()));
+    appendageJoystick.button(11).onTrue(new InstantCommand(() -> Climber.motorUp()));
+    appendageJoystick.button(11).onFalse(new InstantCommand(() -> Climber.stopClimbers()));
 
-    appendageJoystick.button(12).onTrue(new InstantCommand(() -> elevator.stowElevator()));
+    appendageJoystick.button(12).onTrue(new InstantCommand(() -> Climber.motorDown()));
+    appendageJoystick.button(12).onFalse(new InstantCommand(() -> Climber.stopClimbers()));
+
+
+
+    // appendageJoystick.axisLessThan(Joystick.AxisType.kY.value, -0.5).onTrue(new InstantCommand(() -> Climber.motorUp()));
+    // appendageJoystick.axisLessThan(Joystick.AxisType.kY.value, -0.5).onFalse(new InstantCommand(() -> Climber.stopClimbers()));
+
+    // appendageJoystick.axisGreaterThan(Joystick.AxisType.kY.value, 0.5).onTrue(new InstantCommand(() -> Climber.motorDown()));
+    // appendageJoystick.axisGreaterThan(Joystick.AxisType.kY.value, 0.5).onFalse(new InstantCommand(() -> Climber.stopClimbers()));
+
   }
 
   public void configureAxisActions() {
@@ -145,19 +155,25 @@ public class Superstructure extends SubsystemBase {
         .andThen(new InstantCommand(() -> elevator.outElevator()));
   }
 
+  public SequentialCommandGroup subsystemTrapPositon() {
+    return new InstantCommand(() -> arm.trapPositon())
+        .andThen(new InstantCommand(() -> elevator.outElevator()));
+  }
+
   public SequentialCommandGroup example() {
     return new InstantCommand().andThen(new InstantCommand());
   }
 
+
+
   @Override
   public void periodic() {
     PhotonPipelineResult result = vision.photonCamera.getLatestResult();
-    List<PhotonTrackedTarget> targets =  result.getTargets();
-    double[] tags = new double[targets.size()]; 
+    List<PhotonTrackedTarget> targets = result.getTargets();
+    double[] tags = new double[targets.size()];
     for (int i = 0; i < targets.size(); i++) {
       tags[i] = targets.get(i).getFiducialId();
     }
-    SmartDashboard.putNumberArray(
-        "Diagnostics/Vision/Tag IDs", tags);
+    SmartDashboard.putNumberArray("Diagnostics/Vision/Tag IDs", tags);
   }
 }
