@@ -12,6 +12,7 @@ public class Climber extends SubsystemBase {
     17, CANSparkLowLevel.MotorType.kBrushless);
     private static CANSparkMax climberMotor2= new CANSparkMax(
     16, CANSparkLowLevel.MotorType.kBrushless);
+
 public Climber() {
     climberMotor1.restoreFactoryDefaults();
     climberMotor2.restoreFactoryDefaults();
@@ -29,7 +30,6 @@ public Climber() {
     climberMotor2.enableVoltageCompensation(10);
 
     climberMotor1.setInverted(true);
-
 
     climberMotor1.burnFlash();
     climberMotor2.burnFlash();

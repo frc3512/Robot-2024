@@ -94,6 +94,12 @@ public class Shootake extends PIDSubsystem {
     shooting = false;
   }
 
+  public void stopIntakeAndShooter() {
+    intakeMotor.set(0);
+    topMotor.set(0);
+    bottomMotor.set(0);
+  }
+
   public void overrideBeamBreak(String mode) {
     if (mode == "manual") {
       manual_intake = true;

@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.3929974013794195,
-      "y": 5.555088802485298
+      "x": 1.4057878828008366,
+      "y": 5.5430292057165325
     },
-    "rotation": 0.0
+    "rotation": 0
   },
   "command": {
     "type": "sequential",
@@ -14,31 +14,13 @@
         {
           "type": "named",
           "data": {
-            "name": "Motor Fix"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.5
+            "name": "Close Shooting"
           }
         },
         {
           "type": "named",
           "data": {
             "name": "Shooting Speed"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Close Shooting"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.5
           }
         },
         {
@@ -74,25 +56,25 @@
         {
           "type": "named",
           "data": {
-            "name": "Auto Shooting"
+            "name": "Close Shooting"
           }
         },
         {
-          "type": "wait",
+          "type": "path",
           "data": {
-            "waitTime": 2.5
+            "pathName": "2 Note Fast 2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shooting Speed"
           }
         },
         {
           "type": "named",
           "data": {
             "name": "Shoot"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Stop Shooting"
           }
         },
         {
@@ -110,13 +92,37 @@
         {
           "type": "path",
           "data": {
-            "pathName": "2 Note Fast 3"
+            "pathName": "3 Note 3"
           }
         },
         {
-          "type": "wait",
+          "type": "named",
           "data": {
-            "waitTime": 0.75
+            "name": "Close Shooting"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "3 Note 4"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shooting Speed"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Stow"
           }
         },
         {
