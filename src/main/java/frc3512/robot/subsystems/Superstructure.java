@@ -1,6 +1,5 @@
 package frc3512.robot.subsystems;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -13,9 +12,6 @@ import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc3512.robot.Constants;
 import frc3512.robot.auton.Autos;
-import java.util.List;
-import org.photonvision.targeting.PhotonPipelineResult;
-import org.photonvision.targeting.PhotonTrackedTarget;
 
 public class Superstructure extends SubsystemBase {
 
@@ -23,11 +19,11 @@ public class Superstructure extends SubsystemBase {
   private final Autos autos;
 
   // Subsystems
-  public final Arm arm = new Arm();
-  public final Swerve swerve = new Swerve();
   public final Vision vision = new Vision();
-  public final Shootake shootake = new Shootake();
+  public final Swerve swerve = new Swerve(vision);
+  public final Arm arm = new Arm();
   public final Elevator elevator = new Elevator();
+  public final Shootake shootake = new Shootake();
   public final Climber climber = new Climber();
 
   // Joysticks
@@ -67,8 +63,6 @@ public class Superstructure extends SubsystemBase {
     appendageJoystick.button(7).onTrue(new InstantCommand(() -> shootake.want_to_outtake = true));
     appendageJoystick.button(7).onFalse(new InstantCommand(() -> shootake.want_to_outtake = false));
 
-
-
     appendageJoystick.button(10).onTrue(subsystemFarShot());
 
     appendageJoystick.button(11).onTrue(subsystemTrapPositon());
@@ -79,29 +73,39 @@ public class Superstructure extends SubsystemBase {
     // appendageJoystick.button(12).onTrue(new InstantCommand(() -> Climber.motorDown()));
     // appendageJoystick.button(12).onFalse(new InstantCommand(() -> Climber.stopClimbers()));
 
-    appendageJoystick.axisLessThan(Joystick.AxisType.kY.value, -0.5).and(appendageJoystick.button(9)).onTrue(new InstantCommand(() -> Climber.motorUp()));
-    appendageJoystick.axisLessThan(Joystick.AxisType.kY.value, -0.5).and(appendageJoystick.button(9)).onFalse(new InstantCommand(() -> Climber.stopClimbers()));
+    appendageJoystick
+        .axisLessThan(Joystick.AxisType.kY.value, -0.5)
+        .and(appendageJoystick.button(9))
+        .onTrue(new InstantCommand(() -> Climber.motorUp()));
+    appendageJoystick
+        .axisLessThan(Joystick.AxisType.kY.value, -0.5)
+        .and(appendageJoystick.button(9))
+        .onFalse(new InstantCommand(() -> Climber.stopClimbers()));
 
-    appendageJoystick.axisGreaterThan(Joystick.AxisType.kY.value, 0.5).and(appendageJoystick.button(9)).onTrue(new InstantCommand(() -> Climber.motorDown()));
-    appendageJoystick.axisGreaterThan(Joystick.AxisType.kY.value, 0.5).and(appendageJoystick.button(9)).onFalse(new InstantCommand(() -> Climber.stopClimbers()));
-
+    appendageJoystick
+        .axisGreaterThan(Joystick.AxisType.kY.value, 0.5)
+        .and(appendageJoystick.button(9))
+        .onTrue(new InstantCommand(() -> Climber.motorDown()));
+    appendageJoystick
+        .axisGreaterThan(Joystick.AxisType.kY.value, 0.5)
+        .and(appendageJoystick.button(9))
+        .onFalse(new InstantCommand(() -> Climber.stopClimbers()));
   }
 
   public void configureAxisActions() {
-    swerve.setDefaultCommand(
-        swerve.driveCommand(
-            () ->
-                MathUtil.applyDeadband(
-                    -driverXbox.getRawAxis(translationAxis),
-                    Constants.SwerveConstants.swerveDeadband),
-            () ->
-                MathUtil.applyDeadband(
-                    -driverXbox.getRawAxis(strafeAxis), Constants.SwerveConstants.swerveDeadband),
-            () ->
-                MathUtil.applyDeadband(
-                    -driverXbox.getRawAxis(rotationAxis), Constants.SwerveConstants.swerveDeadband),
-            () -> driverXbox.leftBumper().getAsBoolean(),
-            vision.returnCamera()));
+    /* swerve.setDefaultCommand(
+    /* swerve.driveCommand(
+        () ->
+            MathUtil.applyDeadband(
+                -driverXbox.getRawAxis(translationAxis),
+                Constants.SwerveConstants.swerveDeadband),
+        () ->
+            MathUtil.applyDeadband(
+                -driverXbox.getRawAxis(strafeAxis), Constants.SwerveConstants.swerveDeadband),
+        () ->
+            MathUtil.applyDeadband(
+                -driverXbox.getRawAxis(rotationAxis), Constants.SwerveConstants.swerveDeadband),
+        () -> driverXbox.leftBumper().getAsBoolean())); */
   }
 
   public void setMotorBrake(boolean brake) {
@@ -156,7 +160,7 @@ public class Superstructure extends SubsystemBase {
 
   public SequentialCommandGroup subsytemStopIntakeAndShooter() {
     return new InstantCommand(() -> shootake.stopIntakeOutake())
-      .andThen(new InstantCommand(() -> shootake.stopShooting()));
+        .andThen(new InstantCommand(() -> shootake.stopShooting()));
   }
 
   public SequentialCommandGroup subsystemAutoShot() {
@@ -164,20 +168,8 @@ public class Superstructure extends SubsystemBase {
         .andThen(new InstantCommand(() -> elevator.outElevator()));
   }
 
-  public SequentialCommandGroup example() {
-    return new InstantCommand().andThen(new InstantCommand());
-  }
-
-
-
   @Override
   public void periodic() {
-    PhotonPipelineResult result = vision.photonCamera.getLatestResult();
-    List<PhotonTrackedTarget> targets = result.getTargets();
-    double[] tags = new double[targets.size()];
-    for (int i = 0; i < targets.size(); i++) {
-      tags[i] = targets.get(i).getFiducialId();
-    }
-    SmartDashboard.putNumberArray("Diagnostics/Vision/Tag IDs", tags);
+    vision.poseEstimationPeriodic(swerve);
   }
 }

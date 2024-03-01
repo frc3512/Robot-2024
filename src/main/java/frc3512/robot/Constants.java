@@ -38,14 +38,14 @@ public final class Constants {
     public static final double turnControllerI = 0.0;
     public static final double turnControllerD = 0.0;
 
+    public static final double turnControllerTolerance = 0.01;
+
     public static final double maximumSpeed = Units.feetToMeters(19.0);
   }
 
   public static final class GeneralConstants {
     public static final boolean tuningMode = true;
-    public static final boolean enablePoseEstimation =
-        false; // Change to true to enable pose estimation
-
+    public static final boolean enablePoseEstimation = true;
     public static final RobotType robotType = RobotType.PROTO;
   }
 

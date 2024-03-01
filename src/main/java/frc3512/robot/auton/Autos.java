@@ -10,14 +10,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc3512.lib.util.ScoringUtil;
 import frc3512.robot.Constants;
-import frc3512.robot.subsystems.Shootake;
 import frc3512.robot.subsystems.Superstructure;
 import frc3512.robot.subsystems.Swerve;
-import org.photonvision.PhotonCamera;
 
-@SuppressWarnings(
-    "unused") // The superstructure is going to be used, but the linter isn't that smart (yet) XD
 public class Autos {
 
   private final Superstructure superstructure;
@@ -66,16 +63,14 @@ public class Autos {
     NamedCommands.registerCommand("Reset Gyro", new InstantCommand(() -> swerve.zeroGyro()));
     NamedCommands.registerCommand(
         "Motor Fix",
-        new InstantCommand(
-            () ->
-                swerve.driveCommand(
-                    () -> 0.0, () -> 0.0, () -> 0.0, () -> false, new PhotonCamera(null))));
+        new InstantCommand(() -> swerve.driveCommand(() -> 0, () -> 0, () -> 0, () -> false)));
     NamedCommands.registerCommand(
         "Intake", new InstantCommand(() -> superstructure.shootake.want_to_intake = true));
     NamedCommands.registerCommand("Stow", superstructure.subsystemStow());
     NamedCommands.registerCommand("Intake Position", superstructure.subsystemIntake());
     NamedCommands.registerCommand("Close Shooting", superstructure.subsystemCloseShot());
-    NamedCommands.registerCommand("Stop Intake/Shooter", superstructure.subsytemStopIntakeAndShooter());
+    NamedCommands.registerCommand(
+        "Stop Intake/Shooter", superstructure.subsytemStopIntakeAndShooter());
     NamedCommands.registerCommand(
         "Auto Shooting",
         (new InstantCommand(() -> superstructure.elevator.outElevator()))
@@ -93,6 +88,15 @@ public class Autos {
         "Stop Shooting", new InstantCommand(() -> superstructure.shootake.stopShooting()));
     NamedCommands.registerCommand(
         "Shooting Speed", new InstantCommand(() -> superstructure.shootake.shoot()));
+    NamedCommands.registerCommand(
+        "Aim at Speaker",
+        swerve.aimAtPointCommand(
+            () -> 0,
+            () -> 0,
+            () -> 0,
+            () -> ScoringUtil.provideScoringPose().getSecond(),
+            true,
+            true));
   }
 
   /*

@@ -13,15 +13,17 @@ import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc3512.lib.logging.SpartanEntryManager;
+import frc3512.lib.util.ScoringUtil;
 import frc3512.robot.Constants;
 import java.io.File;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
-import org.photonvision.PhotonCamera;
-import org.photonvision.targeting.PhotonPipelineResult;
+import java.util.function.Supplier;
+import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 import swervelib.SwerveController;
 import swervelib.SwerveDrive;
 import swervelib.parser.SwerveDriveConfiguration;
@@ -31,13 +33,15 @@ import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
 
 public class Swerve extends SubsystemBase {
   private final SwerveDrive swerve;
+  private final Vision vision;
   private final PIDController turnController =
       new PIDController(
           Constants.SwerveConstants.turnControllerP,
           Constants.SwerveConstants.turnControllerI,
           Constants.SwerveConstants.turnControllerD);
 
-  public Swerve() {
+  public Swerve(Vision vision) {
+    this.vision = vision;
 
     if (SpartanEntryManager.isTuningMode()) {
       SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
@@ -66,6 +70,9 @@ public class Swerve extends SubsystemBase {
 
     // Heading correction should only be used while controlling the robot via angle.
     swerve.setHeadingCorrection(false);
+
+    turnController.enableContinuousInput(-180.0, 180.0);
+    turnController.setTolerance(Constants.SwerveConstants.turnControllerTolerance);
   }
 
   /**
@@ -80,36 +87,44 @@ public class Swerve extends SubsystemBase {
       DoubleSupplier translationX,
       DoubleSupplier translationY,
       DoubleSupplier angularRotationX,
-      BooleanSupplier doAim,
-      PhotonCamera camera) {
+      BooleanSupplier doAim) {
     return run(
         () -> {
-          PhotonPipelineResult result = camera.getLatestResult();
-          if (result.hasTargets() && doAim.getAsBoolean()) {
-            drive(
-                swerve.swerveController.getRawTargetSpeeds(
-                    MathUtil.applyDeadband(
-                        translationX.getAsDouble() * swerve.getMaximumVelocity(),
-                        Constants.SwerveConstants.swerveDeadband),
-                    MathUtil.applyDeadband(
-                        translationY.getAsDouble() * swerve.getMaximumVelocity(),
-                        Constants.SwerveConstants.swerveDeadband),
-                    -turnController.calculate(result.getBestTarget().getYaw(), 0)));
+          if (vision.hasTargets() && doAim.getAsBoolean()) {
+            aimAtPoint(
+                translationX,
+                translationY,
+                angularRotationX,
+                () -> ScoringUtil.provideScoringPose().getSecond(),
+                true,
+                true);
           } else {
-            swerve.drive(
-                new Translation2d(
-                    MathUtil.applyDeadband(
-                        translationX.getAsDouble() * swerve.getMaximumVelocity(),
-                        Constants.SwerveConstants.swerveDeadband),
-                    MathUtil.applyDeadband(
-                        translationY.getAsDouble() * swerve.getMaximumVelocity(),
-                        Constants.SwerveConstants.swerveDeadband)),
+            driveWithGyroYaw(
+                MathUtil.applyDeadband(
+                    translationX.getAsDouble() * swerve.getMaximumVelocity(),
+                    Constants.SwerveConstants.swerveDeadband),
+                MathUtil.applyDeadband(
+                    translationY.getAsDouble() * swerve.getMaximumVelocity(),
+                    Constants.SwerveConstants.swerveDeadband),
                 MathUtil.applyDeadband(
                     angularRotationX.getAsDouble() * swerve.getMaximumAngularVelocity(),
-                    Constants.SwerveConstants.swerveDeadband),
-                true,
-                false);
+                    Constants.SwerveConstants.swerveDeadband));
           }
+        });
+  }
+
+  /**
+   * Drive the robot given a chassis field oriented velocity. Uses the gyro's yaw instead of the
+   * odometry yaw Prevents the constant reset that occurs if you feed in vision data
+   */
+  public Command driveWithGyroYaw(
+      double translationX, double translationY, double angularRotationX) {
+    return run(
+        () -> {
+          ChassisSpeeds fieldOrientedVelocity =
+              ChassisSpeeds.fromFieldRelativeSpeeds(
+                  translationX, translationY, angularRotationX, swerve.getYaw());
+          drive(fieldOrientedVelocity);
         });
   }
 
@@ -169,6 +184,127 @@ public class Swerve extends SubsystemBase {
     } else {
       zeroGyro();
     }
+  }
+
+  /**
+   * Aim the robot at a desired point on the field, while the driver is able to strafe
+   *
+   * @param xRequestSupplier X axis speed supplier [-1.0, +1.0]
+   * @param yRequestSupplier Y axis speed supplier [-1.0, +1.0]
+   * @param rotateRequestSupplier Rotate speed supplier (ONLY USED IF POINT IS NULL) [-1.0, +1.0]
+   * @param pointSupplier Desired point supplier
+   * @param reversed True to point rear of robot toward point
+   * @param velocityCorrection True to compensate for robot's own velocity
+   */
+  public void aimAtPoint(
+      DoubleSupplier xRequestSupplier,
+      DoubleSupplier yRequestSupplier,
+      DoubleSupplier rotateRequestSupplier,
+      Supplier<Translation2d> pointTranslation2dSupplier,
+      boolean reversed,
+      boolean velocityCorrection) {
+    // Calculate our desired robot velocities
+    double moveRequest = Math.hypot(xRequestSupplier.getAsDouble(), yRequestSupplier.getAsDouble());
+    double moveDirection =
+        Math.atan2(yRequestSupplier.getAsDouble(), xRequestSupplier.getAsDouble());
+
+    // If we don't feed in anything, be able to drive normally and return
+    if (pointTranslation2dSupplier.get() == null) {
+      swerve.drive(
+          new Translation2d(
+              MathUtil.applyDeadband(
+                  xRequestSupplier.getAsDouble() * swerve.getMaximumVelocity(),
+                  Constants.SwerveConstants.swerveDeadband),
+              MathUtil.applyDeadband(
+                  yRequestSupplier.getAsDouble() * swerve.getMaximumVelocity(),
+                  Constants.SwerveConstants.swerveDeadband)),
+          MathUtil.applyDeadband(
+              rotateRequestSupplier.getAsDouble() * swerve.getMaximumAngularVelocity(),
+              Constants.SwerveConstants.swerveDeadband),
+          true,
+          false);
+    }
+
+    Pose2d currPose = getPose();
+    Vector2D robotVector =
+        new Vector2D(
+            moveRequest * vision.getDifferenceHeading().getCos(),
+            moveRequest * vision.getDifferenceHeading().getSin());
+    Translation2d aimPoint =
+        pointTranslation2dSupplier
+            .get()
+            .minus(new Translation2d(robotVector.getX(), robotVector.getY()));
+    Rotation2d targetAngle =
+        new Rotation2d(
+            pointTranslation2dSupplier.get().getX() - currPose.getX(),
+            pointTranslation2dSupplier.get().getY() - currPose.getY());
+    Vector2D targetVector =
+        new Vector2D(
+            currPose.getTranslation().getDistance(pointTranslation2dSupplier.get())
+                * targetAngle.getCos(),
+            currPose.getTranslation().getDistance(pointTranslation2dSupplier.get())
+                * targetAngle.getSin());
+    Vector2D parallelRobotVector =
+        targetVector.scalarMultiply(
+            robotVector.dotProduct(targetVector) / targetVector.getNormSq());
+    Vector2D perpendicularRobotVector =
+        robotVector.subtract(parallelRobotVector).scalarMultiply(velocityCorrection ? 0.3 : 0.0);
+    Translation2d adjustedPoint =
+        pointTranslation2dSupplier
+            .get()
+            .minus(
+                new Translation2d(
+                    perpendicularRobotVector.getX(), perpendicularRobotVector.getY()));
+    Rotation2d adjustedAngle =
+        new Rotation2d(
+            adjustedPoint.getX() - currPose.getX(), adjustedPoint.getY() - currPose.getY());
+
+    double rotation =
+        (reversed)
+            ? currPose.getRotation().plus(Rotation2d.fromRadians(Math.PI)).getDegrees()
+            : currPose.getRotation().getDegrees();
+    double output = turnController.calculate(rotation, adjustedAngle.getDegrees());
+
+    SmartDashboard.putNumberArray(
+        "Diagnostics/Vision/Aim Point",
+        new double[] {aimPoint.getX(), aimPoint.getY(), aimPoint.getAngle().getDegrees()});
+
+    driveWithGyroYaw(
+        -moveRequest * Math.cos(moveDirection), -moveRequest * Math.sin(moveDirection), output);
+  }
+
+  /**
+   * Aim the robot at a desired point on the field, while the driver is able to strafe
+   *
+   * @param xRequestSupplier X axis speed supplier [-1.0, +1.0]
+   * @param yRequestSupplier Y axis speed supplier [-1.0, +1.0]
+   * @param rotateRequestSupplier Rotate speed supplier (ONLY USED IF POINT IS NULL) [-1.0, +1.0]
+   * @param pointSupplier Desired point supplier
+   * @param reversed True to point rear of robot toward point
+   * @param velocityCorrection True to compensate for robot's own velocity
+   * @return Command that will aim at point while strafing
+   */
+  public Command aimAtPointCommand(
+      DoubleSupplier xRequestSupplier,
+      DoubleSupplier yRequestSupplier,
+      DoubleSupplier rotateRequestSupplier,
+      Supplier<Translation2d> pointTranslation2dSupplier,
+      boolean reversed,
+      boolean velocityCorrection) {
+    return runEnd(
+        () -> {
+          aimAtPoint(
+              xRequestSupplier,
+              yRequestSupplier,
+              rotateRequestSupplier,
+              pointTranslation2dSupplier,
+              reversed,
+              velocityCorrection);
+        },
+        () -> {
+          turnController.setSetpoint(swerve.getYaw().getDegrees());
+          turnController.reset();
+        });
   }
 
   /**
