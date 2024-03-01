@@ -1,5 +1,6 @@
 package frc3512.robot.subsystems;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -93,19 +94,19 @@ public class Superstructure extends SubsystemBase {
   }
 
   public void configureAxisActions() {
-    /* swerve.setDefaultCommand(
-    /* swerve.driveCommand(
-        () ->
-            MathUtil.applyDeadband(
-                -driverXbox.getRawAxis(translationAxis),
-                Constants.SwerveConstants.swerveDeadband),
-        () ->
-            MathUtil.applyDeadband(
-                -driverXbox.getRawAxis(strafeAxis), Constants.SwerveConstants.swerveDeadband),
-        () ->
-            MathUtil.applyDeadband(
-                -driverXbox.getRawAxis(rotationAxis), Constants.SwerveConstants.swerveDeadband),
-        () -> driverXbox.leftBumper().getAsBoolean())); */
+    swerve.setDefaultCommand(
+        swerve.driveCommand(
+            () ->
+                MathUtil.applyDeadband(
+                    -driverXbox.getRawAxis(translationAxis),
+                    Constants.SwerveConstants.swerveDeadband),
+            () ->
+                MathUtil.applyDeadband(
+                    -driverXbox.getRawAxis(strafeAxis), Constants.SwerveConstants.swerveDeadband),
+            () ->
+                MathUtil.applyDeadband(
+                    -driverXbox.getRawAxis(rotationAxis), Constants.SwerveConstants.swerveDeadband),
+            () -> driverXbox.leftBumper().getAsBoolean()));
   }
 
   public void setMotorBrake(boolean brake) {
