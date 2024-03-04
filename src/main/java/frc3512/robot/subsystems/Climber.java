@@ -1,19 +1,19 @@
 package frc3512.robot.subsystems;
 
-import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel;
+import com.revrobotics.CANSparkMax;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc3512.lib.util.CANSparkMaxUtil;
 import frc3512.lib.util.CANSparkMaxUtil.Usage;
 
 public class Climber extends SubsystemBase {
-    private static CANSparkMax climberMotor1= new CANSparkMax(
-    17, CANSparkLowLevel.MotorType.kBrushless);
-    private static CANSparkMax climberMotor2= new CANSparkMax(
-    16, CANSparkLowLevel.MotorType.kBrushless);
+  private static CANSparkMax climberMotor1 =
+      new CANSparkMax(17, CANSparkLowLevel.MotorType.kBrushless);
+  private static CANSparkMax climberMotor2 =
+      new CANSparkMax(16, CANSparkLowLevel.MotorType.kBrushless);
 
-public Climber() {
+  public Climber() {
     climberMotor1.restoreFactoryDefaults();
     climberMotor2.restoreFactoryDefaults();
 
@@ -33,19 +33,20 @@ public Climber() {
 
     climberMotor1.burnFlash();
     climberMotor2.burnFlash();
- }
+  }
 
-public static void motorUp() {
+  public static void motorUp() {
     climberMotor1.set(0.4);
     climberMotor2.set(0.4);
- }
-public static void motorDown() {
+  }
+
+  public static void motorDown() {
     climberMotor1.set(-0.8);
     climberMotor2.set(-0.8);
- }
-public static void stopClimbers() {
+  }
+
+  public static void stopClimbers() {
     climberMotor1.set(0);
     climberMotor2.set(0);
- }
- 
+  }
 }

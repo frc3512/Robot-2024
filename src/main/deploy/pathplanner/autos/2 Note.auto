@@ -80,48 +80,6 @@
         {
           "type": "named",
           "data": {
-            "name": "Intake Position"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Intake"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "3 Note 3"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Close Shooting Auto"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "3 Note 4"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Shooting Speed"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Shoot"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
             "name": "Stow"
           }
         },

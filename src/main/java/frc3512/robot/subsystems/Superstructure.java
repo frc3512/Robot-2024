@@ -48,8 +48,11 @@ public class Superstructure extends SubsystemBase {
   }
 
   public void configureBindings() {
+
+    // Reset Gyro
     driverXbox.x().onTrue(new InstantCommand(() -> swerve.zeroGyro()));
 
+    // Arm / Shooter Controls
     appendageJoystick.button(1).onTrue(subsystemAmp());
 
     appendageJoystick.button(2).onTrue(subsystemCloseShot());
@@ -67,11 +70,11 @@ public class Superstructure extends SubsystemBase {
     appendageJoystick.button(7).onTrue(new InstantCommand(() -> shootake.want_to_outtake = true));
     appendageJoystick.button(7).onFalse(new InstantCommand(() -> shootake.want_to_outtake = false));
 
-
-
     appendageJoystick.button(10).onTrue(subsystemFarShot());
 
     appendageJoystick.button(11).onTrue(subsystemTrapPositon());
+
+    appendageJoystick.button(12).onTrue(subsytemStopIntakeAndShooter());
 
     // appendageJoystick.button(11).onTrue(new InstantCommand(() -> Climber.motorUp()));
     // appendageJoystick.button(11).onFalse(new InstantCommand(() -> Climber.stopClimbers()));
@@ -79,12 +82,24 @@ public class Superstructure extends SubsystemBase {
     // appendageJoystick.button(12).onTrue(new InstantCommand(() -> Climber.motorDown()));
     // appendageJoystick.button(12).onFalse(new InstantCommand(() -> Climber.stopClimbers()));
 
-    appendageJoystick.axisLessThan(Joystick.AxisType.kY.value, -0.5).and(appendageJoystick.button(9)).onTrue(new InstantCommand(() -> Climber.motorUp()));
-    appendageJoystick.axisLessThan(Joystick.AxisType.kY.value, -0.5).and(appendageJoystick.button(9)).onFalse(new InstantCommand(() -> Climber.stopClimbers()));
+    // Climber Controls
+    appendageJoystick
+        .axisLessThan(Joystick.AxisType.kY.value, -0.5)
+        .and(appendageJoystick.button(9))
+        .onTrue(new InstantCommand(() -> Climber.motorUp()));
+    appendageJoystick
+        .axisLessThan(Joystick.AxisType.kY.value, -0.5)
+        .and(appendageJoystick.button(9))
+        .onFalse(new InstantCommand(() -> Climber.stopClimbers()));
 
-    appendageJoystick.axisGreaterThan(Joystick.AxisType.kY.value, 0.5).and(appendageJoystick.button(9)).onTrue(new InstantCommand(() -> Climber.motorDown()));
-    appendageJoystick.axisGreaterThan(Joystick.AxisType.kY.value, 0.5).and(appendageJoystick.button(9)).onFalse(new InstantCommand(() -> Climber.stopClimbers()));
-
+    appendageJoystick
+        .axisGreaterThan(Joystick.AxisType.kY.value, 0.5)
+        .and(appendageJoystick.button(9))
+        .onTrue(new InstantCommand(() -> Climber.motorDown()));
+    appendageJoystick
+        .axisGreaterThan(Joystick.AxisType.kY.value, 0.5)
+        .and(appendageJoystick.button(9))
+        .onFalse(new InstantCommand(() -> Climber.stopClimbers()));
   }
 
   public void configureAxisActions() {
@@ -145,7 +160,8 @@ public class Superstructure extends SubsystemBase {
   }
 
   public SequentialCommandGroup subsystemCloseShot() {
-    return new InstantCommand(() -> arm.closeShootingPos())
+    return new InstantCommand(() -> arm.autoCloseShootingPos())
+        // this is done to conserve teleop shooting. will change once tuned
         .andThen(new InstantCommand(() -> elevator.outElevator()));
   }
 
@@ -156,7 +172,7 @@ public class Superstructure extends SubsystemBase {
 
   public SequentialCommandGroup subsytemStopIntakeAndShooter() {
     return new InstantCommand(() -> shootake.stopIntakeOutake())
-      .andThen(new InstantCommand(() -> shootake.stopShooting()));
+        .andThen(new InstantCommand(() -> shootake.stopShooting()));
   }
 
   public SequentialCommandGroup subsystemAutoShot() {
@@ -167,8 +183,6 @@ public class Superstructure extends SubsystemBase {
   public SequentialCommandGroup example() {
     return new InstantCommand().andThen(new InstantCommand());
   }
-
-
 
   @Override
   public void periodic() {

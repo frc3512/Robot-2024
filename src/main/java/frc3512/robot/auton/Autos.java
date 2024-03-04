@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc3512.robot.Constants;
-import frc3512.robot.subsystems.Shootake;
 import frc3512.robot.subsystems.Superstructure;
 import frc3512.robot.subsystems.Swerve;
 import org.photonvision.PhotonCamera;
@@ -52,7 +51,7 @@ public class Autos {
 
     // Add autos
     buildAuto("1 Note Run");
-    buildAuto("3 Note Fast");
+    buildAuto("2 Note");
     buildAuto("3 Note");
 
     SmartDashboard.putData("Auton Chooser", autonChooser);
@@ -75,7 +74,12 @@ public class Autos {
     NamedCommands.registerCommand("Stow", superstructure.subsystemStow());
     NamedCommands.registerCommand("Intake Position", superstructure.subsystemIntake());
     NamedCommands.registerCommand("Close Shooting", superstructure.subsystemCloseShot());
-    NamedCommands.registerCommand("Stop Intake/Shooter", superstructure.subsytemStopIntakeAndShooter());
+    NamedCommands.registerCommand(
+        "Close Shooting Auto",
+        (new InstantCommand(() -> superstructure.elevator.outElevator())
+            .andThen(new InstantCommand(() -> superstructure.arm.autoCloseShootingPos()))));
+    NamedCommands.registerCommand(
+        "Stop Intake/Shooter", superstructure.subsytemStopIntakeAndShooter());
     NamedCommands.registerCommand(
         "Auto Shooting",
         (new InstantCommand(() -> superstructure.elevator.outElevator()))
@@ -87,7 +91,7 @@ public class Autos {
     NamedCommands.registerCommand(
         "Shoot",
         (new InstantCommand(() -> superstructure.shootake.shoot()))
-            .andThen(new WaitCommand(2))
+            .andThen(new WaitCommand(2.5))
             .andThen(superstructure.shootSequence()));
     NamedCommands.registerCommand(
         "Stop Shooting", new InstantCommand(() -> superstructure.shootake.stopShooting()));

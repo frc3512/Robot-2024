@@ -113,6 +113,12 @@ public class Arm extends ProfiledPIDSubsystem {
     enable();
   }
 
+  public void autoCloseShootingPos() {
+    SmartDashboard.putString("Arm/Arm Test", "Auto Shooting Pos");
+    setGoal(Constants.ArmConstants.autoCloseShootingPosition);
+    enable();
+  }
+
   public void trapPositon() {
     setGoal(Constants.ArmConstants.trapPositon);
     enable();
