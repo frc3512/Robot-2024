@@ -38,7 +38,7 @@ public final class Constants {
     public static final double turnControllerI = 0.0;
     public static final double turnControllerD = 0.0;
 
-    public static final double turnControllerTolerance = 0.01;
+    public static final double turnControllerTolerance = 1.0;
 
     public static final double maximumSpeed = Units.feetToMeters(19.0);
   }
@@ -56,10 +56,12 @@ public final class Constants {
 
     public static final Pair<Integer, Translation2d> blueSpeaker =
         new Pair<Integer, Translation2d>(7, new Translation2d(0.00, 5.55));
-    public static final Pair<Integer, Translation2d> redSpeaker =
+    public static final Pair<Integer, Translation2d> redSpeakerDistance =
         new Pair<Integer, Translation2d>(4, new Translation2d(15.64, 5.55));
+    public static final Pair<Integer, Translation2d> redSpeakerAim =
+        new Pair<Integer, Translation2d>(4, new Translation2d(16.70, 5.55));
 
-    public static final Matrix<N3, N1> singleTagStdDevs = VecBuilder.fill(0.9, 0.9, 0.9);
+    public static final Matrix<N3, N1> singleTagStdDevs = VecBuilder.fill(4.0, 4.0, 4.0);
     public static final Matrix<N3, N1> multiTagStdDevs = VecBuilder.fill(0.9, 0.9, 0.9);
   }
 

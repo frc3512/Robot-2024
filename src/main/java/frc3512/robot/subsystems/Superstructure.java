@@ -3,7 +3,6 @@ package frc3512.robot.subsystems;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -21,7 +20,7 @@ public class Superstructure extends SubsystemBase {
 
   // Subsystems
   public final Vision vision = new Vision();
-  public final Swerve swerve = new Swerve(vision);
+  public final Swerve swerve = new Swerve();
   public final Arm arm = new Arm();
   public final Elevator elevator = new Elevator();
   public final Shootake shootake = new Shootake();
@@ -40,8 +39,7 @@ public class Superstructure extends SubsystemBase {
   private final int rotationAxis = XboxController.Axis.kRightX.value;
 
   public Superstructure() {
-    autos = new Autos(this, swerve);
-    SmartDashboard.putData(arm);
+    autos = new Autos(this);
   }
 
   public void configureBindings() {
@@ -67,12 +65,6 @@ public class Superstructure extends SubsystemBase {
     appendageJoystick.button(10).onTrue(subsystemFarShot());
 
     appendageJoystick.button(11).onTrue(subsystemTrapPositon());
-
-    // appendageJoystick.button(11).onTrue(new InstantCommand(() -> Climber.motorUp()));
-    // appendageJoystick.button(11).onFalse(new InstantCommand(() -> Climber.stopClimbers()));
-
-    // appendageJoystick.button(12).onTrue(new InstantCommand(() -> Climber.motorDown()));
-    // appendageJoystick.button(12).onFalse(new InstantCommand(() -> Climber.stopClimbers()));
 
     appendageJoystick
         .axisLessThan(Joystick.AxisType.kY.value, -0.5)
@@ -106,7 +98,8 @@ public class Superstructure extends SubsystemBase {
             () ->
                 MathUtil.applyDeadband(
                     -driverXbox.getRawAxis(rotationAxis), Constants.SwerveConstants.swerveDeadband),
-            () -> driverXbox.leftBumper().getAsBoolean()));
+            () -> driverXbox.a().getAsBoolean(),
+            vision));
   }
 
   public void setMotorBrake(boolean brake) {
@@ -171,6 +164,6 @@ public class Superstructure extends SubsystemBase {
 
   @Override
   public void periodic() {
-    vision.poseEstimationPeriodic(swerve);
+    vision.periodic(swerve);
   }
 }

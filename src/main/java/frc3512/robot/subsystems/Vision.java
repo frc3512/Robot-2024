@@ -10,11 +10,11 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc3512.lib.util.ScoringUtil;
 import frc3512.robot.Constants;
+import frc3512.robot.Robot;
 import java.util.Optional;
 import java.util.function.Supplier;
 import org.photonvision.EstimatedRobotPose;
@@ -111,40 +111,39 @@ public class Vision extends SubsystemBase {
     return poseSupplier.get().getTranslation().getDistance(targetSupplier.get().getSecond());
   }
 
+  /** Set the current heading difference */
+  public void setDifferenceHeading(Rotation2d rotation2d) {
+    diffHeading = rotation2d;
+  }
+
   /** Return the current heading difference */
   public Rotation2d getDifferenceHeading() {
     return diffHeading;
   }
 
-  public void poseEstimationPeriodic(Swerve swerve) {
-    /*
-     * Only use when we are explicitly in the teleop period or are disabled.
-     * No robots (ideally) are running into us in auto, so we can trust the odometry on itself now.
-     */
-    if (Constants.GeneralConstants.enablePoseEstimation
-        && (DriverStation.isTeleop() || DriverStation.isDisabled())) {
+  public void periodic(Swerve swerve) {
+    if (Robot.isReal()) {
+      var prevPose = swerve.getPose();
       // Correct pose estimate with vision measurements
       var visionEst = getEstimatedGlobalPose();
       visionEst.ifPresent(
           est -> {
-            var prevPose = swerve.getPose();
-
             var estPose = est.estimatedPose.toPose2d();
             // Change our trust in the measurement based on the tags we can see
             var estStdDevs = getEstimationStdDevs(estPose);
-
-            diffHeading =
-                new Rotation2d(
-                    swerve.getPose().getX() - prevPose.getX(),
-                    swerve.getPose().getY() - prevPose.getY());
 
             swerve.addVisionMeasurement(
                 est.estimatedPose.toPose2d(), est.timestampSeconds, estStdDevs);
           });
 
+      setDifferenceHeading(
+          new Rotation2d(
+              swerve.getPose().getX() - prevPose.getX(),
+              swerve.getPose().getY() - prevPose.getY()));
+
       SmartDashboard.putNumber(
           "Diagnostics/Vision/Distance",
-          getTargetDistance(() -> swerve.getPose(), () -> ScoringUtil.provideScoringPose()));
+          getTargetDistance(() -> swerve.getPose(), () -> ScoringUtil.provideDistancePose()));
     }
   }
 }

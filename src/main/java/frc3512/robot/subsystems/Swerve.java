@@ -2,7 +2,7 @@ package frc3512.robot.subsystems;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Matrix;
-import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -11,6 +11,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -33,16 +34,14 @@ import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
 
 public class Swerve extends SubsystemBase {
   private final SwerveDrive swerve;
-  private final Vision vision;
-  private final PIDController turnController =
-      new PIDController(
+  private final ProfiledPIDController turnController =
+      new ProfiledPIDController(
           Constants.SwerveConstants.turnControllerP,
           Constants.SwerveConstants.turnControllerI,
-          Constants.SwerveConstants.turnControllerD);
+          Constants.SwerveConstants.turnControllerD,
+          new TrapezoidProfile.Constraints(10.0, 10.0));
 
-  public Swerve(Vision vision) {
-    this.vision = vision;
-
+  public Swerve() {
     if (SpartanEntryManager.isTuningMode()) {
       SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
     } else {
@@ -81,13 +80,16 @@ public class Swerve extends SubsystemBase {
    * @param translationX Translation in the X direction.
    * @param translationY Translation in the Y direction.
    * @param angularRotationX Rotation of the robot to set
+   * @param doAim Button that allows the driver to aim
+   * @param vision Vision subsystem passthrough
    * @return Drive command.
    */
   public Command driveCommand(
       DoubleSupplier translationX,
       DoubleSupplier translationY,
       DoubleSupplier angularRotationX,
-      BooleanSupplier doAim) {
+      BooleanSupplier doAim,
+      Vision vision) {
     return run(
         () -> {
           if (vision.hasTargets() && doAim.getAsBoolean()) {
@@ -96,10 +98,11 @@ public class Swerve extends SubsystemBase {
                 translationY,
                 angularRotationX,
                 () -> ScoringUtil.provideScoringPose().getSecond(),
+                false,
                 true,
-                true);
+                vision);
           } else {
-            driveWithGyroYaw(
+            drive(
                 MathUtil.applyDeadband(
                     translationX.getAsDouble() * swerve.getMaximumVelocity(),
                     Constants.SwerveConstants.swerveDeadband),
@@ -107,25 +110,22 @@ public class Swerve extends SubsystemBase {
                     translationY.getAsDouble() * swerve.getMaximumVelocity(),
                     Constants.SwerveConstants.swerveDeadband),
                 MathUtil.applyDeadband(
-                    angularRotationX.getAsDouble() * swerve.getMaximumAngularVelocity(),
-                    Constants.SwerveConstants.swerveDeadband));
+                    angularRotationX.getAsDouble() * swerve.getMaximumVelocity(),
+                    Constants.SwerveConstants.swerveDeadband),
+                true);
           }
         });
   }
 
-  /**
-   * Drive the robot given a chassis field oriented velocity. Uses the gyro's yaw instead of the
-   * odometry yaw Prevents the constant reset that occurs if you feed in vision data
-   */
-  public Command driveWithGyroYaw(
-      double translationX, double translationY, double angularRotationX) {
-    return run(
-        () -> {
-          ChassisSpeeds fieldOrientedVelocity =
-              ChassisSpeeds.fromFieldRelativeSpeeds(
-                  translationX, translationY, angularRotationX, swerve.getYaw());
-          drive(fieldOrientedVelocity);
-        });
+  /** The primary method for controlling the drivebase. */
+  public void drive(
+      double translationX, double translationY, double rotation, boolean fieldRelative) {
+    ChassisSpeeds velocity =
+        fieldRelative
+            ? ChassisSpeeds.fromFieldRelativeSpeeds(
+                translationX, translationY, rotation, getHeading())
+            : new ChassisSpeeds(translationX, translationY, rotation);
+    swerve.drive(velocity);
   }
 
   /**
@@ -202,7 +202,8 @@ public class Swerve extends SubsystemBase {
       DoubleSupplier rotateRequestSupplier,
       Supplier<Translation2d> pointTranslation2dSupplier,
       boolean reversed,
-      boolean velocityCorrection) {
+      boolean velocityCorrection,
+      Vision vision) {
     // Calculate our desired robot velocities
     double moveRequest = Math.hypot(xRequestSupplier.getAsDouble(), yRequestSupplier.getAsDouble());
     double moveDirection =
@@ -210,19 +211,17 @@ public class Swerve extends SubsystemBase {
 
     // If we don't feed in anything, be able to drive normally and return
     if (pointTranslation2dSupplier.get() == null) {
-      swerve.drive(
-          new Translation2d(
-              MathUtil.applyDeadband(
-                  xRequestSupplier.getAsDouble() * swerve.getMaximumVelocity(),
-                  Constants.SwerveConstants.swerveDeadband),
-              MathUtil.applyDeadband(
-                  yRequestSupplier.getAsDouble() * swerve.getMaximumVelocity(),
-                  Constants.SwerveConstants.swerveDeadband)),
+      drive(
           MathUtil.applyDeadband(
-              rotateRequestSupplier.getAsDouble() * swerve.getMaximumAngularVelocity(),
+              xRequestSupplier.getAsDouble() * swerve.getMaximumVelocity(),
               Constants.SwerveConstants.swerveDeadband),
-          true,
-          false);
+          MathUtil.applyDeadband(
+              yRequestSupplier.getAsDouble() * swerve.getMaximumVelocity(),
+              Constants.SwerveConstants.swerveDeadband),
+          MathUtil.applyDeadband(
+              rotateRequestSupplier.getAsDouble() * swerve.getMaximumVelocity(),
+              Constants.SwerveConstants.swerveDeadband),
+          true);
     }
 
     Pose2d currPose = getPose();
@@ -266,11 +265,13 @@ public class Swerve extends SubsystemBase {
     double output = turnController.calculate(rotation, adjustedAngle.getDegrees());
 
     SmartDashboard.putNumberArray(
-        "Diagnostics/Vision/Aim Point",
-        new double[] {aimPoint.getX(), aimPoint.getY(), aimPoint.getAngle().getDegrees()});
+        "Diagnostics/Vision/Aim Point", new double[] {aimPoint.getX(), aimPoint.getY()});
 
-    driveWithGyroYaw(
-        -moveRequest * Math.cos(moveDirection), -moveRequest * Math.sin(moveDirection), output);
+    drive(
+        -moveRequest * Math.cos(moveDirection),
+        -moveRequest * Math.sin(moveDirection),
+        output,
+        true);
   }
 
   /**
@@ -290,7 +291,8 @@ public class Swerve extends SubsystemBase {
       DoubleSupplier rotateRequestSupplier,
       Supplier<Translation2d> pointTranslation2dSupplier,
       boolean reversed,
-      boolean velocityCorrection) {
+      boolean velocityCorrection,
+      Vision vision) {
     return runEnd(
         () -> {
           aimAtPoint(
@@ -299,11 +301,12 @@ public class Swerve extends SubsystemBase {
               rotateRequestSupplier,
               pointTranslation2dSupplier,
               reversed,
-              velocityCorrection);
+              velocityCorrection,
+              vision);
         },
         () -> {
-          turnController.setSetpoint(swerve.getYaw().getDegrees());
-          turnController.reset();
+          turnController.setGoal(swerve.getOdometryHeading().getDegrees());
+          turnController.reset(swerve.getOdometryHeading().getDegrees());
         });
   }
 
@@ -314,6 +317,11 @@ public class Swerve extends SubsystemBase {
    */
   public Pose2d getPose() {
     return swerve.getPose();
+  }
+
+  /** Gets the SwerveDrive object */
+  public SwerveDrive getSwerveDriveObject() {
+    return swerve;
   }
 
   /**

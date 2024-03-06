@@ -13,36 +13,33 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc3512.lib.util.ScoringUtil;
 import frc3512.robot.Constants;
 import frc3512.robot.subsystems.Superstructure;
-import frc3512.robot.subsystems.Swerve;
 
 public class Autos {
 
   private final Superstructure superstructure;
-  private final Swerve swerve;
   private final SendableChooser<Command> autonChooser;
 
-  public Autos(Superstructure superstructure, Swerve swerve) {
+  public Autos(Superstructure superstructure) {
     this.superstructure = superstructure;
-    this.swerve = swerve;
 
     setMarkers();
 
     AutoBuilder.configureHolonomic(
-        swerve::getPose,
-        swerve::resetOdometry,
-        swerve::getRobotVelocity,
-        swerve::setChassisSpeeds,
+        superstructure.swerve::getPose,
+        superstructure.swerve::resetOdometry,
+        superstructure.swerve::getRobotVelocity,
+        superstructure.swerve::setChassisSpeeds,
         new HolonomicPathFollowerConfig(
             Constants.AutonConstants.TRANSLATION_PID,
             Constants.AutonConstants.ANGLE_PID,
             4.5,
-            swerve.getSwerveDriveConfiguration().getDriveBaseRadiusMeters(),
+            superstructure.swerve.getSwerveDriveConfiguration().getDriveBaseRadiusMeters(),
             new ReplanningConfig()),
         () -> {
           var alliance = DriverStation.getAlliance();
           return alliance.isPresent() ? alliance.get() == DriverStation.Alliance.Red : false;
         },
-        swerve);
+        superstructure.swerve);
 
     autonChooser = new SendableChooser<Command>();
     autonChooser.setDefaultOption("No-op", new InstantCommand());
@@ -60,10 +57,13 @@ public class Autos {
   }
 
   private void setMarkers() {
-    NamedCommands.registerCommand("Reset Gyro", new InstantCommand(() -> swerve.zeroGyro()));
+    NamedCommands.registerCommand(
+        "Reset Gyro", new InstantCommand(() -> superstructure.swerve.zeroGyro()));
     NamedCommands.registerCommand(
         "Motor Fix",
-        new InstantCommand(() -> swerve.driveCommand(() -> 0, () -> 0, () -> 0, () -> false)));
+        new InstantCommand(
+            () ->
+                superstructure.swerve.driveCommand(() -> 0, () -> 0, () -> 0, () -> false, null)));
     NamedCommands.registerCommand(
         "Intake", new InstantCommand(() -> superstructure.shootake.want_to_intake = true));
     NamedCommands.registerCommand("Stow", superstructure.subsystemStow());
@@ -90,13 +90,14 @@ public class Autos {
         "Shooting Speed", new InstantCommand(() -> superstructure.shootake.shoot()));
     NamedCommands.registerCommand(
         "Aim at Speaker",
-        swerve.aimAtPointCommand(
+        superstructure.swerve.aimAtPointCommand(
             () -> 0,
             () -> 0,
             () -> 0,
             () -> ScoringUtil.provideScoringPose().getSecond(),
             true,
-            true));
+            true,
+            superstructure.vision));
   }
 
   /*
