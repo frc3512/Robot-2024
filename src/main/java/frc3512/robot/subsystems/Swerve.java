@@ -39,7 +39,7 @@ public class Swerve extends SubsystemBase {
           Constants.SwerveConstants.turnControllerP,
           Constants.SwerveConstants.turnControllerI,
           Constants.SwerveConstants.turnControllerD,
-          new TrapezoidProfile.Constraints(10.0, 10.0));
+          new TrapezoidProfile.Constraints(30.0, 20.0));
 
   public Swerve() {
     if (SpartanEntryManager.isTuningMode()) {
