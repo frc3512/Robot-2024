@@ -29,8 +29,4 @@ public class Robot2024 {
   public Command getAutonomousCommand() {
     return superstructure.getAuton();
   }
-
-  public Command postAuto() {
-    return superstructure.subsytemStopIntakeAndShooter();
-  }
 }

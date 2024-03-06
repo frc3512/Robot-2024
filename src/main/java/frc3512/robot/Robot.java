@@ -99,7 +99,6 @@ public class Robot extends TimedRobot {
     }
     m_robot.setDriveMode();
     m_robot.setMotorBrake(true);
-    m_robot.postAuto();
   }
 
   /** This function is called periodically during operator control. */

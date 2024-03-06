@@ -16,7 +16,6 @@ import frc3512.robot.Constants.ElevatorConstants;
 public class Elevator extends ProfiledPIDSubsystem {
   private CANSparkMax elevatorMotor = new CANSparkMax(13, MotorType.kBrushless);
   private DutyCycleEncoder elevatorEncoder = new DutyCycleEncoder(1);
-  /* 1 is absolute, 2 is a, 3 is b, 4 is incremental */
 
   boolean bypassStop = false;
 
@@ -46,9 +45,6 @@ public class Elevator extends ProfiledPIDSubsystem {
     SmartDashboard.putNumber("Elevator Encoder", elevatorEncoder.getDistance());
     SmartDashboard.putNumber("Elevator PID Setpoint", getController().getGoal().position);
     SmartDashboard.putNumber("Elevator/ P", ElevatorConstants.kP);
-
-    // elevatorEncoder.setDistancePerPulse(Constants.ElevatorConstants.distancePerPulse);
-    // elevatorEncoder.setSamplesToAverage(Constants.ElevatorConstants.averageSampleSize);
 
     elevatorEncoder.reset();
   }
@@ -98,12 +94,6 @@ public class Elevator extends ProfiledPIDSubsystem {
   @Override
   public void periodic() {
     super.periodic();
-    /*if ((elevatorEncoder.getDistance() >= 0.49 || elevatorEncoder.getDistance() <= -1.55)
-        && !bypassStop) {
-      stopElevator();
-    } else if (elevatorEncoder.getDistance() <= 0.49 && elevatorEncoder.getDistance() >= -1.55) {
-      bypassStop = false;
-    }*/
     SmartDashboard.putNumber("Elevator/ Encoder", elevatorEncoder.getDistance());
     SmartDashboard.putNumber("Elevator/ PID Setpoint", getController().getGoal().position);
     SmartDashboard.putNumber("Elevator/ P", ElevatorConstants.kP);

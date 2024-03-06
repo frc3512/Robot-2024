@@ -18,7 +18,6 @@ import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
 public class Superstructure extends SubsystemBase {
-
   // Autons
   private final Autos autos;
 
@@ -48,7 +47,6 @@ public class Superstructure extends SubsystemBase {
   }
 
   public void configureBindings() {
-
     // Reset Gyro
     driverXbox.x().onTrue(new InstantCommand(() -> swerve.zeroGyro()));
 
@@ -57,30 +55,22 @@ public class Superstructure extends SubsystemBase {
 
     appendageJoystick.button(2).onTrue(subsystemCloseShot());
 
-    appendageJoystick.button(3).onTrue(new InstantCommand(() -> shootake.shoot()));
+    appendageJoystick.button(3).onTrue(new InstantCommand(() -> shootake.setShooter(true)));
     appendageJoystick.button(3).onFalse(shootSequence());
 
     appendageJoystick.button(4).onTrue(subsystemStow());
 
     appendageJoystick.button(5).onTrue(subsystemIntake());
 
-    appendageJoystick.button(6).onTrue(new InstantCommand(() -> shootake.want_to_intake = true));
-    appendageJoystick.button(6).onFalse(new InstantCommand(() -> shootake.want_to_intake = false));
-
-    appendageJoystick.button(7).onTrue(new InstantCommand(() -> shootake.want_to_outtake = true));
-    appendageJoystick.button(7).onFalse(new InstantCommand(() -> shootake.want_to_outtake = false));
-
     appendageJoystick.button(10).onTrue(subsystemFarShot());
 
     appendageJoystick.button(11).onTrue(subsystemTrapPositon());
 
-    appendageJoystick.button(12).onTrue(subsytemStopIntakeAndShooter());
+    // Shootake
+    shootake.setIntake(appendageJoystick.button(6).getAsBoolean());
+    shootake.setOuttake(appendageJoystick.button(7).getAsBoolean());
 
-    // appendageJoystick.button(11).onTrue(new InstantCommand(() -> Climber.motorUp()));
-    // appendageJoystick.button(11).onFalse(new InstantCommand(() -> Climber.stopClimbers()));
-
-    // appendageJoystick.button(12).onTrue(new InstantCommand(() -> Climber.motorDown()));
-    // appendageJoystick.button(12).onFalse(new InstantCommand(() -> Climber.stopClimbers()));
+    appendageJoystick.button(12).onTrue(new InstantCommand(() -> shootake.stopIntakeAndShooter()));
 
     // Climber Controls
     appendageJoystick
@@ -128,10 +118,9 @@ public class Superstructure extends SubsystemBase {
   }
 
   public SequentialCommandGroup shootSequence() {
-    return new InstantCommand(() -> shootake.intake())
+    return new InstantCommand(() -> shootake.setIntake(true))
         .andThen(new WaitCommand(.75))
-        .andThen(new InstantCommand(() -> shootake.stopIntakeOutake()))
-        .andThen(new InstantCommand(() -> shootake.stopShooting()))
+        .andThen(new InstantCommand(() -> shootake.stopIntakeAndShooter()))
         .andThen(new InstantCommand(() -> arm.stowArm()))
         .andThen(new InstantCommand(() -> elevator.stowElevator()));
   }
@@ -170,18 +159,9 @@ public class Superstructure extends SubsystemBase {
         .andThen(new InstantCommand(() -> elevator.outElevator()));
   }
 
-  public SequentialCommandGroup subsytemStopIntakeAndShooter() {
-    return new InstantCommand(() -> shootake.stopIntakeOutake())
-        .andThen(new InstantCommand(() -> shootake.stopShooting()));
-  }
-
   public SequentialCommandGroup subsystemAutoShot() {
     return new InstantCommand(() -> arm.autoShootingPos())
         .andThen(new InstantCommand(() -> elevator.outElevator()));
-  }
-
-  public SequentialCommandGroup example() {
-    return new InstantCommand().andThen(new InstantCommand());
   }
 
   @Override

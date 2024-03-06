@@ -4,16 +4,13 @@ import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.PIDSubsystem;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc3512.lib.util.CANSparkMaxUtil;
 import frc3512.lib.util.CANSparkMaxUtil.Usage;
-import frc3512.robot.Constants.ShooterConstants;
 
-public class Shootake extends PIDSubsystem {
+public class Shootake extends SubsystemBase {
   private CANSparkMax intakeMotor = new CANSparkMax(10, CANSparkLowLevel.MotorType.kBrushless);
   private CANSparkMax topMotor = new CANSparkMax(12, CANSparkLowLevel.MotorType.kBrushless);
   private CANSparkMax bottomMotor = new CANSparkMax(11, CANSparkLowLevel.MotorType.kBrushless);
@@ -23,20 +20,13 @@ public class Shootake extends PIDSubsystem {
   private RelativeEncoder topEncoder = topMotor.getEncoder();
   private RelativeEncoder bottomEncoder = bottomMotor.getEncoder();
 
-  private SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(0, 0.0035);
-  private SimpleMotorFeedforward bottMotorFeedforward = new SimpleMotorFeedforward(0, 0.035);
-
   boolean shooting = false;
   boolean manual_intake = false;
   boolean can_intake = true;
   boolean want_to_outtake = false;
-  public boolean want_to_intake = false;
+  boolean want_to_intake = false;
 
   public Shootake() {
-    super(new PIDController(ShooterConstants.kP, ShooterConstants.kI, ShooterConstants.kD));
-    getController().setTolerance(ShooterConstants.kShooterToleranceRPM);
-    setSetpoint(0);
-
     intakeMotor.restoreFactoryDefaults();
     topMotor.restoreFactoryDefaults();
     bottomMotor.restoreFactoryDefaults();
@@ -72,34 +62,22 @@ public class Shootake extends PIDSubsystem {
     bottomMotor.burnFlash();
   }
 
-  public void stopIntakeOutake() {
-    intakeMotor.set(0.0);
-    want_to_intake = false;
+  public void setIntake(boolean should_intake) {
+    want_to_intake = should_intake;
   }
 
-  public void intake() {
-    intakeMotor.set(-1);
-    want_to_intake = true;
+  public void setOuttake(boolean should_outtake) {
+    want_to_outtake = should_outtake;
   }
 
-  public void shoot() {
-    topMotor.set(0.85);
-    bottomMotor.set(0.85);
-    shooting = true;
-  }
-
-  public void stopShooting() {
-    topMotor.set(0.0);
-    bottomMotor.set(0.0);
-    shooting = false;
+  public void setShooter(boolean should_shoot) {
+    shooting = should_shoot;
   }
 
   public void stopIntakeAndShooter() {
-    intakeMotor.set(0);
-    topMotor.set(0);
-    bottomMotor.set(0);
     shooting = false;
     want_to_intake = false;
+    want_to_outtake = false;
   }
 
   public void overrideBeamBreak(String mode) {
@@ -117,9 +95,9 @@ public class Shootake extends PIDSubsystem {
     super.periodic();
     SmartDashboard.putNumber("Shooter/Top Motor Velocity", topEncoder.getVelocity());
     SmartDashboard.putNumber("Shooter/Bottom Motor Velocity", bottomEncoder.getVelocity());
-    SmartDashboard.putNumber("Shooter/PID Setpoint", getSetpoint());
     SmartDashboard.putBoolean("Shooter/want_to_intake", want_to_intake);
     SmartDashboard.putBoolean("Shooter/want_to_outtake", want_to_outtake);
+
     if ((!noteEnterBeamBreak.get() && shooting == false) && !manual_intake) {
       can_intake = false;
     } else {
@@ -137,16 +115,13 @@ public class Shootake extends PIDSubsystem {
     } else {
       intakeMotor.set(0);
     }
-  }
 
-  @Override
-  public void useOutput(double output, double setPoint) {
-    topMotor.setVoltage(output + feedforward.calculate(setPoint));
-    bottomMotor.setVoltage(output + bottMotorFeedforward.calculate(setPoint));
-  }
-
-  @Override
-  public double getMeasurement() {
-    return topEncoder.getVelocity();
+    if (shooting) {
+      topMotor.set(0.85);
+      bottomMotor.set(0.85);
+    } else {
+      topMotor.set(0);
+      bottomMotor.set(0);
+    }
   }
 }

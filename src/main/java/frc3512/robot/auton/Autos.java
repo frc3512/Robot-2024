@@ -62,6 +62,7 @@ public class Autos {
   }
 
   private void setMarkers() {
+    // Swerve
     NamedCommands.registerCommand("Reset Gyro", new InstantCommand(() -> swerve.zeroGyro()));
     NamedCommands.registerCommand(
         "Motor Fix",
@@ -69,8 +70,8 @@ public class Autos {
             () ->
                 swerve.driveCommand(
                     () -> 0.0, () -> 0.0, () -> 0.0, () -> false, new PhotonCamera(null))));
-    NamedCommands.registerCommand(
-        "Intake", new InstantCommand(() -> superstructure.shootake.want_to_intake = true));
+
+    // Arm + Elevator
     NamedCommands.registerCommand("Stow", superstructure.subsystemStow());
     NamedCommands.registerCommand("Intake Position", superstructure.subsystemIntake());
     NamedCommands.registerCommand("Close Shooting", superstructure.subsystemCloseShot());
@@ -79,8 +80,6 @@ public class Autos {
         (new InstantCommand(() -> superstructure.elevator.outElevator())
             .andThen(new InstantCommand(() -> superstructure.arm.autoCloseShootingPos()))));
     NamedCommands.registerCommand(
-        "Stop Intake/Shooter", superstructure.subsytemStopIntakeAndShooter());
-    NamedCommands.registerCommand(
         "Auto Shooting",
         (new InstantCommand(() -> superstructure.elevator.outElevator()))
             .andThen(new InstantCommand(() -> superstructure.arm.autoShootingPos())));
@@ -88,15 +87,24 @@ public class Autos {
         "Far Shooting",
         (new InstantCommand(() -> superstructure.elevator.outElevator()))
             .andThen(new InstantCommand(() -> superstructure.arm.farShootingPos())));
+
+    // Shootake
+    NamedCommands.registerCommand(
+        "Intake", new InstantCommand(() -> superstructure.shootake.setIntake(true)));
+    NamedCommands.registerCommand(
+        "Stop Shooting", new InstantCommand(() -> superstructure.shootake.setShooter(false)));
+    NamedCommands.registerCommand(
+        "Shooting Speed", new InstantCommand(() -> superstructure.shootake.setShooter(true)));
+    NamedCommands.registerCommand(
+        "Stop Intake/Shooter",
+        new InstantCommand(() -> superstructure.shootake.stopIntakeAndShooter()));
+
+    // Superstructure
     NamedCommands.registerCommand(
         "Shoot",
-        (new InstantCommand(() -> superstructure.shootake.shoot()))
+        (new InstantCommand(() -> superstructure.shootake.setShooter(true)))
             .andThen(new WaitCommand(2.5))
             .andThen(superstructure.shootSequence()));
-    NamedCommands.registerCommand(
-        "Stop Shooting", new InstantCommand(() -> superstructure.shootake.stopShooting()));
-    NamedCommands.registerCommand(
-        "Shooting Speed", new InstantCommand(() -> superstructure.shootake.shoot()));
   }
 
   /*
