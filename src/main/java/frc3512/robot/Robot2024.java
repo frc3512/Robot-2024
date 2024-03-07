@@ -20,8 +20,6 @@ public class Robot2024 {
     superstructure.configureAxisActions();
   }
 
-  public void setDriveMode() {}
-
   public void setMotorBrake(boolean brake) {
     superstructure.setMotorBrake(brake);
   }

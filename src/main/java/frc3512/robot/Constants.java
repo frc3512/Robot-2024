@@ -30,16 +30,7 @@ public final class Constants {
   }
 
   public static final class SwerveConstants {
-    public static final double WHEEL_LOCK_TIME = 10; // seconds
-
     public static final double swerveDeadband = 0.1;
-
-    public static final double turnControllerP = 0.1;
-    public static final double turnControllerI = 0.0;
-    public static final double turnControllerD = 0.0;
-
-    public static final double turnControllerTolerance = 1.0;
-
     public static final double maximumSpeed = Units.feetToMeters(19.0);
   }
 
