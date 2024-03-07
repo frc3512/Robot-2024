@@ -166,4 +166,13 @@ public class Superstructure extends SubsystemBase {
   public void periodic() {
     vision.periodic(swerve);
   }
+
+  @Override
+  public void simulationPeriodic() {
+    // Update camera simulation
+    vision.simulationPeriodic(swerve.getPose());
+
+    var debugField = vision.getSimDebugField();
+    debugField.getObject("EstimatedRobot").setPose(swerve.getPose());
+  }
 }

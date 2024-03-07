@@ -4,6 +4,7 @@ import com.pathplanner.lib.util.PIDConstants;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.numbers.N1;
@@ -36,28 +37,27 @@ public final class Constants {
 
   public static final class GeneralConstants {
     public static final boolean tuningMode = true;
-    public static final boolean enablePoseEstimation = true;
     public static final RobotType robotType = RobotType.PROTO;
   }
 
   public static final class VisionConstants {
     public static final String visionName = "USB_GS_Camera";
     public static final String driverName = "HD_Web_Camera";
-    public static final Transform3d robotToCam = new Transform3d();
+    public static final Transform3d robotToCam = new Transform3d(0.0, 0.0, 0.0, new Rotation3d(0.0, -Units.degreesToRadians(5.0), 0.0));
 
     public static final Pair<Integer, Translation2d> blueSpeaker =
         new Pair<Integer, Translation2d>(7, new Translation2d(0.00, 5.55));
     public static final Pair<Integer, Translation2d> redSpeakerDistance =
         new Pair<Integer, Translation2d>(
-            4, new Translation2d(15.64, 5.55)); // Used for accurate distance
+            4, new Translation2d(15.1499, 5.55)); // Used for accurate distance
     public static final Pair<Integer, Translation2d> redSpeakerAim =
         new Pair<Integer, Translation2d>(
             4,
             new Translation2d(
                 16.70, 5.55)); // Ensures drivetrain gets a full range of aim towards the speaker
 
-    public static final Matrix<N3, N1> singleTagStdDevs = VecBuilder.fill(0.03, 0.03, 1.0);
-    public static final Matrix<N3, N1> multiTagStdDevs = VecBuilder.fill(1.0, 1.0, 1.0);
+    public static final Matrix<N3, N1> singleTagStdDevs = VecBuilder.fill(3.0, 3.0, 3.0);
+    public static final Matrix<N3, N1> multiTagStdDevs = VecBuilder.fill(0.8, 0.8, 0.8);
   }
 
   public static final class ArmConstants {
