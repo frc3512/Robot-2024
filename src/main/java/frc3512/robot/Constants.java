@@ -72,14 +72,14 @@ public final class Constants {
     public static final double kD = 0.05;
 
     // we applied a delta of -0.13 due to a changed encoder
-    public static final double stowPosition = 0.27; // 0.4
-    public static final double autoCloseShootingPosition = 0.17; // 0.3
-    public static final double closeShootingPosition = 0.14; // 0.27
-    public static final double farShootingPosition = 0.31; // 0.44
-    public static final double autoShootingPosition = 0.27; // 0.4
-    public static final double ampPosition = 0.82; // 0.95
-    public static final double intakePosition = 0.1; // 0.23
-    public static final double trapPositon = 0.82; // 0.95
+    public static final double stowPosition = 0.4; // 0.4
+    public static final double autoCloseShootingPosition = 0.3; // 0.3
+    public static final double closeShootingPosition = 0.27; // 0.27
+    public static final double farShootingPosition = 0.44; // 0.44
+    public static final double autoShootingPosition = 0.4; // 0.4
+    public static final double ampPosition = 0.95; // 0.95
+    public static final double intakePosition = 0.21; // 0.23
+    public static final double trapPositon = 0.95; // 0.95
   }
 
   public static final class ElevatorConstants {
@@ -90,9 +90,9 @@ public final class Constants {
     public static final double kI = 0;
     public static final double kD = 0;
 
-    public static final double stowPosition = 0.0;
-    public static final double outPosition = -1.9;
-    public static final double ampPosition = -1.2;
+    public static final double stowPosition = 0.3;
+    public static final double outPosition = -1.4;
+    public static final double ampPosition = -0.7;
     public static final double kMaxVelocityRadPerSecond = 10.0;
     public static final double kMaxAccelerationRadPerSecSquared = 15.0;
 
