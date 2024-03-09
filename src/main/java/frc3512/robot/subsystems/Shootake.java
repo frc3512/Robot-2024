@@ -20,6 +20,8 @@ public class Shootake extends PIDSubsystem {
 
   private DigitalInput noteEnterBeamBreak = new DigitalInput(0);
 
+  private LED leds;
+
   private RelativeEncoder topEncoder = topMotor.getEncoder();
   private RelativeEncoder bottomEncoder = bottomMotor.getEncoder();
 
@@ -32,10 +34,12 @@ public class Shootake extends PIDSubsystem {
   boolean want_to_outtake = false;
   public boolean want_to_intake = false;
 
-  public Shootake() {
+  public Shootake(LED led) {
     super(new PIDController(ShooterConstants.kP, ShooterConstants.kI, ShooterConstants.kD));
     getController().setTolerance(ShooterConstants.kShooterToleranceRPM);
     setSetpoint(0);
+
+    leds = led;
 
     intakeMotor.restoreFactoryDefaults();
     topMotor.restoreFactoryDefaults();
@@ -120,8 +124,10 @@ public class Shootake extends PIDSubsystem {
     SmartDashboard.putBoolean("Shooter/want_to_outtake", want_to_outtake);
     if ((!noteEnterBeamBreak.get() && shooting == false) && !manual_intake) {
       can_intake = false;
+      leds.ledGreen();
     } else {
       can_intake = true;
+      leds.ledRed();
     }
 
     if (want_to_intake && can_intake) {
