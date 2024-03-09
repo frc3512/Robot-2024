@@ -190,10 +190,12 @@ public class Vision extends SubsystemBase {
           // Make sure it's on the field and doesn't have an ambiguity above 0.2
           // Also only does it if we explicity tell it to do so
           boolean ambiguityCheck = getLatestResult().targets.get(0).getPoseAmbiguity() > 0.2;
-          boolean fieldCheck = (estPose.getX() > 0.0 && estPose.getX() <= layout.getFieldLength()) && (estPose.getY() > 0.0 && estPose.getY() <= layout.getFieldLength());
+          boolean fieldCheck =
+              (estPose.getX() > 0.0 && estPose.getX() <= layout.getFieldLength())
+                  && (estPose.getY() > 0.0 && estPose.getY() <= layout.getFieldLength());
           if (ambiguityCheck && fieldCheck && DriverStation.isTeleop()) {
-              swerve.addVisionMeasurement(
-              est.estimatedPose.toPose2d(), est.timestampSeconds, estStdDevs);
+            swerve.addVisionMeasurement(
+                est.estimatedPose.toPose2d(), est.timestampSeconds, estStdDevs);
           }
         });
 

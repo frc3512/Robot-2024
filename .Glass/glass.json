@@ -19,6 +19,9 @@
       "/SmartDashboard/Pigeon 2 (v6) [0]": "Gyro"
     }
   },
+  "NetworkTables Info": {
+    "visible": true
+  },
   "NetworkTables Settings": {
     "mode": "Client (NT4)",
     "serverTeam": "3512"

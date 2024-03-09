@@ -42,8 +42,7 @@ public class Arm extends ProfiledPIDSubsystem {
     leftMotor.setIdleMode(IdleMode.kBrake);
     rightMotor.setIdleMode(IdleMode.kBrake);
 
-    rightMotor.setInverted(true);
-    rightMotor.follow(leftMotor);
+    leftMotor.setInverted(true);
 
     rightMotor.burnFlash();
     leftMotor.burnFlash();
@@ -57,6 +56,7 @@ public class Arm extends ProfiledPIDSubsystem {
   @Override
   public void useOutput(double output, State setpoint) {
     leftMotor.setVoltage(output);
+    rightMotor.setVoltage(output);
   }
 
   @Override

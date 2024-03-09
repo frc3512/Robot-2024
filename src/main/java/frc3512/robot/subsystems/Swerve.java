@@ -239,7 +239,8 @@ public class Swerve extends SubsystemBase {
   }
 
   /** The primary method for controlling the drivebase. */
-  public void drive(double translationX, double translationY, double rotation, boolean fieldRelative) {
+  public void drive(
+      double translationX, double translationY, double rotation, boolean fieldRelative) {
     swerve.drive(new Translation2d(translationX, translationY), rotation, fieldRelative, false);
   }
 
