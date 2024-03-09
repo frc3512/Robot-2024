@@ -22,10 +22,11 @@ public class Superstructure extends SubsystemBase {
   private final Autos autos;
 
   // Subsystems
+  public final LED led = new LED();
   public final Arm arm = new Arm();
   public final Swerve swerve = new Swerve();
   public final Vision vision = new Vision();
-  public final Shootake shootake = new Shootake();
+  public final Shootake shootake = new Shootake(led);
   public final Elevator elevator = new Elevator();
   public final Climber climber = new Climber();
 
@@ -53,18 +54,18 @@ public class Superstructure extends SubsystemBase {
     // Arm / Shooter Controls
     appendageJoystick.button(1).onTrue(subsystemAmp());
 
-    appendageJoystick.button(2).onTrue(subsystemCloseShot());
+    driverXbox.y().onTrue(new InstantCommand(() -> led.ledBlue()));
 
     appendageJoystick.button(3).onTrue(new InstantCommand(() -> shootake.setShooter(true)));
     appendageJoystick.button(3).onFalse(shootSequence());
 
-    appendageJoystick.button(4).onTrue(subsystemStow());
+    // appendageJoystick.button(2).onTrue(subsystemCloseShot());
 
     appendageJoystick.button(5).onTrue(subsystemIntake());
 
-    appendageJoystick.button(10).onTrue(subsystemFarShot());
+    // appendageJoystick.button(10).onTrue(subsystemFarShot());
 
-    appendageJoystick.button(11).onTrue(subsystemTrapPositon());
+    // appendageJoystick.button(11).onTrue(subsystemTrapPositon());
 
     // Shootake
     shootake.setIntake(appendageJoystick.button(6).getAsBoolean());

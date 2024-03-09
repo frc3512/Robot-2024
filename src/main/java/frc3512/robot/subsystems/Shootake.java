@@ -17,6 +17,8 @@ public class Shootake extends SubsystemBase {
 
   private DigitalInput noteEnterBeamBreak = new DigitalInput(0);
 
+  private LED leds;
+
   private RelativeEncoder topEncoder = topMotor.getEncoder();
   private RelativeEncoder bottomEncoder = bottomMotor.getEncoder();
 
@@ -26,7 +28,9 @@ public class Shootake extends SubsystemBase {
   boolean want_to_outtake = false;
   boolean want_to_intake = false;
 
-  public Shootake() {
+  public Shootake(LED led) {
+
+    leds = led;
     intakeMotor.restoreFactoryDefaults();
     topMotor.restoreFactoryDefaults();
     bottomMotor.restoreFactoryDefaults();
@@ -35,7 +39,7 @@ public class Shootake extends SubsystemBase {
     CANSparkMaxUtil.setCANSparkMaxBusUsage(topMotor, Usage.kVelocityOnly, true);
     CANSparkMaxUtil.setCANSparkMaxBusUsage(bottomMotor, Usage.kVelocityOnly, true);
 
-    intakeMotor.setIdleMode(IdleMode.kBrake);
+    intakeMotor.setIdleMode(IdleMode.kCoast);
     topMotor.setIdleMode(IdleMode.kCoast);
     bottomMotor.setIdleMode(IdleMode.kCoast);
 
@@ -100,8 +104,11 @@ public class Shootake extends SubsystemBase {
 
     if ((!noteEnterBeamBreak.get() && shooting == false) && !manual_intake) {
       can_intake = false;
+      leds.flashLEDs = true;
     } else {
       can_intake = true;
+      leds.flashLEDs = false;
+      leds.ledRed();
     }
 
     if (want_to_intake && can_intake) {
