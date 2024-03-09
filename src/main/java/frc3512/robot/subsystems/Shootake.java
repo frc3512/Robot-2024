@@ -49,7 +49,7 @@ public class Shootake extends PIDSubsystem {
     CANSparkMaxUtil.setCANSparkMaxBusUsage(topMotor, Usage.kVelocityOnly, true);
     CANSparkMaxUtil.setCANSparkMaxBusUsage(bottomMotor, Usage.kVelocityOnly, true);
 
-    intakeMotor.setIdleMode(IdleMode.kBrake);
+    intakeMotor.setIdleMode(IdleMode.kCoast);
     topMotor.setIdleMode(IdleMode.kCoast);
     bottomMotor.setIdleMode(IdleMode.kCoast);
 
@@ -124,9 +124,10 @@ public class Shootake extends PIDSubsystem {
     SmartDashboard.putBoolean("Shooter/want_to_outtake", want_to_outtake);
     if ((!noteEnterBeamBreak.get() && shooting == false) && !manual_intake) {
       can_intake = false;
-      leds.ledGreen();
+      leds.flashLEDs = true;
     } else {
       can_intake = true;
+      leds.flashLEDs = false;
       leds.ledRed();
     }
 

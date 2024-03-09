@@ -9,6 +9,10 @@ public class LED extends SubsystemBase {
     public final AddressableLEDBuffer ledBuffer;
     private int m_rainbowFirstPixelHue = 1;
 
+    public boolean flashLEDs = false;
+    int ledRate = 500;
+    int ledTimer = 0;
+    boolean ledsOn = false;
 
     public LED() {
         leds = new AddressableLED(0);
@@ -61,4 +65,27 @@ public class LED extends SubsystemBase {
         leds.setData(ledBuffer);
     }
 
+    public void ledsOff() {
+        for (var i = 0; i < ledBuffer.getLength(); i++) {
+            ledBuffer.setRGB(i, 0, 0, 0);
+        }
+        leds.setData(ledBuffer);
+    }
+
+    @Override
+    public void periodic() {
+        if (flashLEDs) {
+            ledTimer += 20;
+            if (ledTimer >= ledRate && !ledsOn) {
+                ledGreen();
+                ledTimer = 0;
+                ledsOn = true;
+            }
+            else if (ledTimer >= ledRate && ledsOn) {
+                ledsOff();
+                ledTimer = 0;
+                ledsOn = false;
+            }
+        }
+    }
 }
