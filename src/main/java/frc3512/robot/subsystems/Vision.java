@@ -2,6 +2,7 @@ package frc3512.robot.subsystems;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.VecBuilder;
@@ -16,23 +17,54 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc3512.robot.Constants;
 import java.util.Optional;
 import java.util.function.Supplier;
+import org.opencv.core.Mat;
+import org.opencv.core.Point;
+import org.opencv.core.Scalar;
+import org.opencv.imgproc.Imgproc;
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
+import edu.wpi.first.cscore.CvSink;
+import edu.wpi.first.cscore.CvSource;
+import edu.wpi.first.cscore.UsbCamera;
+import edu.wpi.first.cscore.VideoMode;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 import org.photonvision.targeting.PhotonPipelineResult;
 
 public class Vision extends SubsystemBase {
   public PhotonCamera photonCamera = new PhotonCamera(Constants.VisionConstants.visionName);
-  public PhotonCamera driverCamera = new PhotonCamera(Constants.VisionConstants.driverName);
+  //public UsbCamera driverCamera = new UsbCamera("Driver Camera", Constants.VisionConstants.driverName);
   public PhotonPoseEstimator photonPoseEstimator;
   public AprilTagFieldLayout atfl;
   private double lastEstTimestamp = 0;
+  Thread m_driverCamThread;
 
   public Vision() {
-    PhotonCamera.setVersionCheckEnabled(false);
-    driverCamera.setDriverMode(true);
+    m_driverCamThread = new Thread(
+      () -> {
+        UsbCamera driverCamera = CameraServer.startAutomaticCapture();
 
+        driverCamera.setResolution(320, 200);
+
+        CvSink cvSink = CameraServer.getVideo();
+        CvSource outputStream = CameraServer.putVideo("Rectangle", 640, 400);
+
+        Mat mat = new Mat();
+
+        while (!Thread.interrupted()) {
+          if (cvSink.grabFrame(mat) == 0) {
+            outputStream.notifyError(cvSink.getError());
+            continue;
+          }
+          Imgproc.rectangle(mat, new Point(100, 100), new Point(400, 400), new Scalar(255, 255, 255), 5);
+          outputStream.putFrame(mat);
+        }
+      }
+    );
+    m_driverCamThread.setDaemon(true);
+    m_driverCamThread.start();
+
+    PhotonCamera.setVersionCheckEnabled(false);
     atfl = AprilTagFields.kDefaultField.loadAprilTagLayoutField();
 
     // Create pose estimator
