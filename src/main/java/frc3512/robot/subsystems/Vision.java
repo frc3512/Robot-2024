@@ -193,7 +193,7 @@ public class Vision extends SubsystemBase {
           boolean fieldCheck =
               (estPose.getX() > 0.0 && estPose.getX() <= layout.getFieldLength())
                   && (estPose.getY() > 0.0 && estPose.getY() <= layout.getFieldLength());
-          if (ambiguityCheck && fieldCheck && DriverStation.isTeleop()) {
+          if (ambiguityCheck && fieldCheck && !DriverStation.isAutonomous()) {
             swerve.addVisionMeasurement(
                 est.estimatedPose.toPose2d(), est.timestampSeconds, estStdDevs);
           }

@@ -1,6 +1,10 @@
 package frc3512.robot.subsystems;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -44,6 +48,7 @@ public class Superstructure extends SubsystemBase {
 
   public void configureBindings() {
     driverXbox.x().onTrue(new InstantCommand(() -> swerve.zeroGyro()));
+    driverXbox.a().onTrue(new InstantCommand(() -> swerve.resetOdometry(new Pose2d(new Translation2d(14.0, 5.50), new Rotation2d(Units.degreesToRadians(0))))));
 
     appendageJoystick.button(1).onTrue(subsystemAmp());
 
@@ -90,15 +95,15 @@ public class Superstructure extends SubsystemBase {
         swerve.driveCommand(
             () ->
                 MathUtil.applyDeadband(
-                    -driverXbox.getRawAxis(translationAxis),
+                    driverXbox.getRawAxis(translationAxis),
                     Constants.SwerveConstants.swerveDeadband),
             () ->
                 MathUtil.applyDeadband(
-                    -driverXbox.getRawAxis(strafeAxis), Constants.SwerveConstants.swerveDeadband),
+                    driverXbox.getRawAxis(strafeAxis), Constants.SwerveConstants.swerveDeadband),
             () ->
                 MathUtil.applyDeadband(
-                    -driverXbox.getRawAxis(rotationAxis), Constants.SwerveConstants.swerveDeadband),
-            () -> driverXbox.a().getAsBoolean(),
+                    driverXbox.getRawAxis(rotationAxis), Constants.SwerveConstants.swerveDeadband),
+            () -> driverXbox.leftBumper().getAsBoolean(),
             vision));
   }
 
