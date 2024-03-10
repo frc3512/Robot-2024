@@ -2,10 +2,11 @@ package frc3512.robot.subsystems;
 
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
+
 import com.revrobotics.CANSparkMax;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
 import frc3512.lib.util.CANSparkMaxUtil;
@@ -15,7 +16,7 @@ import frc3512.robot.Constants.ElevatorConstants;
 
 public class Elevator extends ProfiledPIDSubsystem {
   private CANSparkMax elevatorMotor = new CANSparkMax(13, MotorType.kBrushless);
-  private DutyCycleEncoder elevatorEncoder = new DutyCycleEncoder(1);
+  private Encoder elevatorEncoder = new Encoder(1, 2);
 
   boolean bypassStop = false;
 

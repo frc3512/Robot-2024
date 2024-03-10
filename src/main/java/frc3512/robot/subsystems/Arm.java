@@ -16,7 +16,7 @@ import frc3512.robot.Constants;
 public class Arm extends ProfiledPIDSubsystem {
   private CANSparkMax leftMotor = new CANSparkMax(14, MotorType.kBrushless);
   private CANSparkMax rightMotor = new CANSparkMax(15, MotorType.kBrushless);
-  private DutyCycleEncoder armEncoder = new DutyCycleEncoder(5);
+  private DutyCycleEncoder armEncoder = new DutyCycleEncoder(3);
 
   boolean bypassStop = false;
 
