@@ -4,6 +4,10 @@
 
 package frc3512.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -89,6 +93,7 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.cancel();
     }
     m_robot.setMotorBrake(true);
+    m_robot.superstructure.swerve.resetOdometry(new Pose2d(new Translation2d(14.0, 5.50), new Rotation2d(Units.degreesToRadians(0))));
   }
 
   /** This function is called periodically during operator control. */

@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc3512.robot.subsystems.Superstructure;
 
 public class Robot2024 {
-  private final Superstructure superstructure = new Superstructure();
+  public final Superstructure superstructure = new Superstructure();
 
   public Robot2024() {
     // Configure the trigger and axis bindings

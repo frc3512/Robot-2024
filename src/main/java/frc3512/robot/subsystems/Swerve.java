@@ -4,7 +4,6 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.numbers.N1;
@@ -59,6 +58,7 @@ public class Swerve extends SubsystemBase {
     // Disables cosine compensation for simulations since it causes discrepancies not seen in real
     // life.
     swerve.setCosineCompensator(!SwerveDriveTelemetry.isSimulation);
+    swerve.swerveController.thetaController.setTolerance(2.5);
   }
 
   /**
@@ -86,7 +86,7 @@ public class Swerve extends SubsystemBase {
                 translationY,
                 angularRotationX,
                 () -> ScoringUtil.provideScoringPose().getSecond(),
-                false,
+                true,
                 true,
                 vision);
           } else {
