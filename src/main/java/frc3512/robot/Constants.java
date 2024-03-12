@@ -9,6 +9,8 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.util.Units;
 
 public final class Constants {
@@ -33,6 +35,14 @@ public final class Constants {
   public static final class SwerveConstants {
     public static final double swerveDeadband = 0.1;
     public static final double maximumSpeed = Units.feetToMeters(19.0);
+
+    public static final double swerveTurnControllerP = 0.05;
+    public static final double swerveTurnControllerI = 0.0;
+    public static final double swerveTurnControllerD = 0.01;
+
+    public static final double swerveDriveControllerTolerance = 2.5;
+
+    public static final TrapezoidProfile.Constraints turnConstraints = new Constraints(30.0, 20.0);
   }
 
   public static final class GeneralConstants {
@@ -44,7 +54,11 @@ public final class Constants {
     public static final String visionName = "USB_GS_Camera";
     public static final String driverName = "HD_Web_Camera";
     public static final Transform3d robotToCam =
-        new Transform3d(0.0, 0.0, 0.0, new Rotation3d(-Units.degreesToRadians(45.0), 0.0, Units.degreesToRadians(180.0)));
+        new Transform3d(
+            0.0,
+            0.0,
+            0.0,
+            new Rotation3d(-Units.degreesToRadians(45.0), 0.0, Units.degreesToRadians(180.0)));
 
     public static final Pair<Integer, Translation2d> blueSpeaker =
         new Pair<Integer, Translation2d>(7, new Translation2d(0.00, 5.55));

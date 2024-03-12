@@ -2,6 +2,7 @@ package frc3512.robot.subsystems;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -28,6 +29,12 @@ import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
 
 public class Swerve extends SubsystemBase {
   private final SwerveDrive swerve;
+  private final ProfiledPIDController turnController =
+      new ProfiledPIDController(
+          Constants.SwerveConstants.swerveTurnControllerP,
+          Constants.SwerveConstants.swerveTurnControllerI,
+          Constants.SwerveConstants.swerveTurnControllerD,
+          Constants.SwerveConstants.turnConstraints);
 
   public Swerve() {
     if (SpartanEntryManager.isTuningMode()) {
@@ -55,10 +62,11 @@ public class Swerve extends SubsystemBase {
       throw new RuntimeException(e);
     }
 
-    // Disables cosine compensation for simulations since it causes discrepancies not seen in real
-    // life.
     swerve.setCosineCompensator(!SwerveDriveTelemetry.isSimulation);
-    swerve.swerveController.thetaController.setTolerance(2.5);
+    swerve.setHeadingCorrection(false);
+
+    turnController.enableContinuousInput(-180.0, 180.0);
+    turnController.setTolerance(Constants.SwerveConstants.swerveDriveControllerTolerance);
   }
 
   /**
@@ -80,7 +88,6 @@ public class Swerve extends SubsystemBase {
     return run(
         () -> {
           if (doAim.getAsBoolean()) {
-            swerve.setHeadingCorrection(true);
             aimAtPoint(
                 translationX,
                 translationY,
@@ -90,7 +97,6 @@ public class Swerve extends SubsystemBase {
                 true,
                 vision);
           } else {
-            swerve.setHeadingCorrection(false);
             drive(
                 MathUtil.applyDeadband(
                     translationX.getAsDouble() * swerve.getMaximumVelocity(),
@@ -137,9 +143,8 @@ public class Swerve extends SubsystemBase {
               vision);
         },
         () -> {
-          swerve.swerveController.thetaController.setSetpoint(
-              swerve.getOdometryHeading().getRadians());
-          swerve.swerveController.thetaController.reset();
+          turnController.setGoal(getHeading().getDegrees());
+          turnController.reset(getHeading().getDegrees());
         });
   }
 
@@ -162,9 +167,6 @@ public class Swerve extends SubsystemBase {
       boolean velocityCorrection,
       Vision vision) {
 
-    // Turn on heading correction
-    swerve.setHeadingCorrection(true);
-
     // Calculate our desired robot velocities
     double moveRequest = Math.hypot(xRequestSupplier.getAsDouble(), yRequestSupplier.getAsDouble());
     double moveDirection =
@@ -172,9 +174,6 @@ public class Swerve extends SubsystemBase {
 
     // If we don't feed in anything, be able to drive normally and return
     if (pointTranslation2dSupplier.get() == null) {
-      // Turn off heading correction (we don't need it)
-      swerve.setHeadingCorrection(false);
-
       drive(
           MathUtil.applyDeadband(
               xRequestSupplier.getAsDouble() * swerve.getMaximumVelocity(),
@@ -223,10 +222,9 @@ public class Swerve extends SubsystemBase {
 
       double rotation =
           (reversed)
-              ? currPose.getRotation().plus(Rotation2d.fromRadians(Math.PI)).getRadians()
-              : currPose.getRotation().getRadians();
-      double output =
-          swerve.swerveController.headingCalculate(rotation, adjustedAngle.getRadians());
+              ? currPose.getRotation().plus(Rotation2d.fromRadians(Math.PI)).getDegrees()
+              : currPose.getRotation().getDegrees();
+      double output = turnController.calculate(rotation, adjustedAngle.getDegrees());
 
       SmartDashboard.putNumberArray(
           "Diagnostics/Vision/Aim Point", new double[] {aimPoint.getX(), aimPoint.getY()});
@@ -263,7 +261,6 @@ public class Swerve extends SubsystemBase {
    */
   public void resetOdometry(Pose2d initialHolonomicPose) {
     swerve.resetOdometry(initialHolonomicPose);
-    //swerve.setGyroOffset(new Rotation3d(0.0, 0.0, 180.0));
   }
 
   /**

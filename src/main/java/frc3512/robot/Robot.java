@@ -93,7 +93,8 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.cancel();
     }
     m_robot.setMotorBrake(true);
-    m_robot.superstructure.swerve.resetOdometry(new Pose2d(new Translation2d(14.0, 5.50), new Rotation2d(Units.degreesToRadians(0))));
+    m_robot.superstructure.swerve.resetOdometry(
+        new Pose2d(new Translation2d(14.0, 5.50), new Rotation2d(Units.degreesToRadians(0))));
   }
 
   /** This function is called periodically during operator control. */
