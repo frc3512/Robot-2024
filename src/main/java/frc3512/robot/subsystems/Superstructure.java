@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc3512.robot.Constants;
 import frc3512.robot.auton.Autos;
+
 import java.util.List;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
@@ -27,7 +28,6 @@ public class Superstructure extends SubsystemBase {
   public final Swerve swerve = new Swerve();
   public final Vision vision = new Vision();
   public final Shootake shootake = new Shootake(led);
-  public final Elevator elevator = new Elevator();
   public final Climber climber = new Climber();
 
   // Joysticks
@@ -53,8 +53,6 @@ public class Superstructure extends SubsystemBase {
 
     // Arm / Shooter Controls
     appendageJoystick.button(1).onTrue(subsystemAmp());
-
-    driverXbox.y().onTrue(new InstantCommand(() -> led.ledBlue()));
 
     appendageJoystick.button(3).onTrue(new InstantCommand(() -> shootake.setShooter(true)));
     appendageJoystick.button(3).onFalse(shootSequence());
@@ -122,47 +120,36 @@ public class Superstructure extends SubsystemBase {
     return new InstantCommand(() -> shootake.setIntake(true))
         .andThen(new WaitCommand(.75))
         .andThen(new InstantCommand(() -> shootake.stopIntakeAndShooter()))
-        .andThen(new InstantCommand(() -> arm.stowArm()))
-        .andThen(new InstantCommand(() -> elevator.stowElevator()));
+        .andThen(new InstantCommand(() -> arm.stowArm()));
   }
 
-  public SequentialCommandGroup subsystemStow() {
-    return new InstantCommand(() -> arm.stowArm())
-        .andThen(new WaitCommand(.5))
-        .andThen(new InstantCommand(() -> elevator.stowElevator()));
+  public InstantCommand subsystemStow() {
+    return new InstantCommand(() -> arm.stowArm());
   }
 
-  public SequentialCommandGroup subsystemIntake() {
-    return new InstantCommand(() -> elevator.outElevator())
-        .andThen(new WaitCommand(.5))
-        .andThen(new InstantCommand(() -> arm.intakePos()));
+  public InstantCommand subsystemIntake() {
+    return new InstantCommand(() -> arm.intakePos());
   }
 
-  public SequentialCommandGroup subsystemAmp() {
-    return new InstantCommand(() -> arm.ampShootingPos())
-        .andThen(new WaitCommand(0.75))
-        .andThen(new InstantCommand(() -> elevator.ampElevator()));
+  public InstantCommand subsystemAmp() {
+    return new InstantCommand(() -> arm.ampShootingPos());
   }
 
-  public SequentialCommandGroup subsystemFarShot() {
-    return new InstantCommand(() -> arm.farShootingPos())
-        .andThen(new InstantCommand(() -> elevator.outElevator()));
+  public InstantCommand subsystemFarShot() {
+    return new InstantCommand(() -> arm.farShootingPos());
   }
 
-  public SequentialCommandGroup subsystemCloseShot() {
-    return new InstantCommand(() -> arm.autoCloseShootingPos())
+  public InstantCommand subsystemCloseShot() {
+    return new InstantCommand(() -> arm.autoCloseShootingPos());
         // this is done to conserve teleop shooting. will change once tuned
-        .andThen(new InstantCommand(() -> elevator.outElevator()));
   }
 
-  public SequentialCommandGroup subsystemTrapPositon() {
-    return new InstantCommand(() -> arm.trapPositon())
-        .andThen(new InstantCommand(() -> elevator.outElevator()));
+  public InstantCommand subsystemTrapPositon() {
+    return new InstantCommand(() -> arm.trapPositon());
   }
 
-  public SequentialCommandGroup subsystemAutoShot() {
-    return new InstantCommand(() -> arm.autoShootingPos())
-        .andThen(new InstantCommand(() -> elevator.outElevator()));
+  public InstantCommand subsystemAutoShot() {
+    return new InstantCommand(() -> arm.autoShootingPos());
   }
 
   @Override

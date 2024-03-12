@@ -81,23 +81,4 @@ public final class Constants {
     public static final double intakePosition = 0.21; // 0.23
     public static final double trapPositon = 0.95; // 0.95
   }
-
-  public static final class ElevatorConstants {
-    public static final int currentLimit = 40;
-    public static final double speed = 0.1;
-
-    public static final double kP = 6.0;
-    public static final double kI = 0;
-    public static final double kD = 0;
-
-    public static final double stowPosition = 0.3;
-    public static final double outPosition = -1.4;
-    public static final double ampPosition = -0.7;
-    public static final double kMaxVelocityRadPerSecond = 10.0;
-    public static final double kMaxAccelerationRadPerSecSquared = 15.0;
-
-    public static final int averageSampleSize = 10;
-    public static final double distancePerPulse =
-        (Math.PI * 2.0 * Units.inchesToMeters(1.751)) / 8192;
-  }
 }
