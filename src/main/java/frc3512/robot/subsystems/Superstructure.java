@@ -13,7 +13,6 @@ import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc3512.robot.Constants;
 import frc3512.robot.auton.Autos;
-
 import java.util.List;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
@@ -59,6 +58,8 @@ public class Superstructure extends SubsystemBase {
 
     // appendageJoystick.button(2).onTrue(subsystemCloseShot());
 
+    appendageJoystick.button(4).onTrue(subsystemStow());
+
     appendageJoystick.button(5).onTrue(subsystemIntake());
 
     // appendageJoystick.button(10).onTrue(subsystemFarShot());
@@ -66,8 +67,12 @@ public class Superstructure extends SubsystemBase {
     // appendageJoystick.button(11).onTrue(subsystemTrapPositon());
 
     // Shootake
-    shootake.setIntake(appendageJoystick.button(6).getAsBoolean());
-    shootake.setOuttake(appendageJoystick.button(7).getAsBoolean());
+    appendageJoystick.button(6).onTrue(new InstantCommand(() -> shootake.setIntake(true)));
+    appendageJoystick.button(6).onFalse(new InstantCommand(() -> shootake.setIntake(false)));
+    appendageJoystick.button(7).onTrue(new InstantCommand(() -> shootake.setOuttake(true)));
+    appendageJoystick.button(7).onFalse(new InstantCommand(() -> shootake.setOuttake(false)));
+    // shootake.setIntake(appendageJoystick.button(6).getAsBoolean());
+    // shootake.setOuttake(appendageJoystick.button(7).getAsBoolean());
 
     appendageJoystick.button(12).onTrue(new InstantCommand(() -> shootake.stopIntakeAndShooter()));
 
@@ -141,7 +146,7 @@ public class Superstructure extends SubsystemBase {
 
   public InstantCommand subsystemCloseShot() {
     return new InstantCommand(() -> arm.autoCloseShootingPos());
-        // this is done to conserve teleop shooting. will change once tuned
+    // this is done to conserve teleop shooting. will change once tuned
   }
 
   public InstantCommand subsystemTrapPositon() {

@@ -39,7 +39,7 @@ public class Shootake extends SubsystemBase {
     CANSparkMaxUtil.setCANSparkMaxBusUsage(topMotor, Usage.kVelocityOnly, true);
     CANSparkMaxUtil.setCANSparkMaxBusUsage(bottomMotor, Usage.kVelocityOnly, true);
 
-    intakeMotor.setIdleMode(IdleMode.kCoast);
+    intakeMotor.setIdleMode(IdleMode.kBrake);
     topMotor.setIdleMode(IdleMode.kCoast);
     bottomMotor.setIdleMode(IdleMode.kCoast);
 
@@ -94,21 +94,14 @@ public class Shootake extends SubsystemBase {
     }
   }
 
-  @Override
-  public void periodic() {
-    super.periodic();
-    SmartDashboard.putNumber("Shooter/Top Motor Velocity", topEncoder.getVelocity());
-    SmartDashboard.putNumber("Shooter/Bottom Motor Velocity", bottomEncoder.getVelocity());
-    SmartDashboard.putBoolean("Shooter/want_to_intake", want_to_intake);
-    SmartDashboard.putBoolean("Shooter/want_to_outtake", want_to_outtake);
-
+  public void shootake_logic() {
     if ((!noteEnterBeamBreak.get() && shooting == false) && !manual_intake) {
       can_intake = false;
       leds.flashLEDs = true;
     } else {
       can_intake = true;
       leds.flashLEDs = false;
-      leds.ledRed();
+      leds.matchAlliance();
     }
 
     if (want_to_intake && can_intake) {
@@ -130,5 +123,16 @@ public class Shootake extends SubsystemBase {
       topMotor.set(0);
       bottomMotor.set(0);
     }
+  }
+
+  @Override
+  public void periodic() {
+    super.periodic();
+    shootake_logic();
+    SmartDashboard.putNumber("Shooter/Top Motor Velocity", topEncoder.getVelocity());
+    SmartDashboard.putNumber("Shooter/Bottom Motor Velocity", bottomEncoder.getVelocity());
+    SmartDashboard.putBoolean("Shooter/want_to_intake", want_to_intake);
+    SmartDashboard.putBoolean("Shooter/want_to_outtake", want_to_outtake);
+    SmartDashboard.putBoolean("Shooter/can_intake", can_intake);
   }
 }

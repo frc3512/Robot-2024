@@ -75,9 +75,12 @@ public class Autos {
     NamedCommands.registerCommand("Stow", superstructure.subsystemStow());
     NamedCommands.registerCommand("Intake Position", superstructure.subsystemIntake());
     NamedCommands.registerCommand("Close Shooting", superstructure.subsystemCloseShot());
-    NamedCommands.registerCommand("Close Shooting Auto", new InstantCommand(() -> superstructure.arm.autoCloseShootingPos()));
-    NamedCommands.registerCommand("Auto Shooting", new InstantCommand(() -> superstructure.arm.autoShootingPos()));
-    NamedCommands.registerCommand("Far Shooting", new InstantCommand(() -> superstructure.arm.farShootingPos()));
+    NamedCommands.registerCommand(
+        "Close Shooting Auto", new InstantCommand(() -> superstructure.arm.autoCloseShootingPos()));
+    NamedCommands.registerCommand(
+        "Auto Shooting", new InstantCommand(() -> superstructure.arm.autoShootingPos()));
+    NamedCommands.registerCommand(
+        "Far Shooting", new InstantCommand(() -> superstructure.arm.farShootingPos()));
 
     // Shootake
     NamedCommands.registerCommand(
