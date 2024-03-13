@@ -56,15 +56,15 @@ public class Superstructure extends SubsystemBase {
     appendageJoystick.button(3).onTrue(new InstantCommand(() -> shootake.setShooter(true)));
     appendageJoystick.button(3).onFalse(shootSequence());
 
-    // appendageJoystick.button(2).onTrue(subsystemCloseShot());
+    appendageJoystick.button(2).onTrue(subsystemCloseShot());
 
     appendageJoystick.button(4).onTrue(subsystemStow());
 
     appendageJoystick.button(5).onTrue(subsystemIntake());
 
-    // appendageJoystick.button(10).onTrue(subsystemFarShot());
+    appendageJoystick.button(10).onTrue(subsystemFarShot());
 
-    // appendageJoystick.button(11).onTrue(subsystemTrapPositon());
+    appendageJoystick.button(11).onTrue(new InstantCommand(() -> arm.louisAmpShot()));
 
     // Shootake
     appendageJoystick.button(6).onTrue(new InstantCommand(() -> shootake.setIntake(true)));
@@ -142,10 +142,11 @@ public class Superstructure extends SubsystemBase {
 
   public InstantCommand subsystemFarShot() {
     return new InstantCommand(() -> arm.farShootingPos());
+
   }
 
   public InstantCommand subsystemCloseShot() {
-    return new InstantCommand(() -> arm.autoCloseShootingPos());
+    return new InstantCommand(() -> arm.closeShootingPos());
     // this is done to conserve teleop shooting. will change once tuned
   }
 

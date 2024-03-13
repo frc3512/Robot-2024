@@ -124,6 +124,11 @@ public class Arm extends ProfiledPIDSubsystem {
     enable();
   }
 
+  public void louisAmpShot() {
+    setGoal(Constants.ArmConstants.louis_amp);
+    enable();
+  }
+
   public void stopArm() {
     disable();
     leftMotor.set(0);
