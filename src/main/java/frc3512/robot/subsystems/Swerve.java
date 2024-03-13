@@ -79,7 +79,7 @@ public class Swerve extends SubsystemBase {
       Vision vision) {
     return run(
         () -> {
-          if (doAim.getAsBoolean()) {
+          if (doAim.getAsBoolean() && vision.hasTargets()) {
             swerve.setHeadingCorrection(true);
             aimAtPoint(
                 translationX,

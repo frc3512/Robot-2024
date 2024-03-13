@@ -11,6 +11,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -189,13 +190,14 @@ public class Vision extends SubsystemBase {
 
           // Make sure it's on the field and doesn't have an ambiguity above 0.2
           // Also only does it if we explicity tell it to do so
-          boolean ambiguityCheck = getLatestResult().targets.get(0).getPoseAmbiguity() > 0.2;
+          boolean ambiguityCheck = getLatestResult().targets.get(0).getPoseAmbiguity() < 0.2;
           boolean fieldCheck =
               (estPose.getX() > 0.0 && estPose.getX() <= layout.getFieldLength())
                   && (estPose.getY() > 0.0 && estPose.getY() <= layout.getFieldLength());
-          if (ambiguityCheck && fieldCheck && !DriverStation.isAutonomous()) {
-            swerve.addVisionMeasurement(
-                est.estimatedPose.toPose2d(), est.timestampSeconds, estStdDevs);
+          SmartDashboard.putBoolean("Diagnostics/Vision/fieldCheck", fieldCheck);
+          SmartDashboard.putBoolean("Diagnostics/Vision/ambiguietyCheck", ambiguityCheck);
+          if (ambiguityCheck) {
+            swerve.addVisionMeasurement(est.estimatedPose.toPose2d(), est.timestampSeconds, estStdDevs);
           }
         });
 
@@ -206,6 +208,8 @@ public class Vision extends SubsystemBase {
     SmartDashboard.putNumber(
         "Diagnostics/Vision/Distance",
         getTargetDistance(() -> swerve.getPose(), () -> ScoringUtil.provideDistancePose()));
+
+      SmartDashboard.putBoolean("Diagnostics/Vision/visionEst", visionEst.isPresent());
   }
 
   public void simulationPeriodic(Pose2d robotSimPose) {
