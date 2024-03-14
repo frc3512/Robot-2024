@@ -44,7 +44,11 @@ public final class Constants {
     public static final String visionName = "USB_GS_Camera";
     public static final String driverName = "HD_Web_Camera";
     public static final Transform3d robotToCam =
-        new Transform3d(0.0, 0.0, 0.0, new Rotation3d(-Units.degreesToRadians(45.0), 0.0, Units.degreesToRadians(0.0)));
+        new Transform3d(
+            0.0,
+            0.0,
+            0.0,
+            new Rotation3d(-Units.degreesToRadians(45.0), 0.0, Units.degreesToRadians(0.0)));
 
     public static final Pair<Integer, Translation2d> blueSpeaker =
         new Pair<Integer, Translation2d>(7, new Translation2d(0.00, 5.55));

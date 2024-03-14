@@ -10,8 +10,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -197,7 +195,8 @@ public class Vision extends SubsystemBase {
           SmartDashboard.putBoolean("Diagnostics/Vision/fieldCheck", fieldCheck);
           SmartDashboard.putBoolean("Diagnostics/Vision/ambiguietyCheck", ambiguityCheck);
           if (ambiguityCheck) {
-            swerve.addVisionMeasurement(est.estimatedPose.toPose2d(), est.timestampSeconds, estStdDevs);
+            swerve.addVisionMeasurement(
+                est.estimatedPose.toPose2d(), est.timestampSeconds, estStdDevs);
           }
         });
 
@@ -209,7 +208,7 @@ public class Vision extends SubsystemBase {
         "Diagnostics/Vision/Distance",
         getTargetDistance(() -> swerve.getPose(), () -> ScoringUtil.provideDistancePose()));
 
-      SmartDashboard.putBoolean("Diagnostics/Vision/visionEst", visionEst.isPresent());
+    SmartDashboard.putBoolean("Diagnostics/Vision/visionEst", visionEst.isPresent());
   }
 
   public void simulationPeriodic(Pose2d robotSimPose) {

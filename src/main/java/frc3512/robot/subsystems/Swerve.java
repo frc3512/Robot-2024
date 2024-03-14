@@ -242,7 +242,13 @@ public class Swerve extends SubsystemBase {
   /** The primary method for controlling the drivebase. */
   public void drive(
       double translationX, double translationY, double rotation, boolean fieldRelative) {
-    swerve.drive(new Translation2d(translationX, translationY), rotation, fieldRelative, false);
+    ChassisSpeeds velocity =
+        fieldRelative
+            ? ChassisSpeeds.fromFieldRelativeSpeeds(
+                translationX, translationY, rotation, swerve.getYaw())
+            : new ChassisSpeeds(translationX, translationY, rotation);
+
+    swerve.drive(velocity, false, new Translation2d());
   }
 
   /**
@@ -263,7 +269,7 @@ public class Swerve extends SubsystemBase {
    */
   public void resetOdometry(Pose2d initialHolonomicPose) {
     swerve.resetOdometry(initialHolonomicPose);
-    //swerve.setGyroOffset(new Rotation3d(0.0, 0.0, 180.0));
+    // swerve.setGyroOffset(new Rotation3d(0.0, 0.0, 180.0));
   }
 
   /**
