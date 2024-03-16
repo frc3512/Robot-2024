@@ -4,7 +4,7 @@ import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
+import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
@@ -23,13 +23,12 @@ public class Arm extends ProfiledPIDSubsystem {
   private CANSparkMax rightMotor = new CANSparkMax(15, MotorType.kBrushless);
   private DutyCycleEncoder armEncoder = new DutyCycleEncoder(3);
 
-  InterpolatingTreeMap<Double, Double> m_table =
-      new InterpolatingTreeMap<Double, Double>(null, null);
+  InterpolatingDoubleTreeMap m_table = new InterpolatingDoubleTreeMap();
 
   boolean bypassStop = false;
   boolean m_useRange = false;
 
-  public Arm(Swerve swerve) {
+  public Arm(Swerve swerve, Vision vision) {
     super(
         new ProfiledPIDController(
             Constants.ArmConstants.kP,
@@ -40,6 +39,7 @@ public class Arm extends ProfiledPIDSubsystem {
     setGoal(Constants.ArmConstants.stowPosition);
 
     m_swerve = swerve;
+    m_vision = vision;
 
     leftMotor.restoreFactoryDefaults();
     rightMotor.restoreFactoryDefaults();
@@ -159,5 +159,10 @@ public class Arm extends ProfiledPIDSubsystem {
         "Arm/Arm Encoder Distance Per Rotation", armEncoder.getDistancePerRotation());
     SmartDashboard.putNumber("Arm/Arm Encoder", armEncoder.getAbsolutePosition());
     SmartDashboard.putNumber("Arm/Arm PID Goal", getController().getGoal().position);
+    SmartDashboard.putNumber(
+        "Arm/Table result",
+        m_table.get(
+            m_vision.getTargetDistance(
+                () -> m_swerve.getPose(), () -> ScoringUtil.provideDistancePose())));
   }
 }

@@ -1,7 +1,5 @@
 package frc3512.robot.subsystems;
 
-import java.time.Instant;
-
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -27,7 +25,7 @@ public class Superstructure extends SubsystemBase {
   // Subsystems
   public final Vision vision = new Vision();
   public final Swerve swerve = new Swerve();
-  public final Arm arm = new Arm(swerve);
+  public final Arm arm = new Arm(swerve, vision);
   public final Elevator elevator = new Elevator();
   public final Shootake shootake = new Shootake();
   public final Climber climber = new Climber();
@@ -59,8 +57,8 @@ public class Superstructure extends SubsystemBase {
                         new Pose2d(
                             new Translation2d(14.0, 5.50),
                             new Rotation2d(Units.degreesToRadians(0))))));
-    driverXbox.rightBumper().onTrue(new InstantCommand(() -> arm.setGoalFromRange(true)));
-    driverXbox.rightBumper().onFalse(new InstantCommand(() -> arm.setGoalFromRange(true)));
+    driverXbox.rightBumper().onTrue(new InstantCommand(() -> arm.setGoalFromRange(true)).andThen(new InstantCommand(() -> arm.enable())));
+    driverXbox.rightBumper().onFalse(new InstantCommand(() -> arm.setGoalFromRange(false)));
 
     appendageJoystick.button(1).onTrue(subsystemAmp());
 
