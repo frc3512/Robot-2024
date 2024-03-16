@@ -46,7 +46,7 @@ public final class Constants {
     public static final boolean enablePoseEstimation =
         false; // Change to true to enable pose estimation
 
-    public static final RobotType robotType = RobotType.PROTO;
+    public static final RobotType robotType = RobotType.COMP;
   }
 
   public static final class VisionConstants {

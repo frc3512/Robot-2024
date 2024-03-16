@@ -1,0 +1,49 @@
+{
+  "version": 1.0,
+  "startingPose": null,
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "2 Note AMP 1"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AMP Shooting Pos"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shooting Speed"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Stop Intake/Shooter"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Stow"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "Test Autos",
+  "choreoAuto": false
+}

@@ -51,30 +51,31 @@ public class Superstructure extends SubsystemBase {
     driverXbox.x().onTrue(new InstantCommand(() -> swerve.zeroGyro()));
 
     // Arm / Shooter Controls
-    appendageJoystick.button(1).onTrue(subsystemAmp());
+    // appendageJoystick.button(1).onTrue(subsystemAmp());
 
-    appendageJoystick.button(3).onTrue(new InstantCommand(() -> shootake.setShooter(true)));
-    appendageJoystick.button(3).onFalse(shootSequence());
+    // appendageJoystick.button(3).onTrue(new InstantCommand(() -> shootake.setShooter(true)));
+    // appendageJoystick.button(3).onFalse(shootSequence());
 
     // appendageJoystick.button(2).onTrue(subsystemCloseShot());
 
-    appendageJoystick.button(4).onTrue(subsystemStow());
+    // appendageJoystick.button(4).onTrue(subsystemStow());
 
-    appendageJoystick.button(5).onTrue(subsystemIntake());
+    // appendageJoystick.button(5).onTrue(subsystemIntake());
 
     // appendageJoystick.button(10).onTrue(subsystemFarShot());
 
     // appendageJoystick.button(11).onTrue(subsystemTrapPositon());
 
     // Shootake
-    appendageJoystick.button(6).onTrue(new InstantCommand(() -> shootake.setIntake(true)));
-    appendageJoystick.button(6).onFalse(new InstantCommand(() -> shootake.setIntake(false)));
-    appendageJoystick.button(7).onTrue(new InstantCommand(() -> shootake.setOuttake(true)));
-    appendageJoystick.button(7).onFalse(new InstantCommand(() -> shootake.setOuttake(false)));
+    // appendageJoystick.button(6).onTrue(new InstantCommand(() -> shootake.setIntake(true)));
+    // appendageJoystick.button(6).onFalse(new InstantCommand(() -> shootake.setIntake(false)));
+    // appendageJoystick.button(7).onTrue(new InstantCommand(() -> shootake.setOuttake(true)));
+    // appendageJoystick.button(7).onFalse(new InstantCommand(() -> shootake.setOuttake(false)));
     // shootake.setIntake(appendageJoystick.button(6).getAsBoolean());
     // shootake.setOuttake(appendageJoystick.button(7).getAsBoolean());
 
-    appendageJoystick.button(12).onTrue(new InstantCommand(() -> shootake.stopIntakeAndShooter()));
+    // appendageJoystick.button(12).onTrue(new InstantCommand(() ->
+    // shootake.stopIntakeAndShooter()));
 
     // Climber Controls
     appendageJoystick
