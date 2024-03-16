@@ -48,7 +48,7 @@ public final class Constants {
             0.0,
             0.0,
             0.0,
-            new Rotation3d(-Units.degreesToRadians(45.0), 0.0, Units.degreesToRadians(0.0)));
+            new Rotation3d(-Units.degreesToRadians(0.0), 0.0, Units.degreesToRadians(0.0)));
 
     public static final Pair<Integer, Translation2d> blueSpeaker =
         new Pair<Integer, Translation2d>(7, new Translation2d(0.00, 5.55));
@@ -74,13 +74,13 @@ public final class Constants {
     public static final double kD = 0.05;
 
     // we applied a delta of -0.13 due to a changed encoder
-    public static final double stowPosition = 0.4; // 0.4
+    public static final double stowPosition = 0.32; // 0.4
     public static final double autoCloseShootingPosition = 0.3; // 0.3
-    public static final double closeShootingPosition = 0.27; // 0.27
-    public static final double farShootingPosition = 0.44; // 0.44
+    public static final double closeShootingPosition = 0.20; // 0.27
+    public static final double farShootingPosition = 0.395; // 0.44
     public static final double autoShootingPosition = 0.4; // 0.4
-    public static final double ampPosition = 0.95; // 0.95
-    public static final double intakePosition = 0.21; // 0.23
+    public static final double ampPosition = 0.90; // 0.95
+    public static final double intakePosition = 0.12; // 0.23
     public static final double trapPositon = 0.95; // 0.95
   }
 

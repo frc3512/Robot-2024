@@ -1,5 +1,7 @@
 package frc3512.robot.subsystems;
 
+import java.time.Instant;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -25,7 +27,7 @@ public class Superstructure extends SubsystemBase {
   // Subsystems
   public final Vision vision = new Vision();
   public final Swerve swerve = new Swerve();
-  public final Arm arm = new Arm();
+  public final Arm arm = new Arm(swerve);
   public final Elevator elevator = new Elevator();
   public final Shootake shootake = new Shootake();
   public final Climber climber = new Climber();
@@ -57,6 +59,8 @@ public class Superstructure extends SubsystemBase {
                         new Pose2d(
                             new Translation2d(14.0, 5.50),
                             new Rotation2d(Units.degreesToRadians(0))))));
+    driverXbox.rightBumper().onTrue(new InstantCommand(() -> arm.setGoalFromRange(true)));
+    driverXbox.rightBumper().onFalse(new InstantCommand(() -> arm.setGoalFromRange(true)));
 
     appendageJoystick.button(1).onTrue(subsystemAmp());
 
@@ -128,41 +132,31 @@ public class Superstructure extends SubsystemBase {
         .andThen(new WaitCommand(.75))
         .andThen(new InstantCommand(() -> shootake.stopIntakeOutake()))
         .andThen(new InstantCommand(() -> shootake.stopShooting()))
-        .andThen(new InstantCommand(() -> arm.stowArm()))
-        .andThen(new InstantCommand(() -> elevator.stowElevator()));
+        .andThen(new InstantCommand(() -> arm.stowArm()));
   }
 
-  public SequentialCommandGroup subsystemStow() {
-    return new InstantCommand(() -> arm.stowArm())
-        .andThen(new WaitCommand(.5))
-        .andThen(new InstantCommand(() -> elevator.stowElevator()));
+  public InstantCommand subsystemStow() {
+    return new InstantCommand(() -> arm.stowArm());
   }
 
-  public SequentialCommandGroup subsystemIntake() {
-    return new InstantCommand(() -> elevator.outElevator())
-        .andThen(new WaitCommand(.5))
-        .andThen(new InstantCommand(() -> arm.intakePos()));
+  public InstantCommand subsystemIntake() {
+    return new InstantCommand(() -> arm.intakePos());
   }
 
-  public SequentialCommandGroup subsystemAmp() {
-    return new InstantCommand(() -> arm.ampShootingPos())
-        .andThen(new WaitCommand(0.75))
-        .andThen(new InstantCommand(() -> elevator.ampElevator()));
+  public InstantCommand subsystemAmp() {
+    return new InstantCommand(() -> arm.ampShootingPos());
   }
 
-  public SequentialCommandGroup subsystemFarShot() {
-    return new InstantCommand(() -> arm.farShootingPos())
-        .andThen(new InstantCommand(() -> elevator.outElevator()));
+  public InstantCommand subsystemFarShot() {
+    return new InstantCommand(() -> arm.farShootingPos());
   }
 
-  public SequentialCommandGroup subsystemCloseShot() {
-    return new InstantCommand(() -> arm.closeShootingPos())
-        .andThen(new InstantCommand(() -> elevator.outElevator()));
+  public InstantCommand subsystemCloseShot() {
+    return new InstantCommand(() -> arm.closeShootingPos());
   }
 
-  public SequentialCommandGroup subsystemTrapPositon() {
-    return new InstantCommand(() -> arm.trapPositon())
-        .andThen(new InstantCommand(() -> elevator.outElevator()));
+  public InstantCommand subsystemTrapPositon() {
+    return new InstantCommand(() -> arm.trapPositon());
   }
 
   public SequentialCommandGroup subsytemStopIntakeAndShooter() {
@@ -170,9 +164,8 @@ public class Superstructure extends SubsystemBase {
         .andThen(new InstantCommand(() -> shootake.stopShooting()));
   }
 
-  public SequentialCommandGroup subsystemAutoShot() {
-    return new InstantCommand(() -> arm.autoShootingPos())
-        .andThen(new InstantCommand(() -> elevator.outElevator()));
+  public InstantCommand subsystemAutoShot() {
+    return new InstantCommand(() -> arm.autoShootingPos());
   }
 
   @Override
