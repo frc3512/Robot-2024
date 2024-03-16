@@ -65,7 +65,7 @@ public class Arm extends ProfiledPIDSubsystem {
 
     m_table.put(0.4, Constants.ArmConstants.closeShootingPosition);
     m_table.put(0.95, Constants.ArmConstants.stowPosition);
-    m_table.put(2.0, Constants.ArmConstants.farShootingPosition);
+    m_table.put(2.0, 0.37);
   }
 
   @Override

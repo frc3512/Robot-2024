@@ -226,7 +226,7 @@ public class Swerve extends SubsystemBase {
               ? currPose.getRotation().plus(Rotation2d.fromRadians(Math.PI)).getRadians()
               : currPose.getRotation().getRadians();
       double output =
-          swerve.swerveController.headingCalculate(rotation, adjustedAngle.getRadians());
+          swerve.swerveController.thetaController.calculate(rotation, adjustedAngle.getRadians());
 
       SmartDashboard.putNumberArray(
           "Diagnostics/Vision/Aim Point", new double[] {aimPoint.getX(), aimPoint.getY()});
@@ -339,5 +339,12 @@ public class Swerve extends SubsystemBase {
   public void addVisionMeasurement(
       Pose2d pose, double timestamp, Matrix<N3, N1> visionMeasurementStdDevs) {
     swerve.addVisionMeasurement(pose, timestamp, visionMeasurementStdDevs);
+  }
+
+
+  @Override
+  public void periodic() {
+    SmartDashboard.putNumber("Swerve/thetaController setpoint", swerve.swerveController.thetaController.getSetpoint());
+    SmartDashboard.putNumber("Swerve/yaw", swerve.getYaw().getRadians());
   }
 }

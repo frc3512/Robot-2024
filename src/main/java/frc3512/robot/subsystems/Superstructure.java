@@ -42,6 +42,8 @@ public class Superstructure extends SubsystemBase {
   private final int strafeAxis = XboxController.Axis.kLeftX.value;
   private final int rotationAxis = XboxController.Axis.kRightX.value;
 
+  boolean xbox_shooting = false;
+
   public Superstructure() {
     autos = new Autos(this);
   }
@@ -57,8 +59,20 @@ public class Superstructure extends SubsystemBase {
                         new Pose2d(
                             new Translation2d(14.0, 5.50),
                             new Rotation2d(Units.degreesToRadians(0))))));
-    driverXbox.rightBumper().onTrue(new InstantCommand(() -> arm.setGoalFromRange(true)).andThen(new InstantCommand(() -> arm.enable())));
-    driverXbox.rightBumper().onFalse(new InstantCommand(() -> arm.setGoalFromRange(false)));
+    
+    if (xbox_shooting) {
+      driverXbox.leftBumper().onTrue(new InstantCommand(() -> arm.setGoalFromRange(true)).andThen(new InstantCommand(() -> arm.enable())));
+      driverXbox.leftBumper().onFalse(new InstantCommand(() -> arm.setGoalFromRange(false)));
+
+      driverXbox.rightBumper().onTrue(new InstantCommand(() -> shootake.shoot()));
+      driverXbox.rightBumper().onFalse(shootSequence());
+
+      driverXbox.b().onTrue(new InstantCommand(() -> shootake.want_to_intake = true));
+      driverXbox.b().onFalse(new InstantCommand(() -> shootake.want_to_intake = false));
+    } else {
+      driverXbox.rightBumper().onTrue(new InstantCommand(() -> arm.setGoalFromRange(true)).andThen(new InstantCommand(() -> arm.enable())));
+      driverXbox.rightBumper().onFalse(new InstantCommand(() -> arm.setGoalFromRange(false)));
+    }
 
     appendageJoystick.button(1).onTrue(subsystemAmp());
 
