@@ -83,8 +83,8 @@ public class Shootake extends PIDSubsystem {
   }
 
   public void shoot() {
-    topMotor.set(0.85);
-    bottomMotor.set(0.85);
+    topMotor.set(0.75);
+    bottomMotor.set(0.75);
     shooting = true;
   }
 
@@ -126,8 +126,8 @@ public class Shootake extends PIDSubsystem {
 
     if (want_to_intake && can_intake) {
       intakeMotor.set(-1);
-      topMotor.set(.6);
-      bottomMotor.set(.6);
+      topMotor.set(.5);
+      bottomMotor.set(.5);
     } else if (want_to_outtake) {
       intakeMotor.set(0.85);
       topMotor.set(0);

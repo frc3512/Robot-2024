@@ -50,18 +50,16 @@ public class Superstructure extends SubsystemBase {
 
   public void configureBindings() {
     driverXbox.x().onTrue(new InstantCommand(() -> swerve.zeroGyro()));
-    driverXbox
-        .a()
-        .onTrue(
-            new InstantCommand(
-                () ->
-                    swerve.resetOdometry(
-                        new Pose2d(
-                            new Translation2d(14.0, 5.50),
-                            new Rotation2d(Units.degreesToRadians(0))))));
-    
+    driverXbox.a().onTrue(new InstantCommand(() -> arm.intakePos()));
+    driverXbox.b().onTrue(new InstantCommand(() -> shootake.want_to_intake = true));
+    driverXbox.b().onFalse(new InstantCommand(() -> shootake.want_to_intake = false));
+
     if (xbox_shooting) {
-      driverXbox.leftBumper().onTrue(new InstantCommand(() -> arm.setGoalFromRange(true)).andThen(new InstantCommand(() -> arm.enable())));
+      driverXbox
+          .leftBumper()
+          .onTrue(
+              new InstantCommand(() -> arm.setGoalFromRange(true))
+                  .andThen(new InstantCommand(() -> arm.enable())));
       driverXbox.leftBumper().onFalse(new InstantCommand(() -> arm.setGoalFromRange(false)));
 
       driverXbox.rightBumper().onTrue(new InstantCommand(() -> shootake.shoot()));
@@ -70,7 +68,11 @@ public class Superstructure extends SubsystemBase {
       driverXbox.b().onTrue(new InstantCommand(() -> shootake.want_to_intake = true));
       driverXbox.b().onFalse(new InstantCommand(() -> shootake.want_to_intake = false));
     } else {
-      driverXbox.rightBumper().onTrue(new InstantCommand(() -> arm.setGoalFromRange(true)).andThen(new InstantCommand(() -> arm.enable())));
+      driverXbox
+          .rightBumper()
+          .onTrue(
+              new InstantCommand(() -> arm.setGoalFromRange(true))
+                  .andThen(new InstantCommand(() -> arm.enable())));
       driverXbox.rightBumper().onFalse(new InstantCommand(() -> arm.setGoalFromRange(false)));
     }
 

@@ -341,10 +341,10 @@ public class Swerve extends SubsystemBase {
     swerve.addVisionMeasurement(pose, timestamp, visionMeasurementStdDevs);
   }
 
-
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("Swerve/thetaController setpoint", swerve.swerveController.thetaController.getSetpoint());
+    SmartDashboard.putNumber(
+        "Swerve/thetaController setpoint", swerve.swerveController.thetaController.getSetpoint());
     SmartDashboard.putNumber("Swerve/yaw", swerve.getYaw().getRadians());
   }
 }
