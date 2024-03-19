@@ -43,7 +43,7 @@ public class Shootake extends SubsystemBase {
     topMotor.setIdleMode(IdleMode.kCoast);
     bottomMotor.setIdleMode(IdleMode.kCoast);
 
-    intakeMotor.setSmartCurrentLimit(40);
+    intakeMotor.setSmartCurrentLimit(60);
     topMotor.setSmartCurrentLimit(40);
     bottomMotor.setSmartCurrentLimit(40);
 

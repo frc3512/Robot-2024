@@ -17,9 +17,10 @@ public class LED extends SubsystemBase {
 
   public LED() {
     leds = new AddressableLED(0);
-    ledBuffer = new AddressableLEDBuffer(29);
+    ledBuffer = new AddressableLEDBuffer(56);
 
     leds.setLength(ledBuffer.getLength());
+
     // For every pixel
     for (var i = 0; i < ledBuffer.getLength(); i++) {
       // Calculate the hue - hue is easier for rainbows because the color
@@ -74,6 +75,21 @@ public class LED extends SubsystemBase {
     } else {
       ledBlue();
     }
+  }
+
+  public void rainbow() {
+    for (var i = 0; i < ledBuffer.getLength(); i++) {
+      // Calculate the hue - hue is easier for rainbows because the color
+      // shape is a circle so only one value needs to precess
+      final var hue = (m_rainbowFirstPixelHue + (i * 180 / ledBuffer.getLength())) % 180;
+      // Set the value
+      ledBuffer.setHSV(i, hue, 255, 128);
+    }
+    // Increase by to make the rainbow "move"
+    m_rainbowFirstPixelHue += 5;
+    // Check bounds
+    m_rainbowFirstPixelHue %= 180;
+    leds.setData(ledBuffer);
   }
 
   @Override
