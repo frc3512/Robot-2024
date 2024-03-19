@@ -101,7 +101,7 @@ public class Shootake extends SubsystemBase {
     } else {
       can_intake = true;
       leds.flashLEDs = false;
-      leds.matchAlliance();
+      //leds.matchAlliance();
     }
 
     if (want_to_intake && can_intake) {

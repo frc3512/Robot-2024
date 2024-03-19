@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc3512.robot.Constants;
+import frc3512.robot.subsystems.LED;
 import frc3512.robot.subsystems.Superstructure;
 import frc3512.robot.subsystems.Swerve;
 import org.photonvision.PhotonCamera;
@@ -26,6 +27,7 @@ public class Autos {
   public Autos(Superstructure superstructure, Swerve swerve) {
     this.superstructure = superstructure;
     this.swerve = swerve;
+
 
     setMarkers();
 
@@ -53,6 +55,7 @@ public class Autos {
     buildAuto("1 Note Run");
     buildAuto("2 Note");
     buildAuto("3 Note");
+    buildAuto("Test 3");
 
     SmartDashboard.putData("Auton Chooser", autonChooser);
   }
@@ -92,6 +95,11 @@ public class Autos {
     NamedCommands.registerCommand(
         "Stop Intake/Shooter",
         new InstantCommand(() -> superstructure.shootake.stopIntakeAndShooter()));
+
+    // Led 
+    NamedCommands.registerCommand(
+        "LEDs Pink",
+        new InstantCommand(() -> superstructure.led.ledsPink()));
 
     // Superstructure
     NamedCommands.registerCommand(

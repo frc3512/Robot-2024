@@ -73,7 +73,7 @@ public final class Constants {
 
     // we applied a delta of -0.13 due to a changed encoder
     public static final double stowPosition = 0.32; // 0.4
-    public static final double autoCloseShootingPosition = 0.3; // 0.3
+    public static final double autoCloseShootingPosition = 0.2; // 0.3
     public static final double closeShootingPosition = 0.20; // 0.27
     public static final double farShootingPosition = 0.395; // 0.44
     public static final double autoShootingPosition = 0.4; // 0.4

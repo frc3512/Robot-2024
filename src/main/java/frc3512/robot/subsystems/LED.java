@@ -61,6 +61,10 @@ public class LED extends SubsystemBase {
     ledSet(0, 0, 0);
   }
 
+  public void ledsPink() {
+    ledSet(255, 182, 193);
+  }
+
   public void ledSet(int red, int green, int blue) {
     for (var i = 0; i < ledBuffer.getLength(); i++) {
       ledBuffer.setRGB(i, red, green, blue);
@@ -78,6 +82,7 @@ public class LED extends SubsystemBase {
 
   @Override
   public void periodic() {
+    /*
     if (flashLEDs) {
       ledTimer += 20;
       if (ledTimer >= ledRate && !ledsOn) {
@@ -89,6 +94,6 @@ public class LED extends SubsystemBase {
         ledTimer = 0;
         ledsOn = false;
       }
-    }
+    }*/
   }
 }
