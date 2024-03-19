@@ -67,17 +67,23 @@ public final class Constants {
     public static final int currentLimit = 40;
     public static final double speed = 0.1;
 
+    public static final double kP = 37;
+    public static final double kI = 0;
+    public static final double kD = 0.01;
+
+    /* WORKING CONSTANTS
     public static final double kP = 32;
     public static final double kI = 0;
     public static final double kD = 0.025;
+     */
 
     public static final double stowPosition = 0.35; // 0.4
     public static final double autoCloseShootingPosition = 0.3; // 0.3
-    public static final double closeShootingPosition = 0.27; // 0.27
-    public static final double farShootingPosition = 0.44; // 0.44
+    public static final double closeShootingPosition = 0.26; // 0.27
+    public static final double farShootingPosition = 0.33; // 0.44
     public static final double autoShootingPosition = 0.4; // 0.4
-    public static final double ampPosition = 0.48; // 0.95
-    public static final double intakePosition = 0.244; // 0.23
+    public static final double ampPosition = 0.5; // 0.95
+    public static final double intakePosition = 0.238; // 0.23
     public static final double trapPositon = 0.5; // 0.95
   }
 }

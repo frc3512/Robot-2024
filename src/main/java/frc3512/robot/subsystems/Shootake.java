@@ -43,7 +43,7 @@ public class Shootake extends SubsystemBase {
     topMotor.setIdleMode(IdleMode.kCoast);
     bottomMotor.setIdleMode(IdleMode.kCoast);
 
-    intakeMotor.setSmartCurrentLimit(60);
+    intakeMotor.setSmartCurrentLimit(70);
     topMotor.setSmartCurrentLimit(40);
     bottomMotor.setSmartCurrentLimit(40);
 
@@ -51,8 +51,8 @@ public class Shootake extends SubsystemBase {
     topMotor.enableVoltageCompensation(10);
     bottomMotor.enableVoltageCompensation(10);
 
-    topMotor.setInverted(false);
-    bottomMotor.setInverted(false);
+    topMotor.setInverted(true);
+    bottomMotor.setInverted(true);
     bottomMotor.follow(topMotor);
 
     topEncoder.setMeasurementPeriod(20);
