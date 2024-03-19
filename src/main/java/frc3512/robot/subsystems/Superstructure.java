@@ -53,6 +53,8 @@ public class Superstructure extends SubsystemBase {
     driverXbox.a().onTrue(new InstantCommand(() -> arm.intakePos()));
     driverXbox.b().onTrue(new InstantCommand(() -> shootake.want_to_intake = true));
     driverXbox.b().onFalse(new InstantCommand(() -> shootake.want_to_intake = false));
+    driverXbox.y().onTrue(new InstantCommand(() -> shootake.shoot()));
+    driverXbox.y().onFalse(shootSequence());
 
     if (xbox_shooting) {
       driverXbox
