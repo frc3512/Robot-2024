@@ -18,7 +18,11 @@
     "drive": true,
     "angle": false
   },
+<<<<<<< HEAD
   "absoluteEncoderOffset":353, 
+=======
+  "absoluteEncoderOffset": 173.7, 
+>>>>>>> vision-aim-at-point
   "location": {
     "front": -11,
     "left": -11

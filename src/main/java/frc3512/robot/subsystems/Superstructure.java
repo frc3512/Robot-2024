@@ -1,9 +1,12 @@
 package frc3512.robot.subsystems;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -13,9 +16,6 @@ import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc3512.robot.Constants;
 import frc3512.robot.auton.Autos;
-import java.util.List;
-import org.photonvision.targeting.PhotonPipelineResult;
-import org.photonvision.targeting.PhotonTrackedTarget;
 
 public class Superstructure extends SubsystemBase {
   // Autons
@@ -23,11 +23,11 @@ public class Superstructure extends SubsystemBase {
 
   // Subsystems
   public final LED led = new LED();
-  public final Arm arm = new Arm();
   public final Swerve swerve = new Swerve();
   public final Vision vision = new Vision();
   public final Shootake shootake = new Shootake(led);
   public final Climber climber = new Climber();
+  public final Arm arm = new Arm(swerve, vision);
 
   // Joysticks
   private final CommandXboxController driverXbox =
@@ -41,16 +41,39 @@ public class Superstructure extends SubsystemBase {
   private final int strafeAxis = XboxController.Axis.kLeftX.value;
   private final int rotationAxis = XboxController.Axis.kRightX.value;
 
+  boolean xbox_shooting = false;
+
   public Superstructure() {
-    autos = new Autos(this, swerve);
-    SmartDashboard.putData(arm);
+    autos = new Autos(this);
   }
 
   public void configureBindings() {
     // Reset Gyro
     driverXbox.x().onTrue(new InstantCommand(() -> swerve.zeroGyro()));
+    driverXbox
+        .a()
+        .onTrue(
+            new InstantCommand(
+                () ->
+                    swerve.resetOdometry(
+                        new Pose2d(
+                            new Translation2d(14.0, 5.50),
+                            new Rotation2d(Units.degreesToRadians(0))))));
+    
+    if (xbox_shooting) {
+      driverXbox.leftBumper().onTrue(new InstantCommand(() -> arm.setGoalFromRange(true)).andThen(new InstantCommand(() -> arm.enable())));
+      driverXbox.leftBumper().onFalse(new InstantCommand(() -> arm.setGoalFromRange(false)));
 
-    // Arm / Shooter Controls
+      driverXbox.rightBumper().onTrue(new InstantCommand(() -> shootake.setShooter(true)));
+      driverXbox.rightBumper().onFalse(shootSequence());
+
+      driverXbox.b().onTrue(new InstantCommand(() -> shootake.want_to_intake = true));
+      driverXbox.b().onFalse(new InstantCommand(() -> shootake.want_to_intake = false));
+    } else {
+      driverXbox.rightBumper().onTrue(new InstantCommand(() -> arm.setGoalFromRange(true)).andThen(new InstantCommand(() -> arm.enable())));
+      driverXbox.rightBumper().onFalse(new InstantCommand(() -> arm.setGoalFromRange(false)));
+    }
+
     appendageJoystick.button(1).onTrue(subsystemAmp());
 
     appendageJoystick.button(3).onTrue(
@@ -63,7 +86,13 @@ public class Superstructure extends SubsystemBase {
 
     appendageJoystick.button(5).onTrue(subsystemIntake());
 
-    appendageJoystick.button(9).onTrue(new InstantCommand(() -> climber.releaseReaction()));
+    appendageJoystick.button(6).onTrue(new InstantCommand(() -> shootake.want_to_intake = true));
+    appendageJoystick.button(6).onFalse(new InstantCommand(() -> shootake.want_to_intake = false));
+
+    appendageJoystick.button(7).onTrue(new InstantCommand(() -> shootake.want_to_outtake = true));
+    appendageJoystick.button(7).onFalse(new InstantCommand(() -> shootake.want_to_outtake = false));
+
+
 
     appendageJoystick.button(10).onTrue(subsystemFarShot());
 
@@ -92,12 +121,13 @@ public class Superstructure extends SubsystemBase {
 
     appendageJoystick
         .axisGreaterThan(Joystick.AxisType.kY.value, 0.5)
-        .and(appendageJoystick.button(9))
-        .onTrue(new InstantCommand(() -> climber.motorDown()));
+        .and(appendageJoystick.button(9)
+        ).onTrue(new InstantCommand(() -> climber.motorDown()));
     appendageJoystick
-        .axisGreaterThan(Joystick.AxisType.kY.value, 0.5)
-        .and(appendageJoystick.button(9))
-        .onFalse(new InstantCommand(() -> climber.stopClimbers()));
+    .axisGreaterThan(Joystick.AxisType.kY.value, 0.5)
+    .and(appendageJoystick.button(9))
+    .onFalse(new InstantCommand(() -> climber.stopClimbers()));
+
   }
 
   public void configureAxisActions() {
@@ -105,16 +135,16 @@ public class Superstructure extends SubsystemBase {
         swerve.driveCommand(
             () ->
                 MathUtil.applyDeadband(
-                    -driverXbox.getRawAxis(translationAxis),
+                    driverXbox.getRawAxis(translationAxis),
                     Constants.SwerveConstants.swerveDeadband),
             () ->
                 MathUtil.applyDeadband(
-                    -driverXbox.getRawAxis(strafeAxis), Constants.SwerveConstants.swerveDeadband),
+                    driverXbox.getRawAxis(strafeAxis), Constants.SwerveConstants.swerveDeadband),
             () ->
                 MathUtil.applyDeadband(
-                    -driverXbox.getRawAxis(rotationAxis), Constants.SwerveConstants.swerveDeadband),
+                    driverXbox.getRawAxis(rotationAxis), Constants.SwerveConstants.swerveDeadband),
             () -> driverXbox.leftBumper().getAsBoolean(),
-            vision.returnCamera()));
+            vision));
   }
 
   public void setMotorBrake(boolean brake) {
@@ -128,7 +158,9 @@ public class Superstructure extends SubsystemBase {
   public SequentialCommandGroup shootSequence() {
     return new InstantCommand(() -> shootake.setIntake(true))
         .andThen(new WaitCommand(.75))
-        .andThen(new InstantCommand(() -> shootake.stopIntakeAndShooter()))
+        .andThen(new InstantCommand(() -> shootake.setIntake(false)))
+        .andThen(new InstantCommand(() -> shootake.setOuttake(false)))
+        .andThen(new InstantCommand(() -> shootake.setShooter(false)))
         .andThen(new InstantCommand(() -> arm.stowArm()));
   }
 
@@ -150,11 +182,16 @@ public class Superstructure extends SubsystemBase {
 
   public InstantCommand subsystemCloseShot() {
     return new InstantCommand(() -> arm.closeShootingPos());
-    // this is done to conserve teleop shooting. will change once tuned
   }
 
   public InstantCommand subsystemTrapPositon() {
     return new InstantCommand(() -> arm.trapPositon());
+  }
+
+  public SequentialCommandGroup subsytemStopIntakeAndShooter() {
+    return new InstantCommand(() -> shootake.setIntake(false))
+        .andThen(new InstantCommand(() -> shootake.setOuttake(false)))
+        .andThen(new InstantCommand(() -> shootake.setShooter(false)));
   }
 
   public InstantCommand subsystemAutoShot() {
@@ -163,12 +200,15 @@ public class Superstructure extends SubsystemBase {
 
   @Override
   public void periodic() {
-    PhotonPipelineResult result = vision.photonCamera.getLatestResult();
-    List<PhotonTrackedTarget> targets = result.getTargets();
-    double[] tags = new double[targets.size()];
-    for (int i = 0; i < targets.size(); i++) {
-      tags[i] = targets.get(i).getFiducialId();
-    }
-    SmartDashboard.putNumberArray("Diagnostics/Vision/Tag IDs", tags);
+    vision.periodic(swerve);
+  }
+
+  @Override
+  public void simulationPeriodic() {
+    // Update camera simulation
+    vision.simulationPeriodic(swerve.getPose());
+
+    var debugField = vision.getSimDebugField();
+    debugField.getObject("EstimatedRobot").setPose(swerve.getPose());
   }
 }

@@ -15,6 +15,16 @@ public class ScoringUtil {
     return DriverStation.getAlliance().isPresent()
             && DriverStation.getAlliance().get() == Alliance.Blue
         ? Constants.VisionConstants.blueSpeaker
-        : Constants.VisionConstants.redSpeaker;
+        : Constants.VisionConstants.redSpeakerAim;
+  }
+
+  /*
+   * Return the right pair to get the distance depending on alliance
+   */
+  public static Pair<Integer, Translation2d> provideDistancePose() {
+    return DriverStation.getAlliance().isPresent()
+            && DriverStation.getAlliance().get() == Alliance.Blue
+        ? Constants.VisionConstants.blueSpeaker
+        : Constants.VisionConstants.redSpeakerDistance;
   }
 }
