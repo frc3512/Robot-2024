@@ -39,11 +39,11 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 48.976,
+    "rotation": 48.23271772961715,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Test autos",
+  "folder": "3 Note",
   "previewStartingState": {
     "rotation": 0,
     "velocity": 0

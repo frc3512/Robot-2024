@@ -51,8 +51,8 @@ public class Shootake extends SubsystemBase {
     topMotor.enableVoltageCompensation(10);
     bottomMotor.enableVoltageCompensation(10);
 
-    topMotor.setInverted(true);
-    bottomMotor.setInverted(true);
+    topMotor.setInverted(false);
+    bottomMotor.setInverted(false);
     bottomMotor.follow(topMotor);
 
     topEncoder.setMeasurementPeriod(20);
