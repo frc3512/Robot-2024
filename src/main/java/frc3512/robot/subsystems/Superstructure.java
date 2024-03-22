@@ -53,8 +53,11 @@ public class Superstructure extends SubsystemBase {
     // Arm / Shooter Controls
     appendageJoystick.button(1).onTrue(subsystemAmp());
 
-    appendageJoystick.button(3).onTrue(
-      new InstantCommand(()-> shootake.setIntake(false)).andThen(new InstantCommand(() -> shootake.setShooter(true))));
+    appendageJoystick
+        .button(3)
+        .onTrue(
+            new InstantCommand(() -> shootake.setIntake(false))
+                .andThen(new InstantCommand(() -> shootake.setShooter(true))));
     appendageJoystick.button(3).onFalse(shootSequence());
 
     appendageJoystick.button(2).onTrue(subsystemCloseShot());
@@ -63,7 +66,8 @@ public class Superstructure extends SubsystemBase {
 
     appendageJoystick.button(5).onTrue(subsystemIntake());
 
-    appendageJoystick.button(9).onTrue(new InstantCommand(() -> climber.releaseReaction()));
+    appendageJoystick.button(9).onTrue(new InstantCommand(() -> climber.releaseReaction(true)));
+    appendageJoystick.button(9).onFalse(new InstantCommand(() -> climber.releaseReaction(false)));
 
     appendageJoystick.button(10).onTrue(subsystemFarShot());
 
@@ -74,11 +78,10 @@ public class Superstructure extends SubsystemBase {
     appendageJoystick.button(6).onFalse(new InstantCommand(() -> shootake.setIntake(false)));
     appendageJoystick.button(7).onTrue(new InstantCommand(() -> shootake.setOuttake(true)));
     appendageJoystick.button(7).onFalse(new InstantCommand(() -> shootake.setOuttake(false)));
-    //shootake.setIntake(appendageJoystick.button(6).getAsBoolean());
-    //shootake.setOuttake(appendageJoystick.button(7).getAsBoolean());
+    // shootake.setIntake(appendageJoystick.button(6).getAsBoolean());
+    // shootake.setOuttake(appendageJoystick.button(7).getAsBoolean());
 
-    appendageJoystick.button(12).onTrue(new InstantCommand(() ->
-      shootake.stopIntakeAndShooter()));
+    appendageJoystick.button(12).onTrue(new InstantCommand(() -> shootake.stopIntakeAndShooter()));
 
     // Climber Controls
     appendageJoystick

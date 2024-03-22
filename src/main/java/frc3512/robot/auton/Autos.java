@@ -88,8 +88,9 @@ public class Autos {
     NamedCommands.registerCommand(
         "Stop Shooting", new InstantCommand(() -> superstructure.shootake.setShooter(false)));
     NamedCommands.registerCommand(
-        "Shooting Speed", 
-        new InstantCommand(() -> superstructure.shootake.setIntake(false)).andThen(new InstantCommand(() -> superstructure.shootake.setShooter(true))));
+        "Shooting Speed",
+        new InstantCommand(() -> superstructure.shootake.setIntake(false))
+            .andThen(new InstantCommand(() -> superstructure.shootake.setShooter(true))));
     NamedCommands.registerCommand(
         "Stop Intake/Shooter",
         new InstantCommand(() -> superstructure.shootake.stopIntakeAndShooter()));

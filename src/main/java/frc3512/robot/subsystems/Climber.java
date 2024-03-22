@@ -3,17 +3,14 @@ package frc3512.robot.subsystems;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel;
 import com.revrobotics.CANSparkMax;
-
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc3512.lib.util.CANSparkMaxUtil;
 import frc3512.lib.util.CANSparkMaxUtil.Usage;
 
 public class Climber extends SubsystemBase {
-  private CANSparkMax climberMotor1 =
-      new CANSparkMax(17, CANSparkLowLevel.MotorType.kBrushless);
-  private CANSparkMax climberMotor2 =
-      new CANSparkMax(16, CANSparkLowLevel.MotorType.kBrushless);
+  private CANSparkMax climberMotor1 = new CANSparkMax(17, CANSparkLowLevel.MotorType.kBrushless);
+  private CANSparkMax climberMotor2 = new CANSparkMax(16, CANSparkLowLevel.MotorType.kBrushless);
 
   private PowerDistribution pdh = new PowerDistribution();
 
@@ -42,8 +39,8 @@ public class Climber extends SubsystemBase {
   }
 
   public void motorUp() {
-    climberMotor1.set(0.3);
-    climberMotor2.set(0.3);
+    climberMotor1.set(0.7);
+    climberMotor2.set(0.7);
   }
 
   public void motorDown() {
@@ -57,7 +54,7 @@ public class Climber extends SubsystemBase {
     climberMotor2.set(0);
   }
 
-  public void releaseReaction() {
-    pdh.setSwitchableChannel(true);
+  public void releaseReaction(boolean isON) {
+    pdh.setSwitchableChannel(isON);
   }
 }
