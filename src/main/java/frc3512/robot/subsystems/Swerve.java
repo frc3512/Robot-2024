@@ -18,10 +18,13 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc3512.lib.logging.SpartanEntryManager;
 import frc3512.robot.Constants;
 import java.io.File;
+import java.util.List;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 import org.photonvision.PhotonCamera;
 import org.photonvision.targeting.PhotonPipelineResult;
+import org.photonvision.targeting.PhotonTrackedTarget;
+
 import swervelib.SwerveController;
 import swervelib.SwerveDrive;
 import swervelib.parser.SwerveDriveConfiguration;
@@ -85,7 +88,14 @@ public class Swerve extends SubsystemBase {
     return run(
         () -> {
           PhotonPipelineResult result = camera.getLatestResult();
+          double yaw = 0.0;
           if (result.hasTargets() && doAim.getAsBoolean()) {
+            List<PhotonTrackedTarget> targets = result.getTargets();
+            for (int i = 0; i < targets.size(); i++) {
+              if (targets.get(i).getFiducialId() == 7 || targets.get(i).getFiducialId() == 4) {
+                yaw = targets.get(i).getYaw();
+              }
+            }
             drive(
                 swerve.swerveController.getRawTargetSpeeds(
                     MathUtil.applyDeadband(
@@ -94,7 +104,7 @@ public class Swerve extends SubsystemBase {
                     MathUtil.applyDeadband(
                         translationY.getAsDouble() * swerve.getMaximumVelocity(),
                         Constants.SwerveConstants.swerveDeadband),
-                    -turnController.calculate(result.getBestTarget().getYaw(), 0)));
+                    -turnController.calculate(yaw, 0)));
           } else {
             swerve.drive(
                 new Translation2d(

@@ -101,6 +101,12 @@ public class Autos {
         (new InstantCommand(() -> superstructure.shootake.setShooter(true)))
             .andThen(new WaitCommand(2.5))
             .andThen(superstructure.shootSequence()));
+
+    NamedCommands.registerCommand(
+        "Fast Shoot",
+        (new InstantCommand(() -> superstructure.shootake.setShooter(true)))
+            .andThen(new WaitCommand(1.5))
+            .andThen(superstructure.shootSequence()));
   }
 
   /*

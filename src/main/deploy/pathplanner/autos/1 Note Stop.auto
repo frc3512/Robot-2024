@@ -1,0 +1,37 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.79,
+      "y": 6.66
+    },
+    "rotation": 60.25136032288084
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 5.0
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "1 Note Stop"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "Test Autos",
+  "choreoAuto": false
+}

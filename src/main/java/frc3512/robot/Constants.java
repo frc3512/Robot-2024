@@ -4,6 +4,7 @@ import com.pathplanner.lib.util.PIDConstants;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.numbers.N1;
@@ -52,12 +53,18 @@ public final class Constants {
   public static final class VisionConstants {
     public static final String visionName = "USB_GS_Camera";
     public static final String driverName = "HD_Web_Camera";
-    public static final Transform3d robotToCam = new Transform3d();
 
     public static final Pair<Integer, Translation2d> blueSpeaker =
         new Pair<Integer, Translation2d>(7, new Translation2d(0.00, 5.55));
     public static final Pair<Integer, Translation2d> redSpeaker =
         new Pair<Integer, Translation2d>(4, new Translation2d(15.64, 5.55));
+
+    public static final Transform3d robotToCam =
+        new Transform3d(
+            Units.inchesToMeters(-11.0),
+            Units.inchesToMeters(7.0),
+            Units.inchesToMeters(16.5),
+            new Rotation3d(0.0, Units.degreesToRadians(105.0), Units.degreesToRadians(180.0)));
 
     public static final Matrix<N3, N1> singleTagStdDevs = VecBuilder.fill(0.9, 0.9, 0.9);
     public static final Matrix<N3, N1> multiTagStdDevs = VecBuilder.fill(0.9, 0.9, 0.9);
@@ -77,13 +84,13 @@ public final class Constants {
     public static final double kD = 0.025;
      */
 
-    public static final double stowPosition = 0.35; // 0.4
-    public static final double autoCloseShootingPosition = 0.3; // 0.3
-    public static final double closeShootingPosition = 0.297; // 0.27
-    public static final double farShootingPosition = 0.375; // 0.44
-    public static final double autoShootingPosition = 0.4; // 0.4
-    public static final double ampPosition = 0.38; // 0.95
-    public static final double intakePosition = 0.243; // 0.23
-    public static final double trapPositon = 0.5; // 0.95
+    public static final double stowPosition = 0.35; 
+    public static final double autoCloseShootingPosition = 0.3; 
+    public static final double closeShootingPosition = 0.297;
+    public static final double farShootingPosition = 0.36; // was .375
+    public static final double autoShootingPosition = 0.4;
+    public static final double ampPosition = 0.39;
+    public static final double intakePosition = 0.243; 
+    public static final double trapPositon = 0.49; 
   }
 }

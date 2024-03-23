@@ -80,7 +80,7 @@
         {
           "type": "named",
           "data": {
-            "name": "Shoot"
+            "name": "Fast Shoot"
           }
         },
         {
@@ -128,7 +128,7 @@
         {
           "type": "named",
           "data": {
-            "name": "Shoot"
+            "name": "Fast Shoot"
           }
         },
         {

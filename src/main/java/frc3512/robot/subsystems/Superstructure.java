@@ -50,6 +50,8 @@ public class Superstructure extends SubsystemBase {
     // Reset Gyro
     driverXbox.x().onTrue(new InstantCommand(() -> swerve.zeroGyro()));
 
+    arm.m_useRange = (driverXbox.rightBumper().getAsBoolean());
+
     // Arm / Shooter Controls
     appendageJoystick.button(1).onTrue(subsystemAmp());
 

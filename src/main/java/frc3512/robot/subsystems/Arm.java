@@ -1,9 +1,14 @@
 package frc3512.robot.subsystems;
 
+import java.util.List;
+
+import org.photonvision.targeting.PhotonTrackedTarget;
+
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
@@ -14,11 +19,17 @@ import frc3512.lib.util.CANSparkMaxUtil.Usage;
 import frc3512.robot.Constants;
 
 public class Arm extends ProfiledPIDSubsystem {
+  private Swerve m_swerve;
+  private Vision m_vision;
+
   private CANSparkMax leftMotor = new CANSparkMax(14, MotorType.kBrushless);
   private CANSparkMax rightMotor = new CANSparkMax(15, MotorType.kBrushless);
   private DutyCycleEncoder armEncoder = new DutyCycleEncoder(3);
 
+  InterpolatingDoubleTreeMap m_table = new InterpolatingDoubleTreeMap();
+
   boolean bypassStop = false;
+  boolean m_useRange = false;
 
   public Arm() {
     super(
@@ -141,10 +152,28 @@ public class Arm extends ProfiledPIDSubsystem {
       bypassStop = false;
     }*/
 
+    /*if (m_useRange && m_vision.returnCamera().hasTargets()) {
+      List<PhotonTrackedTarget> targets = m_vision.returnCamera().getLatestResult().getTargets();
+      for (int i = 0; i < targets.size(); i++) {
+        if (targets.get(i).getFiducialId() == 7 || targets.get(i).getFiducialId() == 4) {
+          int target_id = targets.get(i).getFiducialId();
+          setGoal(
+            m_table.get(
+              m_vision.returnCamera().getLatestResult().getTargets().get(target_id)
+              .getBestCameraToTarget().getTranslation().getNorm()
+            )
+          );
+        }
+      }
+    }
+    SmartDashboard.putNumber("Diagnostics/Vision/Direct distance", m_vision.returnCamera().getLatestResult().getTargets().get(7).getBestCameraToTarget().getTranslation().getNorm());
+  
+    */
+
     SmartDashboard.putNumber("Arm/Arm P Value", getController().getP());
     SmartDashboard.putNumber(
         "Arm/Arm Encoder Distance Per Rotation", armEncoder.getDistancePerRotation());
     SmartDashboard.putNumber("Arm/Arm Encoder", armEncoder.getAbsolutePosition());
     SmartDashboard.putNumber("Arm/Arm PID Goal", getController().getGoal().position);
-  }
+    }
 }
