@@ -51,6 +51,7 @@ public class Autos {
 
     // Add autos
     buildAuto("1 Note Run");
+    buildAuto("1 Note Stop");
     buildAuto("2 Note");
     buildAuto("3 Note");
 

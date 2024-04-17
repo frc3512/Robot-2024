@@ -132,7 +132,7 @@ public class Superstructure extends SubsystemBase {
 
   public SequentialCommandGroup shootSequence() {
     return new InstantCommand(() -> shootake.setIntake(true))
-        .andThen(new WaitCommand(.75))
+        .andThen(new WaitCommand(1.5))
         .andThen(new InstantCommand(() -> shootake.stopIntakeAndShooter()))
         .andThen(new InstantCommand(() -> arm.stowArm()));
   }

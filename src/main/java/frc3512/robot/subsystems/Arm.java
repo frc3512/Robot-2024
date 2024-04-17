@@ -1,9 +1,5 @@
 package frc3512.robot.subsystems;
 
-import java.util.List;
-
-import org.photonvision.targeting.PhotonTrackedTarget;
-
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
@@ -19,12 +15,10 @@ import frc3512.lib.util.CANSparkMaxUtil.Usage;
 import frc3512.robot.Constants;
 
 public class Arm extends ProfiledPIDSubsystem {
-  private Swerve m_swerve;
-  private Vision m_vision;
 
   private CANSparkMax leftMotor = new CANSparkMax(14, MotorType.kBrushless);
   private CANSparkMax rightMotor = new CANSparkMax(15, MotorType.kBrushless);
-  private DutyCycleEncoder armEncoder = new DutyCycleEncoder(3);
+  private DutyCycleEncoder armEncoder = new DutyCycleEncoder(4);
 
   InterpolatingDoubleTreeMap m_table = new InterpolatingDoubleTreeMap();
 
@@ -167,7 +161,7 @@ public class Arm extends ProfiledPIDSubsystem {
       }
     }
     SmartDashboard.putNumber("Diagnostics/Vision/Direct distance", m_vision.returnCamera().getLatestResult().getTargets().get(7).getBestCameraToTarget().getTranslation().getNorm());
-  
+
     */
 
     SmartDashboard.putNumber("Arm/Arm P Value", getController().getP());
@@ -175,5 +169,5 @@ public class Arm extends ProfiledPIDSubsystem {
         "Arm/Arm Encoder Distance Per Rotation", armEncoder.getDistancePerRotation());
     SmartDashboard.putNumber("Arm/Arm Encoder", armEncoder.getAbsolutePosition());
     SmartDashboard.putNumber("Arm/Arm PID Goal", getController().getGoal().position);
-    }
+  }
 }

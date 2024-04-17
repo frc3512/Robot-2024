@@ -25,7 +25,6 @@ public class Vision extends SubsystemBase {
   // Constants.VisionConstants.driverName);
   public PhotonPoseEstimator photonPoseEstimator;
   public AprilTagFieldLayout atfl;
-  private double lastEstTimestamp = 0;
   Thread m_driverCamThread;
 
   public Vision() {
