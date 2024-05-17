@@ -71,6 +71,9 @@ public final class Constants {
   }
 
   public static final class ArmConstants {
+    public static final int compEncoderID = 3;
+    public static final int protoEncoderID = 4;
+
     public static final int currentLimit = 40;
     public static final double speed = 0.1;
 

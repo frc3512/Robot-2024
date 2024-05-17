@@ -13,12 +13,13 @@ import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
 import frc3512.lib.util.CANSparkMaxUtil;
 import frc3512.lib.util.CANSparkMaxUtil.Usage;
 import frc3512.robot.Constants;
+import frc3512.robot.Constants.RobotType;
 
 public class Arm extends ProfiledPIDSubsystem {
 
   private CANSparkMax leftMotor = new CANSparkMax(14, MotorType.kBrushless);
   private CANSparkMax rightMotor = new CANSparkMax(15, MotorType.kBrushless);
-  private DutyCycleEncoder armEncoder = new DutyCycleEncoder(4);
+  private DutyCycleEncoder armEncoder = new DutyCycleEncoder(0);
 
   InterpolatingDoubleTreeMap m_table = new InterpolatingDoubleTreeMap();
 
@@ -34,6 +35,8 @@ public class Arm extends ProfiledPIDSubsystem {
             new TrapezoidProfile.Constraints(7, 5)));
     getController().setTolerance(0.002);
     setGoal(Constants.ArmConstants.stowPosition);
+
+    defineArmEncoder();
 
     leftMotor.restoreFactoryDefaults();
     rightMotor.restoreFactoryDefaults();
@@ -133,6 +136,14 @@ public class Arm extends ProfiledPIDSubsystem {
     disable();
     leftMotor.set(0);
     rightMotor.set(0);
+  }
+
+  public void defineArmEncoder() {
+    if (Constants.GeneralConstants.robotType == RobotType.COMP) {
+      armEncoder = new DutyCycleEncoder(Constants.ArmConstants.protoEncoderID);
+    } else if (Constants.GeneralConstants.robotType == RobotType.PROTO) {
+      armEncoder = new DutyCycleEncoder(Constants.ArmConstants.compEncoderID);
+    }
   }
 
   @Override
