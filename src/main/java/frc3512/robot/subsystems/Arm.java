@@ -19,7 +19,7 @@ public class Arm extends ProfiledPIDSubsystem {
 
   private CANSparkMax leftMotor = new CANSparkMax(14, MotorType.kBrushless);
   private CANSparkMax rightMotor = new CANSparkMax(15, MotorType.kBrushless);
-  private DutyCycleEncoder armEncoder = new DutyCycleEncoder(0);
+  private DutyCycleEncoder armEncoder = new DutyCycleEncoder(3);
 
   InterpolatingDoubleTreeMap m_table = new InterpolatingDoubleTreeMap();
 
@@ -35,8 +35,6 @@ public class Arm extends ProfiledPIDSubsystem {
             new TrapezoidProfile.Constraints(7, 5)));
     getController().setTolerance(0.002);
     setGoal(Constants.ArmConstants.stowPosition);
-
-    defineArmEncoder();
 
     leftMotor.restoreFactoryDefaults();
     rightMotor.restoreFactoryDefaults();

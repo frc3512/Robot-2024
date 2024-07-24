@@ -15,7 +15,7 @@ public class Shootake extends SubsystemBase {
   private CANSparkMax topMotor = new CANSparkMax(12, CANSparkLowLevel.MotorType.kBrushless);
   private CANSparkMax bottomMotor = new CANSparkMax(11, CANSparkLowLevel.MotorType.kBrushless);
 
-  private DigitalInput noteEnterBeamBreak = new DigitalInput(0);
+  private DigitalInput noteEnterBeamBreak = new DigitalInput(1);
 
   private LED leds;
 
