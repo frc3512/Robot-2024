@@ -37,7 +37,7 @@ public final class Constants {
 
   public static final class GeneralConstants {
     public static final boolean tuningMode = true;
-    public static final RobotType robotType = RobotType.PROTO;
+    public static final RobotType robotType = RobotType.COMP;
   }
 
   public static final class VisionConstants {
@@ -74,14 +74,14 @@ public final class Constants {
     public static final double kD = 0.05;
 
     // we applied a delta of -0.13 due to a changed encoder
-    public static final double stowPosition = 0.32; // 0.4
+    public static final double stowPosition = 0.295; // 0.4
     public static final double autoCloseShootingPosition = 0.3; // 0.3
-    public static final double closeShootingPosition = 0.21; // 0.27
-    public static final double farShootingPosition = 0.395; // 0.44
+    public static final double closeShootingPosition = 0.31; // 0.27
+    public static final double farShootingPosition = 0.35; // 0.44
     public static final double autoShootingPosition = 0.4; // 0.4
-    public static final double ampPosition = 0.90; // 0.95
-    public static final double intakePosition = 0.12; // 0.23
-    public static final double trapPositon = 0.95; // 0.95
+    public static final double ampPosition = 0.4; // 0.95
+    public static final double intakePosition = 0.246; // 0.23
+    public static final double trapPositon = 0.48; // 0.95
     public static final double meduimShootinPos = 0.35; // 0.42 
   }
 

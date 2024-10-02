@@ -41,7 +41,7 @@ public class Swerve extends SubsystemBase {
         swerve =
             new SwerveParser(new File(Filesystem.getDeployDirectory(), "swerve/comp"))
                 .createSwerveDrive(Constants.SwerveConstants.maximumSpeed);
-      } else if (Constants.GeneralConstants.robotType == Constants.RobotType.PROTO) {
+      } else if (Constants.GeneralConstants.robotType == Constants.RobotType.COMP) {
         swerve =
             new SwerveParser(new File(Filesystem.getDeployDirectory(), "swerve/proto"))
                 .createSwerveDrive(Constants.SwerveConstants.maximumSpeed);
