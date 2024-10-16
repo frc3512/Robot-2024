@@ -32,7 +32,7 @@ public class Climber extends SubsystemBase {
     climberMotor1.enableVoltageCompensation(10);
     climberMotor2.enableVoltageCompensation(10);
 
-    climberMotor2.setInverted(true);
+    climberMotor1.setInverted(true);
 
     climberMotor1.burnFlash();
     climberMotor2.burnFlash();
