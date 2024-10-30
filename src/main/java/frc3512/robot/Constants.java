@@ -37,7 +37,7 @@ public final class Constants {
 
   public static final class GeneralConstants {
     public static final boolean tuningMode = true;
-    public static final RobotType robotType = RobotType.COMP;
+    public static final RobotType robotType = RobotType.PROTO;
   }
 
   public static final class VisionConstants {
@@ -69,39 +69,25 @@ public final class Constants {
     public static final int currentLimit = 40;
     public static final double speed = 0.1;
 
-    public static final double kP = 26;
-    public static final double kI = 0.05;
-    public static final double kD = 0.05;
-
-    // we applied a delta of -0.13 due to a changed encoder
-    public static final double stowPosition = 0.295; // 0.4
-    public static final double autoCloseShootingPosition = 0.3; // 0.3
-    public static final double closeShootingPosition = 0.31; // 0.27
-    public static final double farShootingPosition = 0.35; // 0.44
-    public static final double autoShootingPosition = 0.4; // 0.4
-    public static final double ampPosition = 0.4; // 0.95
-    public static final double intakePosition = 0.246; // 0.23
-    public static final double trapPositon = 0.48; // 0.95
-    public static final double meduimShootinPos = 0.35; // 0.42 
-  }
-
-  public static final class ElevatorConstants {
-    public static final int currentLimit = 40;
-    public static final double speed = 0.1;
-
-    public static final double kP = 6.0;
+    public static final double kP = 37;
     public static final double kI = 0;
-    public static final double kD = 0;
+    public static final double kD = 0.01;
 
-    public static final double stowPosition = 0.3;
-    public static final double outPosition = -1.4;
-    public static final double ampPosition = -0.7;
-    public static final double kMaxVelocityRadPerSecond = 10.0;
-    public static final double kMaxAccelerationRadPerSecSquared = 15.0;
+    /* WORKING CONSTANTS
+    public static final double kP = 32;
+    public static final double kI = 0;
+    public static final double kD = 0.025;
+     */
 
-    public static final int averageSampleSize = 10;
-    public static final double distancePerPulse =
-        (Math.PI * 2.0 * Units.inchesToMeters(1.751)) / 8192;
+    public static final double stowPosition = 0.27; // 0.295
+    public static final double autoCloseShootingPosition = 0.3; // 0.3
+    public static final double closeShootingPosition = 0.275; // 0.31
+    public static final double meduimShootingPosition = 0.3;
+    public static final double farShootingPosition = 0.33; // was .375, then 0.35
+    public static final double autoShootingPosition = 0.4; // 0.4
+    public static final double ampPosition = 0.335; // 0.4
+    public static final double intakePosition = 0.226; // 0.243
+    public static final double trapPositon = 0.445; // 0.48
   }
 
   public static final class ShooterConstants {

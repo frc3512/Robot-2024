@@ -73,12 +73,10 @@ public class Autos {
         "Stop Intake/Shooter", superstructure.subsytemStopIntakeAndShooter());
     NamedCommands.registerCommand(
         "Auto Shooting",
-        (new InstantCommand(() -> superstructure.elevator.outElevator()))
-            .andThen(new InstantCommand(() -> superstructure.arm.autoShootingPos())));
+        (new InstantCommand(() -> superstructure.arm.autoShootingPos())));
     NamedCommands.registerCommand(
         "Far Shooting",
-        (new InstantCommand(() -> superstructure.elevator.outElevator()))
-            .andThen(new InstantCommand(() -> superstructure.arm.farShootingPos())));
+        (new InstantCommand(() -> superstructure.arm.farShootingPos())));
     NamedCommands.registerCommand(
         "Shoot",
         (new InstantCommand(() -> superstructure.shootake.shoot()))

@@ -26,7 +26,6 @@ public class Superstructure extends SubsystemBase {
   public final Vision vision = new Vision();
   public final Swerve swerve = new Swerve();
   public final Arm arm = new Arm(swerve, vision);
-  public final Elevator elevator = new Elevator();
   public final Shootake shootake = new Shootake();
   public final Climber climber = new Climber();
 
@@ -64,11 +63,6 @@ public class Superstructure extends SubsystemBase {
                   .andThen(new InstantCommand(() -> arm.enable())));
       driverXbox.leftBumper().onFalse(new InstantCommand(() -> arm.setGoalFromRange(false)));
 
-      driverXbox.rightBumper().onTrue(new InstantCommand(() -> shootake.shoot()));
-      driverXbox.rightBumper().onFalse(shootSequence());
-
-      driverXbox.b().onTrue(new InstantCommand(() -> shootake.want_to_intake = true));
-      driverXbox.b().onFalse(new InstantCommand(() -> shootake.want_to_intake = false));
     } else {
       driverXbox
           .rightBumper()

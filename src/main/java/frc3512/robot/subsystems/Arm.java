@@ -64,7 +64,7 @@ public class Arm extends ProfiledPIDSubsystem {
     SmartDashboard.putNumber("Arm/Arm PID Goal", getController().getGoal().position);
 
     m_table.put(0.4, Constants.ArmConstants.closeShootingPosition);
-    m_table.put(0.95, Constants.ArmConstants.meduimShootinPos);
+    m_table.put(0.95, Constants.ArmConstants.meduimShootingPosition);
     m_table.put(1.5, 0.365);
     m_table.put(2.0, 0.35);
   }
