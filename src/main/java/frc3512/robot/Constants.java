@@ -90,7 +90,7 @@ public final class Constants {
     public static final double farShootingPosition = 0.35; // was .375, then 0.35
     public static final double autoShootingPosition = 0.4; // 0.4
     public static final double ampPosition = 0.335; // 0.4
-    public static final double intakePosition = 0.226; // 0.243
+    public static final double intakePosition = 0.227; // 0.243
     public static final double trapPositon = 0.445; // 0.48
   }
 }
